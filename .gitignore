@@ -11,3 +11,9 @@
 *.lai
 *.la
 *.a
+
+# emacs weirdness
+*~
+
+# scons stuff
+*.dblite
