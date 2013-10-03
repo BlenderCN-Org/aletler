@@ -8,8 +8,8 @@
 
 class Face {
 public:
- Face() : v{0,0,0}, color(0) {}
- Face(size_t v0, size_t v1, size_t v2) : v{v0, v1, v2} , color(0) {}
+  Face();
+  Face(size_t v0, size_t v1, size_t v2);
 
   // Integer indices into an array of vertices
   size_t v[3];
@@ -19,7 +19,7 @@ public:
 
 struct Vertex {
 public:
-Vertex() : x{0,0,0}, color(0) {}
+  Vertex();
 
   double x[3];
 

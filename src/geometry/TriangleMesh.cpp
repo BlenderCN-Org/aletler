@@ -9,6 +9,11 @@
 
 #include "MarchingSource.h"
 
+
+Face::Face() : v{0,0,0}, color(0) {}
+Face::Face(size_t v0, size_t v1, size_t v2) : v{v0, v1, v2} , color(0) {}
+Vertex::Vertex() : x{0,0,0}, color(0) {}
+
 bool operator==(const Vertex &lhs, const Vertex &rhs);
 bool operator==(const Face &lhs, const Face &rhs);
 bool approxEq(double a, double b);

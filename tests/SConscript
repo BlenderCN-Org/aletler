@@ -1,0 +1,9 @@
+Import ('env')
+
+env.Program('../bin/tests/geometry',
+            Glob('../tests/geometry/*.cpp'),
+            CPPPATH = ['../include'],
+            LIBS = ['aletler-geometry'],
+            LIBPATH = ['../lib']
+
+            )
