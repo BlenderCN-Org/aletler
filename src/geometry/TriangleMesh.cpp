@@ -9,9 +9,13 @@
 
 #include "MarchingSource.h"
 
+bool operator==(const Vertex &lhs, const Vertex &rhs);
+bool operator==(const Face &lhs, const Face &rhs);
+bool approxEq(double a, double b);
+
 static double roundDouble(double d) {
   
-  return floorf(d * 1e6 + 0.5) / 1e6;
+  return floor(d * 1e6 + 0.5) / 1e6;
 }
 
 static const double TOLERANCE = 1e-6;
@@ -71,7 +75,7 @@ size_t TriangleMesh::insertVertex(Vertex &v) {
   // is v already in m_verts? Then get index:
   std::vector<Vertex>::iterator pos = std::find(m_verts.begin(), m_verts.end(), v);
   if (pos != m_verts.end()) {
-    vIndex = pos - m_verts.begin();
+    vIndex = static_cast<size_t>(pos - m_verts.begin());
 
   } else {
     // v didn't exist, so let's insert
@@ -83,15 +87,15 @@ size_t TriangleMesh::insertVertex(Vertex &v) {
 }
 
 
-void TriangleMesh::triangulateImplicitFunc(double xmin, double xmax,
-					   double ymin, double ymax,
-					   double zmin, double zmax,
-					   double dx,
+void TriangleMesh::triangulateImplicitFunc(float xmin, float xmax,
+					   float ymin, float ymax,
+					   float zmin, float zmax,
+					   float dx,
 					   double (*fnPtr)(double, double, double)) {
-  GLint iTriCount;
-  GLfloat *afVertices = new GLfloat[(sizeof(GLfloat) * 100)]; // shouldn't need more than this per cell
+  int iTriCount;
+  float *afVertices = new float[(sizeof(float) * 100)]; // shouldn't need more than this per cell
 
-  GLfloat x, y, z;
+  float x, y, z;
   for (x = xmin; x < xmax; x += dx) {
     for (y = ymin; y < ymax; y += dx) {
       for (z = zmin; z < zmax; z += dx) {
@@ -164,7 +168,20 @@ void TriangleMesh::write(const std::string &filename) const {
 
 
 void TriangleMesh::readObj(const std::string &filename) {
-  
+  std::ifstream ifile(filename.c_str());
+  std::string line;
+
+  if (ifile.is_open()) {
+    while (getline (ifile,line)) {
+      std::cout << line << std::endl;
+      }
+
+    ifile.close();
+
+  } else {
+    std::cout << "Unable to open file" << std::endl; 
+  }
+
 }
 
 
@@ -210,7 +227,7 @@ Vertex &TriangleMesh::getVertex(size_t faceIndex, size_t vertIndex) {
 
 
 
-void TriangleMesh::colorNeighbors(size_t vertIndex, int color) {
+void TriangleMesh::colorNeighbors(size_t vertIndex, size_t color) {
 
   Vertex &currVert = m_verts[vertIndex];
   if (currVert.color) return;

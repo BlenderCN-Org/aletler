@@ -10,18 +10,13 @@
 #ifndef MARCHINGSOURCE_H
 #define MARCHINGSOURCE_H
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
 
 // vMarchCubeCustom is a special entry point into Bloyd's source that
 // will compute and return the triangle vertices for a single marching
 // cubes cell on a custom function. f < 0 is inside, f > 0 is out.
 
-GLvoid vMarchCubeCustom(GLfloat fX, GLfloat fY, GLfloat fZ, GLfloat fScale,
-                        double (*f)(double, double, double),
-                        GLint &iTriCount, GLfloat *afVertices);
+void vMarchCubeCustom(float fX, float fY, float fZ, float fScale,
+		      double (*f)(double, double, double),
+		      int &iTriCount, float *afVertices);
 
 #endif

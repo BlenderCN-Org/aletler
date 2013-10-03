@@ -39,10 +39,10 @@ class TriangleMesh {
   // This method issues the callback to marching cubes,
   // for each cell in the grid. It populates the mesh data structure
   // by calling addTriangle() as it runs marching cubes.  
-  void triangulateImplicitFunc(double xmin, double xmax,
-			       double ymin, double ymax,
-			       double zmin, double zmax,
-			       double dx,
+  void triangulateImplicitFunc(float xmin, float xmax,
+			       float ymin, float ymax,
+			       float zmin, float zmax,
+			       float dx,
 			       double (*fnPtr)(double, double, double));
 
   void print() const;
@@ -66,7 +66,7 @@ class TriangleMesh {
 
   // helper functions
   Vertex &getVertex(size_t faceIndex, size_t vertIndex); 
-  void colorNeighbors(size_t vertIndex, int color);
+  void colorNeighbors(size_t vertIndex, size_t color);
 
 };
 
