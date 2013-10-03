@@ -64,8 +64,8 @@ void TriangleMesh::addTriangle(Vertex &v0, Vertex &v1, Vertex &v2) {
 }
 
 
-int TriangleMesh::insertVertex(Vertex &v) {
-  int vIndex = 0;
+size_t TriangleMesh::insertVertex(Vertex &v) {
+  size_t vIndex = 0;
     
     
   // is v already in m_verts? Then get index:
@@ -93,7 +93,7 @@ void TriangleMesh::triangulateImplicitFunc(double xmin, double xmax,
 
   GLfloat x, y, z;
   for (x = xmin; x < xmax; x += dx) {
-    for (y = xmin; y < ymax; y += dx) {
+    for (y = ymin; y < ymax; y += dx) {
       for (z = zmin; z < zmax; z += dx) {
 	vMarchCubeCustom(x, y, z, dx, 
 			 fnPtr,
@@ -142,7 +142,7 @@ void TriangleMesh::write(const std::string &filename) const {
   std::ofstream ofile;
   ofile.open(filename.c_str());
 
-  for (int i = 0; i < m_verts.size(); i++) {
+  for (size_t i = 0; i < m_verts.size(); i++) {
     ofile << "v " 
 	  << std::setprecision(6) 
 	  << std::fixed 
@@ -151,7 +151,7 @@ void TriangleMesh::write(const std::string &filename) const {
 	  << m_verts[i].x[2] << "\n";
   }
 
-  for (int i = 0; i < m_faces.size(); i++) {
+  for (size_t i = 0; i < m_faces.size(); i++) {
     // remember, vertex indices START FROM 1 (in OBJ format)!!!
     ofile << "f "
 	  << m_faces[i]->v[0] + 1 << " "
@@ -187,7 +187,7 @@ double TriangleMesh::signedVolumeOfTriangle(const Vertex &v1,
 double TriangleMesh::volume() const {
   double vol = 0.0;
 
-  for (int i = 0; i < m_faces.size(); i++) {
+  for (size_t i = 0; i < m_faces.size(); i++) {
     Face *f = m_faces[i];
     Vertex v1 = m_verts[f->v[0]];
     Vertex v2 = m_verts[f->v[1]];
@@ -199,7 +199,7 @@ double TriangleMesh::volume() const {
 }
 
 
-Vertex &TriangleMesh::getVertex(int faceIndex, int vertIndex) {
+Vertex &TriangleMesh::getVertex(size_t faceIndex, size_t vertIndex) {
   if (vertIndex == 0) 
     return m_verts[m_faces[faceIndex]->v[0]];
   else if (vertIndex == 1)
@@ -210,7 +210,7 @@ Vertex &TriangleMesh::getVertex(int faceIndex, int vertIndex) {
 
 
 
-void TriangleMesh::colorNeighbors(int vertIndex, int color) {
+void TriangleMesh::colorNeighbors(size_t vertIndex, int color) {
 
   Vertex &currVert = m_verts[vertIndex];
   if (currVert.color) return;
@@ -218,7 +218,7 @@ void TriangleMesh::colorNeighbors(int vertIndex, int color) {
   currVert.color = color;
 
 
-  for (int i = 0; i < currVert.faces.size(); i++) {
+  for (size_t i = 0; i < currVert.faces.size(); i++) {
 
     Face *currFace = currVert.faces[i]; 
 
@@ -247,7 +247,7 @@ void TriangleMesh::color() {
   _numColors = 0;
 
   bool uncoloredVertsExist = true;
-  int firstUncoloredVert = 0;
+  size_t firstUncoloredVert = 0;
 
   while (uncoloredVertsExist) {
     
@@ -255,13 +255,12 @@ void TriangleMesh::color() {
 
     
     colorNeighbors(firstUncoloredVert, _numColors);
-    std::cout << "colored a mesh starting with vert " << firstUncoloredVert << std::endl;
 
     // We have colored one mesh. Now, let's see if there's still 
     // work to do:
     firstUncoloredVert = m_verts.size();
     
-    for (int i = 0; i < m_verts.size(); i++) {
+    for (size_t i = 0; i < m_verts.size(); i++) {
       Vertex &currVert = m_verts[i];
       if (!currVert.color) {
 	firstUncoloredVert = i;
@@ -279,14 +278,14 @@ void TriangleMesh::color() {
   std::cout << "Number of meshes: " << _numColors << std::endl;
 
   // DEBUG   ***  THERE SHOULD BE NO UNCOLORED VERTS
-  for (int i = 0; i < m_verts.size(); i++) {
+  for (size_t i = 0; i < m_verts.size(); i++) {
     if (!m_verts[i].color) {
       std::cout << "Vertex " << i << " is uncolored. Exiting..." << std::endl;
       assert(m_verts[i].color);
     }
   }
 
-  for (int i = 0; i < m_faces.size(); i++) {
+  for (size_t i = 0; i < m_faces.size(); i++) {
     if (!m_faces[i]->color) {
       std::cout << "Face " << i << " is uncolored. Exiting..." << std::endl;
       assert(m_faces[i]->color);
@@ -300,13 +299,13 @@ std::vector<TriangleMesh> *TriangleMesh::splitMeshes() {
 
   std::vector<TriangleMesh> *meshes = new std::vector<TriangleMesh>;
 
-  for (int c = 0; c < _numColors; c++) {
+  for (size_t c = 0; c < _numColors; c++) {
     meshes->push_back(TriangleMesh());
   }
   
-  for (int f = 0; f < m_faces.size(); f++) {
+  for (size_t f = 0; f < m_faces.size(); f++) {
     Face *currFace = m_faces[f];
-    int c = currFace->color - 1;
+    size_t c = currFace->color - 1;
     //    std::cout << "Num meshes: " << meshes->size() << "    mesh num: " << c << "    color: " << currFace->color << std::endl;
     meshes->at(c).addTriangle(getVertex(f, 0),
 			      getVertex(f, 1),
@@ -316,7 +315,7 @@ std::vector<TriangleMesh> *TriangleMesh::splitMeshes() {
 	
   } 
 
-  for (int m = 0; m < meshes->size(); m++) {
+  for (size_t m = 0; m < meshes->size(); m++) {
     std::cout << "**** MESH " << m << " has volume: " << meshes->at(m).volume() << std::endl;
   }
 

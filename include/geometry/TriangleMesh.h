@@ -9,11 +9,11 @@
 class Face {
 public:
  Face() : v{0,0,0}, color(0) {}
- Face(int v0, int v1, int v2) : v{v0, v1, v2} , color(0) {}
+ Face(size_t v0, size_t v1, size_t v2) : v{v0, v1, v2} , color(0) {}
 
   // Integer indices into an array of vertices
-  int v[3];
-  int color;
+  size_t v[3];
+  size_t color;
 };
 
 
@@ -26,7 +26,7 @@ Vertex() : x{0,0,0}, color(0) {}
   // This list of pointers to incident triangles allows us 
   // to find connected components and therefore traverse a mesh.
   std::vector<Face *> faces;
-  int color;
+  size_t color;
 };
 
 
@@ -58,15 +58,15 @@ class TriangleMesh {
   std::vector<Vertex> m_verts;
   std::vector<Face *> m_faces;
 
-  int _numColors;
+  size_t _numColors;
 
   void addTriangle(Vertex &v1, Vertex &v2, Vertex &v3);
-  int insertVertex(Vertex &v);
+  size_t insertVertex(Vertex &v);
   double signedVolumeOfTriangle(const Vertex &v1, const Vertex &v2, const Vertex &v3) const;
 
   // helper functions
-  Vertex &getVertex(int faceIndex, int vertIndex); 
-  void colorNeighbors(int vertIndex, int color);
+  Vertex &getVertex(size_t faceIndex, size_t vertIndex); 
+  void colorNeighbors(size_t vertIndex, int color);
 
 };
 
