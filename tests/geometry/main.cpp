@@ -12,6 +12,12 @@ double sphereFn(double x, double y, double z) {
   return implicitSphere(xyz, g_center, g_radius);
 }
 
+double torusFn(double x, double y, double z) {
+  double xyz[3] {x, y, z};
+  double center[3] {0, 0, 0};
+  return implicitTorus(xyz, center, 2, 0.25);
+}
+
 void testSphere() {
 
   int meshCounter = 0;
@@ -73,8 +79,28 @@ void testSphere() {
 
 int main() {
 
-  testSphere();
+  //  testSphere();
   //mesh.write("data/sphere.obj");
+
+  TriangleMesh donut;
+  donut.triangulateImplicitFunc(-5, 5,
+			       -5, 5,
+			       -5, 5,
+			       0.05,
+			       torusFn);
+
+  donut.write("data/torus.obj", MFF_OBJ);
+
+  double meshVol = donut.volume();
+  double analyticVol = torusVolume(2, 0.25);
+  double volRatio = meshVol / analyticVol;
+  double pctErr = 100 * (volRatio - 1);
+
+  std::cout << "volume of torus:  " 
+	    << "MESH:" << meshVol
+	    << "    ANALYTIC:" << analyticVol
+	    << "    PCT ERROR:" << pctErr
+	    << std::endl;
 
   return 0;
 }
