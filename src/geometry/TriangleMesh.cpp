@@ -140,8 +140,17 @@ void TriangleMesh::print() const {
 }
 
 
+void TriangleMesh::write(const std::string &filename, MeshFileFormat mff) const {
+  if (mff == MFF_OBJ) {
+    writeObj(filename);
+  } else {
+    std::cerr << "Mesh file format not implemented. Exiting..." << std::endl;
+    exit(1);
+  }
+}
 
-void TriangleMesh::write(const std::string &filename) const {
+
+void TriangleMesh::writeObj(const std::string &filename) const {
 
   if (m_verts.size() == 0) {
     std::cout << "!!!!!   Mesh has no vertices  !!!!!!" << std::endl;
@@ -171,6 +180,15 @@ void TriangleMesh::write(const std::string &filename) const {
   ofile.close();
 }
 
+
+void TriangleMesh::read(const std::string &filename, MeshFileFormat mff) {
+  if (mff == MFF_OBJ) {
+    readObj(filename);
+  } else {
+    std::cerr << "Unimplemented mesh file format. Exiting..." << std::endl;
+    exit(1);
+  }
+}
 
 void TriangleMesh::readObj(const std::string &filename) {
   std::ifstream ifile(filename.c_str());

@@ -1,7 +1,6 @@
 import os
 
 
-
 env = Environment(
     ENV = {'PATH' : os.environ['PATH'],
            },
@@ -9,13 +8,18 @@ env = Environment(
     CXXFLAGS = ["-std=c++11", 
                 "-Weverything", 
                 "-Wno-c++98-compat",
-                "-pedantic",]
+                "-pedantic",],
     )
 
 env.Append(CPPPATH = ['include'])
 
-SConscript(dirs='tests', exports='env')
-
 env.Library('lib/aletler-geometry',
             Glob('src/geometry/*.cpp'),
             CPPPATH = ['include/geometry'])
+
+
+env.Program('bin/tests/geometry',
+            Glob('tests/geometry/*.cpp'),
+            LIBS = ['aletler-geometry'],
+            LIBPATH = ['lib']
+           )

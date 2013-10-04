@@ -5,6 +5,11 @@
 #include <string>
 
 
+enum MeshFileFormat {
+  MFF_OBJ,
+};
+  
+
 
 class Face {
 public:
@@ -20,7 +25,6 @@ public:
 struct Vertex {
 public:
   Vertex();
-
   double x[3];
 
   // This list of pointers to incident triangles allows us 
@@ -46,12 +50,21 @@ class TriangleMesh {
 			       double (*fnPtr)(double, double, double));
 
   void print() const;
-  void write(const std::string &filename) const;
-  void readObj(const std::string &filename);
+  void write(const std::string &filename, MeshFileFormat mff) const;
+  void read(const std::string &filename, MeshFileFormat mff);
   double volume() const;
   void color();
 
   std::vector<TriangleMesh> *splitMeshes();
+
+  void clearAll() {
+    m_verts.clear();
+    for (int i = 0; i < m_faces.size(); i++) {
+      delete m_faces[i];
+      m_faces[i] = NULL;
+    }
+    m_faces.clear();
+  }
 
 
  private:
@@ -68,6 +81,9 @@ class TriangleMesh {
   Vertex &getVertex(size_t faceIndex, size_t vertIndex); 
   void colorNeighbors(size_t vertIndex, size_t color);
 
+  void writeObj(const std::string &filename) const;
+  void readObj(const std::string &filename);
+  
 };
 
 
