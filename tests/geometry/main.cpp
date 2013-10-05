@@ -102,5 +102,10 @@ int main() {
 	    << "    PCT ERROR:" << pctErr
 	    << std::endl;
 
+  TriangleMesh bagel;
+  bagel.read("data/torus.obj", MFF_OBJ);
+  bagel.write("data/bagel.obj", MFF_OBJ);
+  
+  
   return 0;
 }

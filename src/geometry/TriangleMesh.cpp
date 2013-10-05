@@ -1,6 +1,7 @@
 #include "TriangleMesh.h"
 
 #include <iostream>
+#include <sstream>
 #include <cmath>
 #include <cassert>
 #include <algorithm>
@@ -190,14 +191,79 @@ void TriangleMesh::read(const std::string &filename, MeshFileFormat mff) {
   }
 }
 
+template <typename T>
+T StringToNumber (const std::string &Text ) {
+  //character array as argument
+  std::stringstream ss(Text);
+  T result;
+  return ss >> result ? result : 0;
+}
+
+void initVertexFromString(Vertex &v, const std::string line) {
+  std::stringstream stream(line);
+  std::string strs[3];
+  std::string firstchar;
+  stream >> firstchar;
+  stream >> strs[0];
+  stream >> strs[1];
+  stream >> strs[2];
+
+  v.x[0] = StringToNumber<double>(strs[0]);
+  v.x[1] = StringToNumber<double>(strs[1]);
+  v.x[2] = StringToNumber<double>(strs[2]);
+
+}
+
+void getVertIndicesFromString(size_t *v, const std::string line) {
+  std::stringstream stream(line);
+  std::string strs[3];
+  std::string firstchar;
+  stream >> firstchar;
+
+  stream >> strs[0];
+  stream >> strs[1];
+  stream >> strs[2];
+
+  v[0] = StringToNumber<size_t>(strs[0]) - 1;
+  v[1] = StringToNumber<size_t>(strs[1]) - 1;
+  v[2] = StringToNumber<size_t>(strs[2]) - 1;
+}
+
 void TriangleMesh::readObj(const std::string &filename) {
   std::ifstream ifile(filename.c_str());
   std::string line;
 
+  const std::string& whitespace = " \t";
+
   if (ifile.is_open()) {
-    while (getline (ifile,line)) {
-      std::cout << line << std::endl;
+    while (std::getline (ifile,line)) {
+      
+      size_t strBegin = line.find_first_not_of(whitespace);
+      if (strBegin == std::string::npos  // empty line
+	  || line[strBegin] == '#')  // comment
+	continue;
+
+      if (line[strBegin] == 'v') {
+	// push all vertices
+	Vertex v;
+	initVertexFromString(v, line);
+	m_verts.push_back(v);
       }
+
+      if (line[strBegin] == 'f') {
+	// push all faces
+	size_t vertIndex[3] {0,0,0};
+	getVertIndicesFromString(vertIndex, line);
+
+	Vertex &v0 = m_verts[vertIndex[0]];
+	Vertex &v1 = m_verts[vertIndex[1]];
+	Vertex &v2 = m_verts[vertIndex[2]];
+	addTriangle(v0, v1, v2);
+      }
+    }
+
+    std::cout << "Pushed " << m_verts.size() << " vertices." << std::endl;
+    std::cout << "Pushed " << m_faces.size() << " faces." << std::endl;
 
     ifile.close();
 
