@@ -11,12 +11,13 @@
 
 
 #include "SoundParameters.h"
+#include "SphericalTools.h"
 #include <Eigen/Dense>
 #include <complex>
 
 
 using namespace Eigen;
-
+using namespace std;
 
 class Monopole {
 public:
@@ -35,9 +36,9 @@ public:
     double pressure(double t, Vector3d ear) const {
         
   //      complex<double> g = greens_expansion(ear);
-        complex<double> g = greens(ear);
+      complex<double> g = greens(ear);
         
-        complex<double> complex_press = -ii * m_k * C_AIR * RHO_AIR * g * exp(-ii * m_omega * t);
+      complex<double> complex_press = -ii * m_k * C_AIR * RHO_AIR * g * exp(-ii * m_omega * t);
         
         return complex_press.real();
     }
