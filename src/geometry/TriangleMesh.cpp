@@ -1,5 +1,6 @@
 #include "TriangleMesh.h"
 
+#include <cfloat>  // DBL_MAX is defined here
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -91,6 +92,32 @@ size_t TriangleMesh::insertVertex(Vertex &v) {
 
   return vIndex;
 }
+
+
+void TriangleMesh::boundingBox(double boxmin[3], double boxmax[3]) {
+
+  boxmin[0] = boxmin[1] = boxmin[2] = DBL_MAX;
+  boxmax[0] = boxmax[1] = boxmax[2] = -DBL_MAX;
+  
+  for (int i = 0; i < m_verts.size(); i++) {
+    const Vertex &v = m_verts[i];
+
+    for (int j = 0; j < 3; j++) {
+
+      if (v.x[j] < boxmin[j]) {
+	boxmin[j] = v.x[j];
+      }
+
+      if (v.x[j] > boxmax[j]) {
+	boxmax[j] = v.x[j];
+
+      }
+    }
+
+  }  
+}
+
+
 
 
 void TriangleMesh::triangulateImplicitFunc(float xmin, float xmax,

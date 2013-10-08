@@ -66,6 +66,7 @@ class TriangleMesh {
     m_faces.clear();
   }
 
+  void boundingBox(double boxmin[3], double boxmax[3]);
 
  private:
   std::vector<Vertex> m_verts;
