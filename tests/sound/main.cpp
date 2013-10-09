@@ -7,17 +7,17 @@
 //
 
 #include <iostream>
-#include "SphericalTools.h"
+#include <sound/SphericalTools.h>
 
-#include "SoundParameters.h"
-#include "Timer.h"
-#include "SoundTrack.h"
-#include "SoundFileManager.h"
-#include "Monopole.h"
-#include "Listener.h"
-#include "Bubble.h"
-#include "util.h"
-#include "ZeroCrossing.h"
+#include <sound/SoundParameters.h>
+#include <sound/Timer.h>
+#include <sound/SoundTrack.h>
+#include <sound/SoundFileManager.h>
+#include <sound/Monopole.h>
+#include <sound/Listener.h>
+#include <sound/Bubble.h>
+#include <sound/util.h>
+#include <sound/ZeroCrossing.h>
 
 void filter_simplest_lowpass(const vector<double> &x, vector<double> &y, void *args) {
     for (int i = 1; i < x.size(); i++) {
@@ -78,7 +78,8 @@ void make_bubbles(std::vector<Bubble *> &bubblevec, int nBubbles,
 
 int main(int argc, const char * argv[])
 {
-    
+
+  /*
     SoundTrack fizzy(44100, 1);
     //SoundFileManager mineralwater("/Users/phaedon/mineralwater.wav", 48000);
     SoundFileManager mineralwater("/Users/phaedon/16_chirp.wav", 48000);
@@ -105,7 +106,7 @@ int main(int argc, const char * argv[])
     cout << "Analyzed fizzy water" << endl;
     
     return 0;
-    
+  */
     
     
     
@@ -168,7 +169,7 @@ int main(int argc, const char * argv[])
        // movingthing.step(timestep);
     }
 
-    muzak.applyFilter(filter_simplest_lowpass);
+    //muzak.applyFilter(filter_simplest_lowpass);
     
     muzak.normalize();
 
