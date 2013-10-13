@@ -1,5 +1,6 @@
 #include "TriangleMesh.h"
 
+#include <limits>
 #include <cfloat>  // DBL_MAX is defined here
 #include <iostream>
 #include <sstream>
@@ -12,20 +13,26 @@
 #include "MarchingSource.h"
 
 
-Face::Face() : v{0,0,0}, color(0) {}
-Face::Face(size_t v0, size_t v1, size_t v2) : v{v0, v1, v2} , color(0) {}
-Vertex::Vertex() : x{0,0,0}, color(0) {}
+Face::Face() : color(0) {
+  v[0] = v[1] = v[2] = 0;}
+Face::Face(size_t v0, size_t v1, size_t v2) : color(0) {
+  v[0] = v0;
+  v[1] = v1;
+  v[2] = v2;
+}
+
+Vertex::Vertex() : x(Vector3d(0,0,0)), color(0) {}
 
 bool operator==(const Vertex &lhs, const Vertex &rhs);
 bool operator==(const Face &lhs, const Face &rhs);
 bool approxEq(double a, double b);
+bool approxEq(const Vector3d &v1, const Vector3d &v2);
+void initVertexFromString(Vertex &v, const std::string line);
+void getVertIndicesFromString(size_t *v, const std::string line);
 
-static double roundDouble(double d) {
-  
-  return floor(d * 1e6 + 0.5) / 1e6;
-}
 
-static const double TOLERANCE = 1e-6;
+//static const double TOLERANCE = std::numeric_limits<double>::epsilon();
+static const double TOLERANCE = 1e-10;
 
 // Compares two floating point numbers. 
 // Returns "true" if they are equal, within TOLERANCE
@@ -34,11 +41,17 @@ bool approxEq(double a, double b) {
 }
 
 
+bool approxEq(const Vector3d &v1, const Vector3d &v2) {
+  Vector3d diff = v1 - v2;
+  return (fabs(diff[0]) < TOLERANCE)
+    && (fabs(diff[1]) < TOLERANCE)
+    && (fabs(diff[2]) < TOLERANCE);
+}
+
+
 // Comparators for vertices & faces
 bool operator==(const Vertex &lhs, const Vertex &rhs) {
-  return approxEq(lhs.x[0], rhs.x[0]) 
-    && approxEq(lhs.x[1], rhs.x[1]) 
-    && approxEq(lhs.x[2], rhs.x[2]);
+  return approxEq(lhs.x, rhs.x);
 }
 
 bool operator==(const Face &lhs, const Face &rhs) {
@@ -99,7 +112,7 @@ void TriangleMesh::boundingBox(double boxmin[3], double boxmax[3]) {
   boxmin[0] = boxmin[1] = boxmin[2] = DBL_MAX;
   boxmax[0] = boxmax[1] = boxmax[2] = -DBL_MAX;
   
-  for (int i = 0; i < m_verts.size(); i++) {
+  for (size_t i = 0; i < m_verts.size(); i++) {
     const Vertex &v = m_verts[i];
 
     for (int j = 0; j < 3; j++) {
@@ -142,17 +155,17 @@ void TriangleMesh::triangulateImplicitFunc(float xmin, float xmax,
 
 	  // 3 verts per triangle, 3 coords per vert:
 
-	  v1.x[0] = roundDouble (afVertices[t*9]);
-	  v1.x[1] = roundDouble (afVertices[t*9 + 1]);
-	  v1.x[2] = roundDouble (afVertices[t*9 + 2]);
+	  v1.x[0] =  (afVertices[t*9]);
+	  v1.x[1] =  (afVertices[t*9 + 1]);
+	  v1.x[2] =  (afVertices[t*9 + 2]);
 
-	  v2.x[0] = roundDouble (afVertices[t*9 + 3]);
-	  v2.x[1] = roundDouble (afVertices[t*9 + 4]);
-	  v2.x[2] = roundDouble (afVertices[t*9 + 5]);
+	  v2.x[0] =  (afVertices[t*9 + 3]);
+	  v2.x[1] =  (afVertices[t*9 + 4]);
+	  v2.x[2] =  (afVertices[t*9 + 5]);
 
-	  v3.x[0] = roundDouble (afVertices[t*9 + 6]);
-	  v3.x[1] = roundDouble (afVertices[t*9 + 7]);
-	  v3.x[2] = roundDouble (afVertices[t*9 + 8]);
+	  v3.x[0] =  (afVertices[t*9 + 6]);
+	  v3.x[1] =  (afVertices[t*9 + 7]);
+	  v3.x[2] =  (afVertices[t*9 + 8]);
 	    
 	  addTriangle(v1, v2, v3);
 	}
@@ -190,7 +203,7 @@ void TriangleMesh::writeObj(const std::string &filename) const {
 
   for (size_t i = 0; i < m_verts.size(); i++) {
     ofile << "v " 
-	  << std::setprecision(6) 
+	  << std::setprecision(10) 
 	  << std::fixed 
 	  << m_verts[i].x[0] << " "
 	  << m_verts[i].x[1] << " "
@@ -279,7 +292,8 @@ void TriangleMesh::readObj(const std::string &filename) {
 
       if (line[strBegin] == 'f') {
 	// push all faces
-	size_t vertIndex[3] {0,0,0};
+	size_t vertIndex[3];
+	vertIndex[0] = vertIndex[1] = vertIndex[2] = 0;
 	getVertIndicesFromString(vertIndex, line);
 
 	Vertex &v0 = m_verts[vertIndex[0]];

@@ -8,19 +8,26 @@ static double g_center[3];
 static double g_radius;
 
 double sphereFn(double x, double y, double z) {
-  double xyz[3] {x, y, z};
+  double xyz[3];
+  xyz[0] = x;
+  xyz[1] = y;
+  xyz[2] = z;
   return implicitSphere(xyz, g_center, g_radius);
 }
 
 double torusFn(double x, double y, double z) {
-  double xyz[3] {x, y, z};
-  double center[3] {0, 0, 0};
+  double xyz[3];
+  xyz[0] = x;
+  xyz[1] = y;
+  xyz[2] = z;
+  double center[3];
+  center[0] = center[1] = center[2] = 0;
   return implicitTorus(xyz, center, 2, 0.25);
 }
 
 void testSphere() {
 
-  int meshCounter = 0;
+  //int meshCounter = 0;
 
   TriangleMesh mesh;
 

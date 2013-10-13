@@ -3,10 +3,12 @@
 
 #include <vector>
 #include <string>
+#include <Eigen/Dense>
 
+using Eigen::Vector3d;
 
 enum MeshFileFormat {
-  MFF_OBJ,
+  MFF_OBJ
 };
   
 
@@ -25,7 +27,7 @@ public:
 struct Vertex {
 public:
   Vertex();
-  double x[3];
+  Vector3d x;
 
   // This list of pointers to incident triangles allows us 
   // to find connected components and therefore traverse a mesh.
@@ -59,7 +61,7 @@ class TriangleMesh {
 
   void clearAll() {
     m_verts.clear();
-    for (int i = 0; i < m_faces.size(); i++) {
+    for (size_t i = 0; i < m_faces.size(); i++) {
       delete m_faces[i];
       m_faces[i] = NULL;
     }

@@ -1,16 +1,13 @@
 import os
 
-EIGEN_PATH = "/usr/local/include/eigen-eigen-ffa86ffb5570/"
-
 env = Environment(
-    ENV = {'PATH' : os.environ['PATH'],
-           },
+    ENV = os.environ,
     CXX = "clang++",
-    CXXFLAGS = ["-std=c++11", 
-                "-Weverything", 
+    CXXFLAGS = ["-Weverything", 
                 #"-Wno-c++98-compat",
                 #"-pedantic",
             ],
+    LIBPATH = ['lib']
     )
 
 env.Append(CPPPATH = ['include'])
@@ -21,13 +18,21 @@ env.Library('lib/aletler-geometry',
 
 env.Library('lib/aletler-sound',
             Glob('src/sound/*.cpp'),
-            CXX = "g++", # because Eigen doesn't seem to like clang
+            LIBS = ['sndfile'],
+            LIBPATH = ['/usr/local/lib'],
             CXXFLAGS = "",
             CPPPATH = ['include/sound',
-                       EIGEN_PATH])
+                   ])
 
 env.Program('bin/tests/geometry',
             Glob('tests/geometry/*.cpp'),
             LIBS = ['aletler-geometry'],
-            LIBPATH = ['lib']
            )
+
+env.Program('bin/tests/sound',
+            Glob('tests/sound/*.cpp'),
+            LIBS = ['aletler-sound', 
+                    'sndfile',
+                ],
+            CXXFLAGS = "",
+        )
