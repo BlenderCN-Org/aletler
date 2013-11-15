@@ -23,9 +23,11 @@ env.Library('lib/aletler-sound',
             LIBPATH = ['/usr/local/lib'],
             CXXFLAGS = "",
             CPPPATH = ['include/sound',
+
                        '/opt/local/include',
                    ]
 )
+
 
 env.Program('bin/tests/geometry',
             Glob('tests/geometry/*.cpp'),
