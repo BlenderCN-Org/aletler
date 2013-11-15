@@ -19,6 +19,17 @@ static const double RHO_WATER = 1000.0;
 static const double C_AIR = 344.0;
 static const double C_WATER = 1480.0;
 
+// 1 ATM pressure, in Pascals:
+static const double P_ATM = 101325;
+
+static const double GRAVITY = 9.80665;
+
+// Surface tension of air in water
+static const double SIGMA_AIR_WATER = 0.073;
+
+// heat capacity ratio, or adiabatic gas constant
+// "gamma > 1 for any ideal gas"
+static const double GAMMA_AIR = 1.4;
 
 
 // simulation details

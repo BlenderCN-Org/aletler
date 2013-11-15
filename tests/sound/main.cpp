@@ -76,6 +76,21 @@ void make_bubbles(std::vector<Bubble *> &bubblevec, int nBubbles,
 }
 
 
+Bubble *singleBubble() {
+  Vector3d loc(1, 1, 0);
+  Bubble *bubble = new Bubble(3, 0, loc);
+
+
+
+  for (double d = 0.020; d > 0; d -= 0.001) {
+    bubble->set_depth(d);
+    std::cout << "depth " << bubble->depth() << "    freq " << bubble->frequency() << "    minnfreq " << bubble->minnaert(3) << std::endl;
+  }
+
+  return bubble;
+}
+
+
 int main(int argc, const char * argv[])
 {
 
@@ -108,6 +123,8 @@ int main(int argc, const char * argv[])
     return 0;
   */
     
+
+
     
     
     test_sphericalbasis();
@@ -120,13 +137,14 @@ int main(int argc, const char * argv[])
     // Bubbles!
     std::vector<Bubble *> lotsa_bubbles;
     
-    double total_duration = 5;
+    double total_duration = 3;
 
     // one bubble.
-    //lotsa_bubbles.push_back(new Bubble(10, 0.5, Vector3d(1, 1, 0)));
+    lotsa_bubbles.push_back(new Bubble(3, 0.0, Vector3d(1, 1, 0)));
+    lotsa_bubbles[0]->set_depth(0.023);
 
     // many bubbles.
-    make_bubbles(lotsa_bubbles, 100, 5, 12, total_duration);
+    //make_bubbles(lotsa_bubbles, 100, 5, 12, total_duration);
     
    
     // and someone needs to be able to hear it
@@ -152,13 +170,18 @@ int main(int argc, const char * argv[])
         // add up the sound pressure from all the bubbles...
         for (int b = 0; b < lotsa_bubbles.size(); b++) {
             Bubble* curr_bubble = lotsa_bubbles[b];
-            
+
+
             bool isBubbleBorn = i >= curr_bubble->get_birthtime() * SAMPLING_RATE;
             bool isBubbleDead = i > (curr_bubble->get_birthtime() + Bubble::S_BUBBLELIFE) * SAMPLING_RATE;
             
             if(isBubbleBorn && !isBubbleDead) {
-                leftearpressure += curr_bubble->pressure(t, human.leftEar());
-                rightearpressure += curr_bubble->pressure(t, human.rightEar());
+	      
+	      curr_bubble->timestep(timestep);
+	      // 	      curr_bubble->set_depth( 0.023 - (t/0.15)*0.023 );
+	      std::cout << curr_bubble->depth()  << "   " << curr_bubble->frequency() << std::endl;
+	      leftearpressure += curr_bubble->pressure(t, human.leftEar());
+	      rightearpressure += curr_bubble->pressure(t, human.rightEar());
             }
         }
         
@@ -200,6 +223,8 @@ int main(int argc, const char * argv[])
     
         
     cout << "Finished!\n" << endl;
+
+    Bubble *sb = singleBubble();
     
     return 0;
 }
