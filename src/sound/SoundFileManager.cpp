@@ -8,6 +8,7 @@
 
 #include "SoundFileManager.h"
 #include <iostream>
+#include <cstdlib>
 
 // libsndfile is the bomb: http://www.mega-nerd.com/libsndfile/api.html
 //#include <sndfile.h>
