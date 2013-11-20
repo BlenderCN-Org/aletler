@@ -107,7 +107,7 @@ size_t TriangleMesh::insertVertex(Vertex &v) {
 }
 
 
-void TriangleMesh::boundingBox(double boxmin[3], double boxmax[3]) {
+void TriangleMesh::boundingBox(double boxmin[3], double boxmax[3]) const {
 
   boxmin[0] = boxmin[1] = boxmin[2] = DBL_MAX;
   boxmax[0] = boxmax[1] = boxmax[2] = -DBL_MAX;

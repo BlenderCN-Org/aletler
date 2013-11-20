@@ -4,11 +4,14 @@
 #include <iostream>
 #include <Eigen/Dense>
 
+
 using Eigen::Vector3d;
 
 class BoundingBox {
 
  public:
+
+  BoundingBox();
 
   BoundingBox(Vector3d &bmin, Vector3d &bmax);
 
@@ -16,7 +19,7 @@ class BoundingBox {
 	      double xf, double yf, double zf);
 
   // Returns true if the box contains point p.
-  bool contains(const Vector3d &p);
+  bool contains(const Vector3d &p) const;
 
 
  private:

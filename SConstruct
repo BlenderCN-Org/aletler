@@ -4,18 +4,19 @@ env = Environment(
     ENV = os.environ,
 
 #    CXX = "clang++",
- #   CXXFLAGS = ["-Weverything", 
-                #"-Wno-c++98-compat",
-                #"-pedantic",
-  #          ],
+#    CXXFLAGS = ["-Weverything", 
+#                "-Wno-c++98-compat",
+#                "-pedantic",
+#          ],
     LIBPATH = ['lib']
     )
 
-env.Append(CPPPATH = ['include'])
+env.Append(CPPPATH = ['include',
+                      'include/geometry'])
 
 env.Library('lib/aletler-geometry',
             Glob('src/geometry/*.cpp'),
-            CPPPATH = ['include/geometry'])
+            )
 
 env.Library('lib/aletler-sound',
            Glob('src/sound/*.cpp'),
@@ -23,7 +24,6 @@ env.Library('lib/aletler-sound',
             LIBPATH = ['/usr/local/lib'],
             CXXFLAGS = "",
             CPPPATH = ['include/sound',
-
                        '/opt/local/include',
                    ]
 )

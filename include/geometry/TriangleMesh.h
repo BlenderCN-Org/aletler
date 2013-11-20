@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <string>
+
+#include <geometry/BoundingBox.h>
+
 #include <Eigen/Dense>
 
 using Eigen::Vector3d;
@@ -68,7 +71,21 @@ class TriangleMesh {
     m_faces.clear();
   }
 
-  void boundingBox(double boxmin[3], double boxmax[3]);
+  // TODO: deprecate this
+  void boundingBox(double boxmin[3], double boxmax[3]) const;
+
+ 
+  // newer version
+  const BoundingBox & getBBox() const {
+
+    double boxmin[3];
+    double boxmax[3];
+    
+    boundingBox(boxmin, boxmax);
+    
+    return BoundingBox(boxmin[0], boxmin[1], boxmin[2],
+		       boxmax[0], boxmax[1], boxmax[2] );
+}
 
  private:
   std::vector<Vertex> m_verts;

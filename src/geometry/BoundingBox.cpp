@@ -1,5 +1,11 @@
 #include "BoundingBox.h"
 
+
+BoundingBox::BoundingBox() {
+  boxmin[0] = boxmin[1] = boxmin[2] = 1e300;
+  boxmax[0] = boxmax[1] = boxmax[2] = -1e300;
+}
+
 BoundingBox::BoundingBox(Vector3d &bmin, Vector3d &bmax) 
   : boxmin(bmin),
     boxmax(bmax) {
@@ -16,7 +22,7 @@ BoundingBox::BoundingBox(double x0, double y0, double z0,
 }
 
   // Returns true if the box contains point p.
-bool BoundingBox::contains(const Vector3d &p) {
+bool BoundingBox::contains(const Vector3d &p) const {
     
   return (p[0] > boxmin[0]
 	  && p[1] > boxmin[1]
