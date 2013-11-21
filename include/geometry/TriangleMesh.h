@@ -74,18 +74,22 @@ class TriangleMesh {
   // TODO: deprecate this
   void boundingBox(double boxmin[3], double boxmax[3]) const;
 
+  
  
   // newer version
-  const BoundingBox & getBBox() const {
+  void getBoundingBox(BoundingBox &box) const {
 
     double boxmin[3];
     double boxmax[3];
-    
+
     boundingBox(boxmin, boxmax);
     
-    return BoundingBox(boxmin[0], boxmin[1], boxmin[2],
-		       boxmax[0], boxmax[1], boxmax[2] );
-}
+    Vector3d bmin(boxmin[0], boxmin[1], boxmin[2]);
+    Vector3d bmax(boxmax[0], boxmax[1], boxmax[2]);
+
+    box.set(bmin, bmax);
+  }
+
 
  private:
   std::vector<Vertex> m_verts;

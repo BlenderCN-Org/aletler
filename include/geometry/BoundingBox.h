@@ -22,6 +22,11 @@ class BoundingBox {
   bool contains(const Vector3d &p) const;
 
 
+  void set(const Vector3d &bmin, const Vector3d &bmax) {
+    boxmin = bmin;
+    boxmax = bmax;
+  }
+
  private:
   Vector3d boxmin;
   Vector3d boxmax;
