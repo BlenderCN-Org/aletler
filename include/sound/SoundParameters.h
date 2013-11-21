@@ -9,7 +9,7 @@
 #define soundmath_SoundParameters_h
 
 // an epsilon for assertion testing
-double VERY_SMALL = 0.000001;
+static const double VERY_SMALL = 0.000001;
 
 
 // constants related to physical parameters
