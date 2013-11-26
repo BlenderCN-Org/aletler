@@ -15,7 +15,92 @@ enum MeshFileFormat {
 };
   
 
+// A Triangle actually contains 3 points and can stand
+// on its own (outside of a TriangleMesh object)
+class Triangle {
+ public:
 
+  // Assume counterclockwise winding order
+  Vector3d a, b, c;
+
+  Vector3d normal() {
+    return (b-a).cross(c-a);
+  }
+
+  // area of parallelogram
+  double area_pgram() {
+    return normal().dot(normal().normalized());
+  }
+
+  // area of triangle
+  double area() {
+    return 0.5 * area_pgram();
+  }
+
+  double potential(const Vector3d &p) {
+    
+    return fabs (fn_I_qrg(a,b,p) +
+		 fn_I_qrg(b,c,p) +
+		 fn_I_qrg(c,a,p));
+  }
+
+  Vector3d centroid() {
+    return (a + b + c) / 3.0;
+  }
+
+ private:
+  
+      
+  // One term in the potential at point P
+  // H. Wang et al, Harmonic Parameterization by Electrostatics
+  // (Eqn 15)
+  double fn_I_qrg(const Vector3d &q, 
+		  const Vector3d &r,
+		  const Vector3d &p) {
+    Vector3d n = ((c-a).cross(b-a)).normalized();
+
+    double h = n.dot(p-a);
+    Vector3d g = p - h * n;
+
+    Vector3d rq = q-r;
+    Vector3d rg = g-r;
+    Vector3d rp = p-r;
+    
+    Vector3d qr = r-q;
+    Vector3d qg = g-q;
+    Vector3d qp = p-q;
+    
+    double sig = (qg.cross(rg)).dot(n);
+    double N = rq.dot(rp) + rq.norm() * rp.norm();
+    double D = rq.dot(qp) + rq.norm() * qp.norm();
+
+
+    // TODO: check against double precision limits
+    if (sig == 0 || N == 0 || D == 0) {
+      return 0;
+    }
+    
+    double first_term = (sig * log(N/D)) / rq.norm();
+    
+    double N2 = sig * rq.dot(rg) * (fabs(h) - rp.norm());
+    double D2 = sig*sig * rp.norm() + fabs(h) * pow(rq.dot(rg), 2);
+    double second_term = fabs(h) * atan2(N2, D2);
+
+    double N3 = sig * qr.dot(qg) * (fabs(h) - qp.norm());
+    double D3 = sig*sig * qp.norm() + fabs(h) * pow(qr.dot(qg), 2);
+    double third_term = fabs(h) * atan2(N3, D3);
+
+    return first_term + second_term + third_term;
+  }
+  
+
+};
+
+
+// Although a Face is a triangle, this representation
+// is compact and simply stores 3 integer indices
+// into an array. This only has meaning as part of the
+// TriangleMesh class.
 class Face {
 public:
   Face();
@@ -90,6 +175,24 @@ class TriangleMesh {
     box.set(bmin, bmax);
   }
 
+  // Returns the normal vector for triangle i in the list of triangle faces.
+  Vector3d normal(size_t i);
+
+  // returns the ith triangle in the list of faces
+  Triangle triangle(size_t i) const {
+    Triangle t;
+
+    Face *f = m_faces[i];
+    t.a = m_verts[f->v[0]].x;
+    t.b = m_verts[f->v[1]].x;
+    t.c = m_verts[f->v[2]].x;
+
+    return t;
+  }
+
+  size_t size() const {
+    return m_faces.size();
+  }
 
  private:
   std::vector<Vertex> m_verts;

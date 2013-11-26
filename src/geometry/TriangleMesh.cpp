@@ -21,6 +21,8 @@ Face::Face(size_t v0, size_t v1, size_t v2) : color(0) {
   v[2] = v2;
 }
 
+
+
 Vertex::Vertex() : x(Vector3d(0,0,0)), color(0) {}
 
 bool operator==(const Vertex &lhs, const Vertex &rhs);
@@ -85,6 +87,22 @@ void TriangleMesh::addTriangle(Vertex &v0, Vertex &v1, Vertex &v2) {
   m_verts[tri->v[2]].faces.push_back(tri);
 
   m_faces.push_back(tri);
+}
+
+
+Vector3d normal(size_t i) {
+  
+  Face *f = m_faces[i];
+  
+  Vector3d a = m_verts[f->v[0]].x;
+  Vector3d b = m_verts[f->v[1]].x;
+  Vector3d c = m_verts[f->v[2]].x;
+
+  Vector3d ab = b - a;
+  Vector3d ac = c - a;
+
+  Vector3d n = ab.cross(ac);
+  return n;
 }
 
 
