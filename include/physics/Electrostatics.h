@@ -11,7 +11,15 @@ class Electrostatics {
   // stores vector of capacitances, with indices
   // corresponding to bubble indices
   void capacitance(std::vector<double> &caps) {
+    assert(caps.size() == 0 || caps.size() == _bubbles.size());
     
+    if (caps.size() == 0) {
+      caps.resize(_bubbles.size(), 0);
+    }
+
+    for (size_t i = 0; i < _bubbles.size(); i++) {
+      caps[i] = single_capacitance(i, true);
+    }
   }
   
   void addBubble(TriangleMesh *b) { _bubbles.push_back(b); }
