@@ -26,7 +26,7 @@ class Electrostatics {
   void setSurface(TriangleMesh *s) { _free_surface = s; }
 
 
-  // private:
+ private:
 
   // computes capacitance of a single mesh
   // (generally a bubble) relative to free surface

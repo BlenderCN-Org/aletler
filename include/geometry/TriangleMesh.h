@@ -11,7 +11,8 @@
 using Eigen::Vector3d;
 
 enum MeshFileFormat {
-  MFF_OBJ
+  MFF_OBJ,
+  MFF_STL
 };
   
 
@@ -38,10 +39,16 @@ class Triangle {
   }
 
   double potential(const Vector3d &p) {
-    
+
+
     return fabs (fn_I_qrg(a,b,p) +
 		 fn_I_qrg(b,c,p) +
 		 fn_I_qrg(c,a,p));
+    /*
+    return fabs (goto_I_qrg(a,b,p) +
+		 goto_I_qrg(b,c,p) +
+		 goto_I_qrg(c,a,p));
+    */
   }
 
   Vector3d centroid() {
@@ -50,6 +57,39 @@ class Triangle {
 
  private:
   
+
+  double goto_I_qrg(const Vector3d &q,
+		    const Vector3d &r,
+		    const Vector3d &p) {
+
+    Vector3d n = ((a-c).cross(b-c)).normalized();
+    double h = fabs(n.dot(p-a));
+    Vector3d g = p - h * n;    
+    double sig = ((q-g).cross(r-g)).dot(n);
+
+    Vector3d rq = r-q; Vector3d rg = r-g; Vector3d rp = r-p;
+    Vector3d qr = q-r; Vector3d qg = q-g; Vector3d qp = q-p;
+
+    double N = rq.dot(rg) + rq.norm() * rp.norm();
+    double D = -qr.dot(qg) + qr.norm() * qp.norm();
+    
+    if (N == 0 || D == 0) return 0;
+
+    double first_term = (sig / rq.norm()) * log(N / D);
+
+    double N2 = sig * rq.dot(rg) * (h - rp.norm());
+    double D2 = sig*sig * rp.norm() + h * pow(rq.dot(rg), 2);
+
+    double second_term = h * atan2(N2, D2);
+
+    double N3 = sig * qr.dot(qg) * (h - qp.norm());
+    double D3 = sig*sig * qp.norm() + h * pow(qr.dot(qg), 2);
+    
+    double third_term = h * atan2(N3, D3);
+
+    return first_term + second_term + third_term;
+  }
+
       
   // One term in the potential at point P
   // H. Wang et al, Harmonic Parameterization by Electrostatics
@@ -73,8 +113,7 @@ class Triangle {
     double sig = (qg.cross(rg)).dot(n);
     double N = rq.dot(rp) + rq.norm() * rp.norm();
     double D = rq.dot(qp) + rq.norm() * qp.norm();
-
-
+    
     // TODO: check against double precision limits
     if (sig == 0 || N == 0 || D == 0) {
       return 0;
@@ -210,6 +249,7 @@ class TriangleMesh {
 
   void writeObj(const std::string &filename) const;
   void readObj(const std::string &filename);
+  void readStl(const std::string &filename);
   
 };
 

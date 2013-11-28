@@ -12,6 +12,21 @@
 
 #include "MarchingSource.h"
 
+struct stl_triangle {
+  float normal[3];
+  float v1[3];
+  float v2[3];
+  float v3[3];
+  uint16_t attrib;
+};
+
+struct stl_format {
+  uint8_t header[80];
+  uint32_t n_triangles;
+
+  stl_triangle tri0;
+};
+
 
 Face::Face() : color(0) {
   v[0] = v[1] = v[2] = 0;}
@@ -34,7 +49,7 @@ void getVertIndicesFromString(size_t *v, const std::string line);
 
 
 //static const double TOLERANCE = std::numeric_limits<double>::epsilon();
-static const double TOLERANCE = 1e-10;
+static const double TOLERANCE = 1e-11;
 
 // Compares two floating point numbers. 
 // Returns "true" if they are equal, within TOLERANCE
@@ -90,7 +105,7 @@ void TriangleMesh::addTriangle(Vertex &v0, Vertex &v1, Vertex &v2) {
 }
 
 
-Vector3d normal(size_t i) {
+Vector3d TriangleMesh::normal(size_t i) {
   
   Face *f = m_faces[i];
   
@@ -243,6 +258,8 @@ void TriangleMesh::writeObj(const std::string &filename) const {
 void TriangleMesh::read(const std::string &filename, MeshFileFormat mff) {
   if (mff == MFF_OBJ) {
     readObj(filename);
+  } else if (mff == MFF_STL) {
+    readStl(filename);
   } else {
     std::cerr << "Unimplemented mesh file format. Exiting..." << std::endl;
     exit(1);
@@ -332,7 +349,56 @@ void TriangleMesh::readObj(const std::string &filename) {
 
 }
 
+void TriangleMesh::readStl(const std::string &filename) {
 
+  std::ifstream::pos_type size;
+  char *stlbin;
+  stl_format *stl;
+
+  std::ifstream file(filename, std::ios::in|std::ios::binary|std::ios::ate);
+  if (file.is_open()) {
+    size = file.tellg();
+    stlbin = new char[size];
+    file.seekg(0, std::ios::beg);
+    file.read(stlbin, size);
+    file.close();
+
+    stl = (stl_format *)stlbin;
+
+    uint32_t nt = stl->n_triangles;
+    std::cout << "Num triangles: " << nt << std::endl;
+
+    stl_triangle *currTri = &(stl->tri0);
+
+    for (uint32_t i = 0; i < nt; i++) {
+
+      Vertex v1, v2, v3;
+
+      v1.x[0] = currTri->v1[0];
+      v1.x[1] = currTri->v1[1];
+      v1.x[2] = currTri->v1[2];
+
+      v2.x[0] = currTri->v2[0];
+      v2.x[1] = currTri->v2[1];
+      v2.x[2] = currTri->v2[2];
+
+      v3.x[0] = currTri->v3[0];
+      v3.x[1] = currTri->v3[1];
+      v3.x[2] = currTri->v3[2];
+
+      addTriangle(v1, v2, v3);
+
+      // I guess because of word alignment, need this magic const :-(
+      currTri = (stl_triangle *) (((char *)currTri) + 50);
+    }
+
+    delete [] stlbin;
+    std::cout << "Num triangles in mesh: " << this->size() << std::endl;
+
+  } else {
+    std::cout << "Unable to open file";
+  }
+}
 
 
 // source: http://stackoverflow.com/questions/1406029/how-to-calculate-the-volume-of-a-3d-mesh-object-the-surface-of-which-is-made-up
