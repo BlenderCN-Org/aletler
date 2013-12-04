@@ -12,7 +12,10 @@ env = Environment(
     )
 
 env.Append(CPPPATH = ['include',
-                      'include/geometry'])
+                      'include/geometry',
+                      '/usr/local/include/eigen-eigen-ffa86ffb5570/',
+                  ]
+       )
 
 env.Library('lib/aletler-geometry',
             Glob('src/geometry/*.cpp'),
@@ -25,6 +28,7 @@ env.Library('lib/aletler-sound',
             CXXFLAGS = "",
             CPPPATH = ['include/sound',
                        '/opt/local/include',
+                       '/usr/local/include/eigen-eigen-ffa86ffb5570/',
                    ]
 )
 
@@ -43,6 +47,7 @@ env.Program('bin/tests/sound',
                 ],
 
             CPPPATH = ['/opt/local/include',
-                       'include'],
+                       'include',
+                       '/usr/local/include/eigen-eigen-ffa86ffb5570/'],
             CXXFLAGS = "",
        )

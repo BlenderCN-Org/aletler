@@ -15,7 +15,7 @@
 #include <sound/SoundFileManager.h>
 #include <sound/Monopole.h>
 #include <sound/Listener.h>
-#include <sound/Bubble.h>
+#include <sound/BubbleSound.h>
 #include <sound/util.h>
 #include <sound/ZeroCrossing.h>
 
@@ -78,11 +78,11 @@ void make_bubbles(std::vector<Bubble *> &bubblevec, int nBubbles,
 
 Bubble *singleBubble() {
   Vector3d loc(1, 1, 0);
-  Bubble *bubble = new Bubble(3, 0, loc);
+  Bubble *bubble = new Bubble(8, 0, loc);
 
 
 
-  for (double d = 0.020; d > 0; d -= 0.001) {
+  for (double d = 0.030; d > 0; d -= 0.001) {
     bubble->set_depth(d);
     std::cout << "depth " << bubble->depth() << "    freq " << bubble->frequency() << "    minnfreq " << bubble->minnaert(3) << std::endl;
   }
@@ -140,8 +140,8 @@ int main(int argc, const char * argv[])
     double total_duration = 3;
 
     // one bubble.
-    lotsa_bubbles.push_back(new Bubble(3, 0.0, Vector3d(1, 1, 0)));
-    lotsa_bubbles[0]->set_depth(0.023);
+    lotsa_bubbles.push_back(new Bubble(12, 0.0, Vector3d(1, 1, 0)));
+    lotsa_bubbles[0]->set_depth(0.062);
 
     // many bubbles.
     //make_bubbles(lotsa_bubbles, 100, 5, 12, total_duration);
@@ -224,7 +224,7 @@ int main(int argc, const char * argv[])
         
     cout << "Finished!\n" << endl;
 
-    Bubble *sb = singleBubble();
+    //Bubble *sb = singleBubble();
     
     return 0;
 }
