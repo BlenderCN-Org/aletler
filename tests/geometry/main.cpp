@@ -84,7 +84,21 @@ void testSphere() {
   
 }
 
+void testTriangle() {
+  
+  Triangle t;
+  Eigen::Vector3d origin(0,0,0);
+  t.a = Vector3d(-2, 0.5, 0.6);
+  t.b = Vector3d(3, 0.88, 3);
+  t.c = Vector3d(-1, 2, 18);
+  
+  std::cout << t.area() << "    " << t.integral(oneFn, t.a) << std::endl;
+}
+
 int main() {
+  
+  testTriangle();
+  return 0;
 
   //  testSphere();
   //mesh.write("data/sphere.obj");

@@ -9,12 +9,67 @@
 #include <Eigen/Dense>
 
 using Eigen::Vector3d;
+using Eigen::Vector2d;
+
+typedef double (*scalarFn3d)(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj);
 
 enum MeshFileFormat {
   MFF_OBJ,
   MFF_STL
 };
+
+enum TriangleQuadrature {
+    GAUSS4X4,
+};
+
+static double oneFn(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
+  return 1.0;
+}
+
+static double neumannMatrixEntry(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
   
+  return (xj - yi).dot(nj) / pow( (xj - yi).norm(), 3);
+}
+
+
+// http://people.sc.fsu.edu/~%20jburkardt/datasets/quadrature_rules_tri/quadrature_rules_tri.html
+// GAUSS4X4, order 16, degree of precision 7, (essentially a product of two 4 point 1D Gauss-Legendre rules).
+static const Vector2d gauss4x4_abscissas[16] = {
+  Vector2d(0.0571041961,  0.06546699455602246),
+  Vector2d(0.2768430136 , 0.05021012321401679),
+  Vector2d(0.5835904324 , 0.02891208422223085),
+  Vector2d(0.8602401357 , 0.009703785123906346),
+  Vector2d(0.0571041961 , 0.3111645522491480),
+  Vector2d(0.2768430136 , 0.2386486597440242),
+  Vector2d(0.5835904324 , 0.1374191041243166),
+  Vector2d(0.8602401357 , 0.04612207989200404),
+  Vector2d(0.0571041961 , 0.6317312516508520),
+  Vector2d(0.2768430136 , 0.4845083266559759),
+  Vector2d(0.5835904324 , 0.2789904634756834),
+  Vector2d(0.8602401357 , 0.09363778440799593),
+  Vector2d(0.0571041961 , 0.8774288093439775),
+  Vector2d(0.2768430136 , 0.6729468631859832),
+  Vector2d(0.5835904324 , 0.3874974833777692),
+  Vector2d(0.8602401357 , 0.1300560791760936)};
+
+static const double gauss4x4_weights[16] = {
+  0.04713673637581137,
+  0.07077613579259895,
+  0.04516809856187617,
+  0.01084645180365496,
+  0.08837017702418863,
+  0.1326884322074010,
+  0.08467944903812383,
+  0.02033451909634504,
+  0.08837017702418863,
+  0.1326884322074010,
+  0.08467944903812383,
+  0.02033451909634504,
+  0.04713673637581137,
+  0.07077613579259895,
+  0.04516809856187617,
+  0.01084645180365496};
+
 
 // A Triangle actually contains 3 points and can stand
 // on its own (outside of a TriangleMesh object)
@@ -24,17 +79,17 @@ class Triangle {
   // Assume counterclockwise winding order
   Vector3d a, b, c;
 
-  Vector3d normal() {
+  Vector3d normal() const {
     return (b-a).cross(c-a);
   }
 
   // area of parallelogram
-  double area_pgram() {
+  double area_pgram() const {
     return normal().dot(normal().normalized());
   }
 
   // area of triangle
-  double area() {
+  double area() const {
     return 0.5 * area_pgram();
   }
 
@@ -55,6 +110,50 @@ class Triangle {
     return (a + b + c) / 3.0;
   }
 
+  
+  // Maps point p on the 2d unit triangle ( (0,0), (1,0), (0,1) )
+  // to a point on this triangle, in 3d
+  Vector3d mapUnitTriangle(const Vector2d &p) const {
+    
+    // barycentric coords
+    double ell1, ell2, ell3;
+    ell2 = p.x();
+    ell3 = p.y();
+    ell1 = 1 - ell2 - ell3;
+    
+    return (ell1 * a) + (ell2 * b) + (ell3 * c);
+    
+  }
+  
+  
+  
+  double integral(scalarFn3d fn,
+                  const Vector3d &refpt,
+                  TriangleQuadrature quadtype = GAUSS4X4) const {
+    
+    
+    int quad_num = 0;
+    const double *quad_weights;
+    const Vector2d *quad_abscissas;
+    
+    if (quadtype == GAUSS4X4) {
+      quad_weights = &gauss4x4_weights[0];
+      quad_abscissas = &gauss4x4_abscissas[0];
+      quad_num = 16;
+    } else {
+      quad_weights = NULL;
+      quad_abscissas = NULL;
+    }
+    
+    double wtdsum = 0;
+    
+    for (size_t i = 0; i < quad_num; i++) {
+      wtdsum += quad_weights[i] * fn(refpt, mapUnitTriangle(quad_abscissas[i]), normal());
+    }
+    
+    return area() * wtdsum;
+  }
+  
  private:
   
 
