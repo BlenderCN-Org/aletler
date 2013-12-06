@@ -1,0 +1,17 @@
+macro(config_compiler_and_linker)
+    if (CMAKE_CXX_COMPILER MATCHES ".*icpc$")
+        #add_definitions(-wd981 -wd383 -wd444)
+        if ( NOT USE_DEBUG )
+            set(CMAKE_CXX_FLAGS_RELEASE "-O3 -no-prec-div -xHost -opt-prefetch -unroll-aggressive -DNDEBUG")
+        endif ()
+
+        set(OPENMP_LIB iomp5)
+    endif ()
+endmacro()
+
+macro(disable_eigen_warnings)
+    set(EIGEN_DISABLE_WARNINGS 1)
+    if (CMAKE_CXX_COMPILER MATCHES ".*icpc$")
+        add_definitions(-wd161)
+    endif ()
+endmacro()
