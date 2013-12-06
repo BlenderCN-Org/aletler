@@ -172,6 +172,6 @@ private:
     bool m_isFinished;
 };
 
-const double Bubble::S_BUBBLELIFE = 0.13;
+
 
 #endif

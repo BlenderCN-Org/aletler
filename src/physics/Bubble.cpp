@@ -12,6 +12,8 @@
 #include <sstream>
 
 
+// Helper function from StackOverflow -- this should be moved
+// out of this class
 std::string ZeroPadNumber(size_t num, int width)
 {
   std::ostringstream ss;
