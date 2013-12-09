@@ -19,7 +19,8 @@ enum MeshFileFormat {
 };
 
 enum TriangleQuadrature {
-    GAUSS4X4,
+  GAUSS4X4,
+  STRANG3
 };
 
 static double oneFn(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
@@ -30,6 +31,23 @@ static double neumannMatrixEntry(const Vector3d &yi, const Vector3d &xj, const V
   
   return (xj - yi).dot(nj) / pow( (xj - yi).norm(), 3);
 }
+
+
+// STRANG3, order 4, degree of precision 3
+static const Vector2d strang3_abscissas[4] = {
+  Vector2d(0.33333333333333333333,  0.33333333333333333333),
+  Vector2d(0.60000000000000000000,  0.20000000000000000000),
+  Vector2d(0.20000000000000000000,  0.60000000000000000000),
+  Vector2d(0.20000000000000000000,  0.20000000000000000000)
+};
+
+static const double strang3_weights[4] = {
+  -0.56250000000000000000,
+  0.52083333333333333333,
+  0.52083333333333333333,
+  0.52083333333333333333
+};
+
 
 
 // http://people.sc.fsu.edu/~%20jburkardt/datasets/quadrature_rules_tri/quadrature_rules_tri.html
@@ -140,6 +158,10 @@ class Triangle {
       quad_weights = &gauss4x4_weights[0];
       quad_abscissas = &gauss4x4_abscissas[0];
       quad_num = 16;
+    } else if (quadtype == STRANG3) {
+      quad_weights = &strang3_weights[0];
+      quad_abscissas = &strang3_abscissas[0];
+      quad_num = 4;
     } else {
       quad_weights = NULL;
       quad_abscissas = NULL;

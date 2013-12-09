@@ -10,6 +10,8 @@
 #include <physics/Electrostatics.h>
 #include <iostream>
 
+#include "vdb.h"
+
 #include <sound/Monopole.h>
 #include <sound/SoundTrack.h>
 #include <sound/SoundFileManager.h>
@@ -40,24 +42,91 @@ void boostmain()
 
 
 int main() {
+
   
-  boostmain();
+  std::string bubbledir = "/Users/phaedon/github/bem-laplace-simple/meshes/";
+  
+  
+  std::string meshdir = "/Users/phaedon/github/aletler/meshes/";
+  
+  
+  TriangleMesh bubblemesh, freesurfacemesh, solidsurfacemesh;
+  
+  /*
+  bubblemesh.read(meshdir + "plate_bubble.obj", MFF_OBJ);
+  freesurfacemesh.read(meshdir + "plate_freesurface.obj", MFF_OBJ);
+  solidsurfacemesh.read(meshdir + "insulators.obj", MFF_OBJ);
+   */
+  
+  bubblemesh.read(bubbledir + "sphere3.obj", MFF_OBJ);
+  //solidsurfacemesh.read(bubbledir + "plane_h128_s16_t200.obj", MFF_OBJ);
+
+  
+  //bubblemesh.read(bubbledir + "sphere_5mm_h95cm.obj", MFF_OBJ);
+  //solidsurfacemesh.read(bubbledir + "plane_h1_s100mm_t2048.obj", MFF_OBJ);
+
+  //solidsurfacemesh.read(bubbledir + "plane_h1_s100mm_t2048.obj", MFF_OBJ);
+  //solidsurfacemesh.read(bubbledir + "insulators.obj", MFF_OBJ);
+  
+  Electrostatics e;
+  e.setBubble(&bubblemesh);
+  e.setSurface(&freesurfacemesh);
+  e.setSolid(&solidsurfacemesh);
+  
+  std::cout << "computing dirichlet matrix" << std::endl;
+  e.computeDirichletMatrix();
+  
+  std::cout << "computing neumann matrix" << std::endl;
+  e.computeNeumannMatrix();
+  
+  std::cout << "computing combined matrix" << std::endl;
+  e.computeCombinedMatrix();
+  
+  std::cout << "solving linear system" << std::endl;
+  e.solveLinearSystem();
+  
+  std::cout << "bubble capacitance!    " << e.bubbleCapacitance() << std::endl;
+  
+  /*
+  size_t nb = bubblemesh.size();
+  size_t nfs = freesurfacemesh.size();
+  size_t n = bubblemesh.size() + freesurfacemesh.size() + solidsurfacemesh.size();
+  MatrixXd absNormalDerivs(freesurfacemesh.size(), 1);
+  for (size_t i = 0; i < freesurfacemesh.size(); i++) {
+    absNormalDerivs(i) = fabs(e.normalDerivAt(i + nb));
+  }
+  
+  double minND = absNormalDerivs.minCoeff();
+  double maxND = absNormalDerivs.maxCoeff();
+  
+  for (size_t i = 0; i < nfs; i++) {
+    Triangle t = e.triangleAt(i + nb);
+    Vector3d c = t.centroid();
+   // double p = e.potentialAt(i);
+    double dp = absNormalDerivs(i);
+    
+    double color = (dp - minND) / (maxND - minND);
+    
+    //std::cout << dp << std::endl;
+
+    vdb_color(color, 0.1, 1-color);
+    vdb_point(c.x(), c.y(), c.z());
+  }
+  */
+  
+  
+  std::cout << "done!" << std::endl;
   return 1;
   
+  
+  
   Bubble b0(0);
-  Bubble b1(1);
-  Bubble b2(2);
-  Bubble b3(3);
-  
-  std::string bubbledir = "/Users/phaedon/github/bem-laplace-simple/meshes/bubbles";
-  
+
   b0.set_directory(bubbledir);
-  b1.set_directory(bubbledir);
-  b2.set_directory(bubbledir);
-  b3.set_directory(bubbledir);
+ 
 
   b0.compute_all_frequencies(0, 24);
- // b1.compute_all_frequencies(0, 48);
+  // b1.compute_all_frequencies(0, 48);
   //b2.compute_all_frequencies(0, 48);
   //b3.compute_all_frequencies(0, 48);
 
@@ -72,6 +141,8 @@ int main() {
   }
   */
   
+  
+  /*
   Monopole m0, m1, m2, m3;
 
   double inv_SR = 1.0 / 44100;
@@ -105,6 +176,8 @@ int main() {
   sfm.open(WriteOnly);
   sfm.writeAudio(st);
   sfm.close();
+  */
+  
   
   return 0;
 }
