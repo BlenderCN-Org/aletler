@@ -26,6 +26,8 @@ class Electrostatics {
     _dirichletMatrix.resize(n, n);
     _dirichletMatrix.setZero();
     
+   // MatrixXd debugMatrix(n, n);
+    
     for (size_t i = 0; i < n; i++) {
       
       // because the last column is zeroed out in the multiplication
@@ -36,14 +38,30 @@ class Electrostatics {
         Triangle tj = triangleAt(j);
         
         Vector3d ci = ti.centroid();
-        _dirichletMatrix(i, j) = tj.potential(ci) / tj.area();
+        _dirichletMatrix(i, j) = (0.25 * M_1_PI) * tj.potential(ci);// / tj.area();
+        //_dirichletMatrix(i, j) = dirichletMatrixElem(tj, ci);
+        /*
+        debugMatrix(i, j) =(0.25 * M_1_PI) * tj.potential(ci) - dirichletMatrixElem(tj, ci);
+        */
+      /*  if (i == j)
+          std::cout << "diagonal diff:   " << dirichletMatrixElem(tj, ci) << std::endl;
+       */
+        
         
       }
     }
+    
+    //std::cout << "DIRICHLET MATRIX" << std::endl;
+   // std::cout << _dirichletMatrix << std::endl;
+    //std::cout << debugMatrix << std::endl;
   }
   
   
-  double neumannMatrixElem(const Triangle &j, const Vector3d &xi) {
+  double dirichletMatrixElem(const Triangle &j, const Vector3d &xi) const {
+    return (0.25 * M_1_PI) * j.integral(dirichletMatrixEntry, xi, GAUSS4X4);
+  }
+  
+  double neumannMatrixElem(const Triangle &j, const Vector3d &xi) const {
     
     return (-0.25 * M_1_PI) * j.integral(neumannMatrixEntry, xi, STRANG3);
     
@@ -79,12 +97,17 @@ class Electrostatics {
         } else {
           
           // set all the diagonals to 1/2
-          _neumannMatrix(i, i) = 0.5;
+          _neumannMatrix(i, i) = +0.5;
+          //_neumannMatrix(i, i) = 0.0;
         }
         
       }
     } // end for-loops
     
+    
+    //std::cout << _neumannMatrix << std::endl;
+   // std::cout << "NEUMANN MATRIX" << std::endl;
+   // std::cout << _neumannMatrix << std::endl;
     computeRHS();
     
   }
@@ -109,20 +132,44 @@ class Electrostatics {
         
       }
     }
-    
-    
   }
   
   void solveLinearSystem() {
     _q = _combinedMatrix.fullPivLu().solve(_rhs);
+    
+    std::cout << "HERE IS DU/DN: " << std::endl;
+    std::cout << _q << std::endl;
+    
   }
   
   double bubbleCapacitance() {
     double c = 0;
     for (size_t i = 0; i < _bubble->size(); i++) {
-      c += _q(i);
+      Triangle t = _bubble->triangle(i);
+      c += _q(i) * t.area();
     }
     return c;
+  }
+  
+  double evaluateField(const Vector3d &x) const {
+    size_t nb = _bubble->size();
+    size_t nf = _free_surface->size();
+    size_t ns = _solid->size();
+    size_t n = nb + nf + ns;
+    
+    MatrixXd singleLayer(1, n);
+    MatrixXd doubleLayer(1, n);
+    
+    for (size_t i = 0; i < nb; i++) {
+      
+      
+      Triangle t = _bubble->triangle(i);
+      singleLayer(i) = dirichletMatrixElem(t, x);
+      doubleLayer(i) = neumannMatrixElem(t, x);
+      
+    }
+    
+    return (doubleLayer * _1_0_0 - singleLayer * _q)(0,0);
   }
   
   
@@ -188,6 +235,9 @@ class Electrostatics {
     }
     
     _rhs = _neumannMatrix * _1_0_0;
+   
+  //  std::cout << "HERE ARE THE ROW SUMS: H * 1:" << std::endl;
+  //  std::cout << _rhs << std::endl;
     //_rhs = _1_0_0;
   }
 

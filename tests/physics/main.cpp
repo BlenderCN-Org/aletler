@@ -45,20 +45,21 @@ int main() {
 
   
   std::string bubbledir = "/Users/phaedon/github/bem-laplace-simple/meshes/";
-  
-  
   std::string meshdir = "/Users/phaedon/github/aletler/meshes/";
   
   
   TriangleMesh bubblemesh, freesurfacemesh, solidsurfacemesh;
   
-  /*
-  bubblemesh.read(meshdir + "plate_bubble.obj", MFF_OBJ);
-  freesurfacemesh.read(meshdir + "plate_freesurface.obj", MFF_OBJ);
+ 
+  //bubblemesh.read(meshdir + "plate_bubble.obj", MFF_OBJ);
+  //freesurfacemesh.read(meshdir + "plate_freesurface.obj", MFF_OBJ);
+   /*
   solidsurfacemesh.read(meshdir + "insulators.obj", MFF_OBJ);
    */
   
   bubblemesh.read(bubbledir + "sphere3.obj", MFF_OBJ);
+  //freesurfacemesh.read(bubbledir + "plane_h4_s16_t200.obj", MFF_OBJ);
+
   //solidsurfacemesh.read(bubbledir + "plane_h128_s16_t200.obj", MFF_OBJ);
 
   
@@ -68,10 +69,49 @@ int main() {
   //solidsurfacemesh.read(bubbledir + "plane_h1_s100mm_t2048.obj", MFF_OBJ);
   //solidsurfacemesh.read(bubbledir + "insulators.obj", MFF_OBJ);
   
+  
+  // TEST INTEGRATOR
+  
+  double sa = bubblemesh.surfaceArea();
+  
+  
   Electrostatics e;
   e.setBubble(&bubblemesh);
   e.setSurface(&freesurfacemesh);
   e.setSolid(&solidsurfacemesh);
+  
+  bubblemesh.flipNormals();
+  
+  for (size_t i = 0; i < bubblemesh.size(); i++) {
+    Triangle t = bubblemesh.triangle(i);
+    
+    std::cout << "TRIANGLE AREA " << i << ":  " << t.area() << std::endl;
+    
+    Vector3d c = t.centroid();
+    vdb_color(0, 1, 0);
+    vdb_point(c.x(), c.y(), c.z());
+    
+    Vector3d n = 1.0 * t.normal().normalized();
+    vdb_color(1, 0, 0);
+    /*vdb_line(c.x(), c.y(), c.z(),
+             c.x() + n.x(), c.y() + n.y(), c.z() + n.z());
+     */
+  }
+  
+  for (size_t i = 0; i < freesurfacemesh.size(); i++) {
+    Triangle t = freesurfacemesh.triangle(i);
+    Vector3d c = t.centroid();
+    vdb_color(0, 1, 0);
+    vdb_point(c.x(), c.y(), c.z());
+    
+    Vector3d n = 1.0 * t.normal().normalized();
+    vdb_color(1, 0, 0);
+    /*
+    vdb_line(c.x(), c.y(), c.z(),
+             c.x() + n.x(), c.y() + n.y(), c.z() + n.z());
+     */
+  }
+  
   
   std::cout << "computing dirichlet matrix" << std::endl;
   e.computeDirichletMatrix();
@@ -86,6 +126,31 @@ int main() {
   e.solveLinearSystem();
   
   std::cout << "bubble capacitance!    " << e.bubbleCapacitance() << std::endl;
+  
+  
+  return 1;
+  
+  // FIELD EVALUATION HERE
+  /*
+  MatrixXd fld(41, 1);
+  
+  for (int i = -20; i <= 20; i++) {
+    Vector3d pt(i * 0.25, 0, 0);
+    fld(i + 20) = e.evaluateField(pt);
+  }
+  
+  double fldmin = fld.minCoeff();
+  double fldmax = fld.maxCoeff();
+  for (int i = -20; i <= 20; i++) {
+    Vector3d pt(i * 0.25, 0, 0);
+
+    double fldval = fld(i + 20);
+    std::cout << "field value at x=" << pt.x()  << " :  " << fldval << std::endl;
+    double color = (fldval - fldmin) / (fldmax - fldmin);
+    vdb_color(0, 0, color);
+    vdb_point(pt.x(), pt.y(), pt.z());
+  }
+   */
   
   /*
   size_t nb = bubblemesh.size();

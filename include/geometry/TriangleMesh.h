@@ -29,7 +29,11 @@ static double oneFn(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) 
 
 static double neumannMatrixEntry(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
   
-  return (xj - yi).dot(nj) / pow( (xj - yi).norm(), 3);
+  return (xj - yi).dot(nj.normalized()) / pow( (xj - yi).norm(), 3);
+}
+
+static double dirichletMatrixEntry(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
+  return 1.0 / (xj - yi).norm();
 }
 
 
@@ -103,7 +107,7 @@ class Triangle {
 
   // area of parallelogram
   double area_pgram() const {
-    return normal().dot(normal().normalized());
+    return fabs(normal().dot(normal().normalized()));
   }
 
   // area of triangle
@@ -170,7 +174,9 @@ class Triangle {
     double wtdsum = 0;
     
     for (size_t i = 0; i < quad_num; i++) {
-      wtdsum += quad_weights[i] * fn(refpt, mapUnitTriangle(quad_abscissas[i]), normal());
+      wtdsum += quad_weights[i] * fn(refpt,
+                                     mapUnitTriangle(quad_abscissas[i]),
+                                     normal());
     }
     
     return area() * wtdsum;
@@ -288,7 +294,9 @@ public:
 class TriangleMesh {
 
  public:
-  TriangleMesh() {}
+  TriangleMesh() {
+    _flipNormals = false;
+  }
 
   // This method issues the callback to marching cubes,
   // for each cell in the grid. It populates the mesh data structure
@@ -307,6 +315,30 @@ class TriangleMesh {
 
   std::vector<TriangleMesh> *splitMeshes();
 
+  double surfaceArea() {
+    // This is mainly to test my integration function
+    
+    // ANALYTIC (SORT OF) -- just the sum of all the triangle areas
+    double sa = 0;
+    for (size_t i = 0; i < size(); i++) {
+      Triangle t = triangle(i);
+      sa += t.area();
+    }
+    
+    std::cout << "analytic version: " << sa << std::endl;
+    
+    // INTEGRAL
+    sa = 0;
+    for (size_t i = 0; i < size(); i++) {
+      Triangle t = triangle(i);
+      sa += t.integral(oneFn, Vector3d(0,0,0), STRANG3);
+    }
+    
+    std::cout << "integral version: " << sa << std::endl;
+    
+    return sa;
+  }
+  
   void clearAll() {
     m_verts.clear();
     for (size_t i = 0; i < m_faces.size(); i++) {
@@ -343,15 +375,28 @@ class TriangleMesh {
     Triangle t;
 
     Face *f = m_faces[i];
-    t.a = m_verts[f->v[0]].x;
-    t.b = m_verts[f->v[1]].x;
-    t.c = m_verts[f->v[2]].x;
+    
+    if (_flipNormals) {
+      t.a = m_verts[f->v[0]].x;
+      t.b = m_verts[f->v[2]].x;
+      t.c = m_verts[f->v[1]].x;
 
+
+    } else {
+      t.a = m_verts[f->v[0]].x;
+      t.b = m_verts[f->v[1]].x;
+      t.c = m_verts[f->v[2]].x;
+    }
+    
     return t;
   }
 
   size_t size() const {
     return m_faces.size();
+  }
+  
+  void flipNormals() {
+    _flipNormals = true;
   }
 
  private:
@@ -359,6 +404,8 @@ class TriangleMesh {
   std::vector<Face *> m_faces;
 
   size_t _numColors;
+  
+  bool _flipNormals;
 
   void addTriangle(Vertex &v1, Vertex &v2, Vertex &v3);
   size_t insertVertex(Vertex &v);

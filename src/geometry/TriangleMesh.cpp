@@ -117,7 +117,10 @@ Vector3d TriangleMesh::normal(size_t i) {
   Vector3d ac = c - a;
 
   Vector3d n = ab.cross(ac);
-  return n;
+  if (_flipNormals)
+    return -n;
+  else
+    return n;
 }
 
 
