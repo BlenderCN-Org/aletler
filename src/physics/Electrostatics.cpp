@@ -10,95 +10,109 @@
 #include <physics/Electrostatics.h>
 
 using Eigen::Vector3d;
-using Eigen::MatrixXd;
 
-// stores vector of capacitances, with indices
-// corresponding to bubble indices
-void Electrostatics::capacitance(std::vector<double> &caps) {
-  assert(caps.size() == 0 || caps.size() == _bubbles.size());
+
+void Electrostatics::computeDirichletMatrix() {
   
-  if (caps.size() == 0) {
-    caps.resize(_bubbles.size(), 0);
+  if (_triangles.size() == 0 || _centroids.size() == 0) {
+    precomputeTriangles();
   }
   
-  for (size_t i = 0; i < _bubbles.size(); i++) {
-    caps[i] = single_capacitance(i, true);
+  size_t n = _bubble->size() + _free_surface->size() + _solid->size();
+  size_t n_bub_fs = _bubble->size() + _free_surface->size();
+  _dirichletMatrix.resize(n, n);
+  _dirichletMatrix.setZero();
+  
+  for (size_t i = 0; i < n; i++) {
+    
+    // because the last column is zeroed out in the multiplication
+    // Hp = Gt where G is the dirichlet matrix, we don't bother
+    for (size_t j = 0; j < n_bub_fs; j++) {
+
+      _dirichletMatrix(i, j) = (0.25 * M_1_PI) * _triangles[j].potential( _centroids[i] );
+      
+    }
   }
 }
 
 
-// computes capacitance of a single mesh
-// (generally a bubble) relative to free surface
-double Electrostatics::single_capacitance(size_t mesh_index,
-                          bool use_free_surface) {
+void Electrostatics::computeNeumannMatrix() {
   
+  size_t nb = _bubble->size();
+  size_t nf = _free_surface->size();
+  size_t n = nb + nf + _solid->size();
+
   
-  TriangleMesh *currMesh = _bubbles[mesh_index];
-  
-  // num triangles in bubble mesh
-  size_t bn = _bubbles[mesh_index]->size();
-  
-  // num triangles in free-surface meshes
-  size_t fsn = 0;
-  if (use_free_surface) {
-    /*for (size_t i = 0; i < _free_surface.size(); i++) {
-     fsn += _free_surface[i]->size();
-     }
-     */
-    fsn = _free_surface->size();
+  if (_triangles.size() == 0 || _centroids.size() == 0) {
+    precomputeTriangles();
   }
   
-  // total dimension of matrix
-  size_t n = bn + fsn;
-  MatrixXd A(n, n);
-  MatrixXd rhs(n, 1); // 1s and 0s
+  _neumannMatrix.resize(n, n);
+  _neumannMatrix.setZero();
   
-  
-  // TODO: this is fine for a single bubble,
-  // but over a system of several bubbles we'd
-  // be constructing this redundantly
-  std::vector<Triangle> tris;
-  std::vector<Vector3d> probes;
-  MatrixXd inv_area(n, 1);
-  
-  // Initialize triangles, probe points, triangle areas
-  // for bubble mesh of interest
-  for (size_t i = 0; i < bn; ++i) {
-    tris.push_back(currMesh->triangle(i));
-    probes.push_back(tris[i].centroid());
-    inv_area(i) = 1.0 / tris[i].area();
-    rhs(i) = 1.0;
-  }
-  
-  for (size_t i = bn; i < n; ++i) {
-    
-    // triangle index
-    size_t ti = i - bn;
-    
-    tris.push_back(_free_surface->triangle(ti));
-    probes.push_back(tris[i].centroid());
-    inv_area(i) = 1.0 / tris[i].area();
-    
-    // Voltage of triangles at free surface is 0
-    rhs(i) = 0.0;
-  }
-  
-  // Create matrix
-  for (size_t p = 0 ; p < n; ++p) {
-    for (size_t t = 0; t < n; ++t) {
-      A(t, p) = tris[t].potential(probes[p]) * inv_area(t);
+  for (size_t i = 0; i < n; i++) {
+    for (size_t j = 0; j < n; j++) {
+      
+      // only set non-diagonal entries:
+      if (i != j) {
+        
+        // and only for the H_B and H_S columns (H_F is multiplied by zeros in the special case of
+        // the free surface, so we leave it out to avoid integrating each of those triangles)
+        if (j < nb || j >= (nb + nf)) {
+          
+          _neumannMatrix(i, j) = neumannMatrixElem(_triangles[j], _centroids[i]);
+        }
+        
+        
+      } else {
+        
+        // set all the diagonals to 1/2 to solve the interior formulation
+        _neumannMatrix(i, i) = +0.5;
+      }
+      
     }
+  } // end for-loops
+  
+  computeRHS();
+  
+}
+
+
+void Electrostatics::computeCombinedMatrix() {
+  
+  size_t nb = _bubble->size();
+  size_t nf = _free_surface->size();
+  size_t ns = _solid->size();
+  size_t n = nb+nf+ns;
+  
+  _combinedMatrix.resize(n, n);
+  _combinedMatrix.block(0, 0, n, nb + nf) = _dirichletMatrix.block(0, 0, n, nb + nf);
+  _combinedMatrix.block(0, nb + nf, n, ns) = _neumannMatrix.block(0, nb + nf, n, ns);
+}
+
+
+
+void Electrostatics::solveLinearSystem() {
+  computeCombinedMatrix();
+  _q = _combinedMatrix.fullPivLu().solve(_rhs);
+}
+
+
+
+double Electrostatics::bubbleCapacitance() {
+  return _q.head(_bubble->size()).dot(_bubble->triangleAreas()) * 0.25 * M_1_PI;
+}
+
+void Electrostatics::precomputeTriangles() {
+  _triangles.clear();
+  _centroids.clear();
+  
+  size_t nb = _bubble->size();
+  size_t nf = _free_surface->size();
+  size_t ns = _solid->size();
+  
+  for (size_t i = 0; i < nb+nf+ns; i++) {
+    _triangles.push_back(triangleAt(i));
+    _centroids.push_back(triangleAt(i).centroid());
   }
-  
-  // Solve matrix
-  MatrixXd q = A.fullPivLu().solve(rhs);
-  
-  double C = 0;
-  // Compute solution
-  for (size_t i = 0; i < bn; ++i) {
-    C += q(i);
-  }
-  
-  return C;
-  
 }

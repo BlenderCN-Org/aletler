@@ -10,6 +10,7 @@
 
 using Eigen::Vector3d;
 using Eigen::Vector2d;
+using Eigen::VectorXd;
 
 typedef double (*scalarFn3d)(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj);
 
@@ -398,6 +399,9 @@ class TriangleMesh {
   void flipNormals() {
     _flipNormals = true;
   }
+  
+  Eigen::VectorXd &triangleAreas() { return _triangleAreas; }
+
 
  private:
   std::vector<Vertex> m_verts;
@@ -406,7 +410,11 @@ class TriangleMesh {
   size_t _numColors;
   
   bool _flipNormals;
-
+  
+  
+  double triangleArea(size_t i) { return _triangleAreas(i); }
+  VectorXd _triangleAreas;
+  
   void addTriangle(Vertex &v1, Vertex &v2, Vertex &v3);
   size_t insertVertex(Vertex &v);
   double signedVolumeOfTriangle(const Vertex &v1, const Vertex &v2, const Vertex &v3) const;

@@ -112,12 +112,9 @@ public:
     
     Electrostatics e;
     e.setSurface(_surface);
-    e.addBubble(_bubble);
-    
-    std::vector<double> c;
-    e.capacitance(c);
-    
-    return c[0];
+    e.setBubble(_bubble);
+
+    return e.bubbleCapacitance();
   }
   
 private:

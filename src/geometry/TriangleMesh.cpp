@@ -267,6 +267,12 @@ void TriangleMesh::read(const std::string &filename, MeshFileFormat mff) {
     std::cerr << "Unimplemented mesh file format. Exiting..." << std::endl;
     exit(1);
   }
+  
+  // populate triangle areas -- this is an optimization
+  _triangleAreas.resize(size(), 1);
+  for (size_t i = 0; i < size(); i++) {
+    _triangleAreas(i) = triangle(i).area();
+  }
 }
 
 template <typename T>
