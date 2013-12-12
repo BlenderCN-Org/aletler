@@ -19,10 +19,21 @@
 		8210A4F2184A9188003C1D56 /* SoundFileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4AC18499157003C1D56 /* SoundFileManager.cpp */; };
 		8210A4F3184A918A003C1D56 /* SoundTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4AE18499157003C1D56 /* SoundTrack.cpp */; };
 		8210A4F4184A919A003C1D56 /* libaletler-sound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4ED184A9179003C1D56 /* libaletler-sound.a */; };
+		8232F59718525A8B00EEF1F6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4CC1849984A003C1D56 /* main.cpp */; };
+		8232F59818525B2200EEF1F6 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		8210A4D418499898003C1D56 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		8232F58C18525A7800EEF1F6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -68,6 +79,7 @@
 		8210A4DF184998C4003C1D56 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8210A4E518499CC4003C1D56 /* Electrostatics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Electrostatics.cpp; path = physics/Electrostatics.cpp; sourceTree = "<group>"; };
 		8210A4ED184A9179003C1D56 /* libaletler-sound.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaletler-sound.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8232F58E18525A7800EEF1F6 /* test-geometry */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-geometry"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +114,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8232F58B18525A7800EEF1F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8232F59818525B2200EEF1F6 /* libaletler-geometry.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -122,6 +142,7 @@
 				8210A4BF1849940E003C1D56 /* libaletler-physics.a */,
 				8210A4D618499898003C1D56 /* test-physics */,
 				8210A4ED184A9179003C1D56 /* libaletler-sound.a */,
+				8232F58E18525A7800EEF1F6 /* test-geometry */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -347,6 +368,23 @@
 			productReference = 8210A4ED184A9179003C1D56 /* libaletler-sound.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		8232F58D18525A7800EEF1F6 /* test-geometry */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8232F59618525A7800EEF1F6 /* Build configuration list for PBXNativeTarget "test-geometry" */;
+			buildPhases = (
+				8232F58A18525A7800EEF1F6 /* Sources */,
+				8232F58B18525A7800EEF1F6 /* Frameworks */,
+				8232F58C18525A7800EEF1F6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "test-geometry";
+			productName = "test-geometry";
+			productReference = 8232F58E18525A7800EEF1F6 /* test-geometry */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -372,6 +410,7 @@
 				8210A4BE1849940E003C1D56 /* aletler-physics */,
 				8210A4D518499898003C1D56 /* test-physics */,
 				8210A4EC184A9179003C1D56 /* aletler-sound */,
+				8232F58D18525A7800EEF1F6 /* test-geometry */,
 			);
 		};
 /* End PBXProject section */
@@ -411,6 +450,14 @@
 				8210A4F1184A9185003C1D56 /* BubbleSound.cpp in Sources */,
 				8210A4F2184A9188003C1D56 /* SoundFileManager.cpp in Sources */,
 				8210A4F3184A918A003C1D56 /* SoundTrack.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8232F58A18525A7800EEF1F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8232F59718525A8B00EEF1F6 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,6 +609,7 @@
 					/usr/local/include/,
 					"~/github/odeint-v2/",
 					/opt/local/include/,
+					"~/github/vdb/",
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				OTHER_LDFLAGS = "-lsndfile";
@@ -580,6 +628,7 @@
 					/usr/local/include/,
 					"~/github/odeint-v2/",
 					/opt/local/include/,
+					"~/github/vdb/",
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				OTHER_LDFLAGS = "-lsndfile";
@@ -611,6 +660,24 @@
 			};
 			name = Release;
 		};
+		8232F59418525A7800EEF1F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8232F59518525A7800EEF1F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -630,6 +697,7 @@
 				8210A4B718499220003C1D56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8210A4C01849940E003C1D56 /* Build configuration list for PBXNativeTarget "aletler-physics" */ = {
 			isa = XCConfigurationList;
@@ -638,6 +706,7 @@
 				8210A4C21849940E003C1D56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8210A4DC18499898003C1D56 /* Build configuration list for PBXNativeTarget "test-physics" */ = {
 			isa = XCConfigurationList;
@@ -646,12 +715,22 @@
 				8210A4DE18499898003C1D56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8210A4EE184A9179003C1D56 /* Build configuration list for PBXNativeTarget "aletler-sound" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8210A4EF184A9179003C1D56 /* Debug */,
 				8210A4F0184A9179003C1D56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8232F59618525A7800EEF1F6 /* Build configuration list for PBXNativeTarget "test-geometry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8232F59418525A7800EEF1F6 /* Debug */,
+				8232F59518525A7800EEF1F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

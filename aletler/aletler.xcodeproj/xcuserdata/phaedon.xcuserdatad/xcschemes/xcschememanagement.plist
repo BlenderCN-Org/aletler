@@ -19,6 +19,11 @@
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
+		<key>test-geometry.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>test-physics.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -48,6 +53,11 @@
 			<true/>
 		</dict>
 		<key>8210A4EC184A9179003C1D56</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8232F58D18525A7800EEF1F6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
