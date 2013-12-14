@@ -20,8 +20,10 @@ enum MeshFileFormat {
 };
 
 enum TriangleQuadrature {
+  VERTEX,
+  STRANG3,
+  STRANG5,
   GAUSS4X4,
-  STRANG3
 };
 
 static double oneFn(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
@@ -36,6 +38,21 @@ static double neumannMatrixEntry(const Vector3d &yi, const Vector3d &xj, const V
 static double dirichletMatrixEntry(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
   return 1.0 / (xj - yi).norm();
 }
+
+
+// VERTEX, order 3, degree precision 1
+static const Vector2d vertex_abscissas[3] = {
+  Vector2d(1.00000000000000000000,  0.00000000000000000000),
+  Vector2d(0.00000000000000000000,  1.00000000000000000000),
+  Vector2d(0.00000000000000000000,  0.00000000000000000000)
+};
+
+
+static const double vertex_weights[3] = {
+  0.33333333333333333333,
+  0.33333333333333333333,
+  0.33333333333333333333
+};
 
 
 // STRANG3, order 4, degree of precision 3
@@ -53,6 +70,24 @@ static const double strang3_weights[4] = {
   0.52083333333333333333
 };
 
+// STRANG5, order 6, dop 4
+static const Vector2d strang5_abscissas[6] = {
+  Vector2d(0.816847572980459,  0.091576213509771),
+  Vector2d(0.091576213509771,  0.816847572980459),
+  Vector2d(0.091576213509771,  0.091576213509771),
+  Vector2d(0.108103018168070,  0.445948490915965),
+  Vector2d(0.445948490915965,  0.108103018168070),
+  Vector2d(0.445948490915965,  0.445948490915965)
+};
+
+static const double strang5_weights[6] = {
+  0.109951743655322,
+  0.109951743655322,
+  0.109951743655322,
+  0.223381589678011,
+  0.223381589678011,
+  0.223381589678011
+};
 
 
 // http://people.sc.fsu.edu/~%20jburkardt/datasets/quadrature_rules_tri/quadrature_rules_tri.html
@@ -167,6 +202,15 @@ class Triangle {
       quad_weights = &strang3_weights[0];
       quad_abscissas = &strang3_abscissas[0];
       quad_num = 4;
+    } else if (quadtype == STRANG5) {
+      quad_weights = &strang5_weights[0];
+      quad_abscissas = &strang5_abscissas[0];
+      quad_num = 6;
+    } else if (quadtype == VERTEX) {
+      quad_weights = &vertex_weights[0];
+      quad_abscissas = &vertex_abscissas[0];
+      quad_num = 3;
+        
     } else {
       quad_weights = NULL;
       quad_abscissas = NULL;
@@ -403,6 +447,12 @@ class TriangleMesh {
   Eigen::VectorXd &triangleAreas() { return _triangleAreas; }
 
 
+  void translate(const Vector3d &dv) {
+    for (size_t i = 0; i < m_verts.size(); i++) {
+      m_verts[i].x += dv;
+    }
+  }
+  
  private:
   std::vector<Vertex> m_verts;
   std::vector<Face *> m_faces;

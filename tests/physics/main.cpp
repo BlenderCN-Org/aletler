@@ -8,6 +8,8 @@
 
 #include <physics/Bubble.h>
 #include <physics/Electrostatics.h>
+#include <physics/PhysicalConstants.h>
+
 #include <iostream>
 
 #include "vdb.h"
@@ -15,28 +17,85 @@
 #include <sound/Monopole.h>
 #include <sound/SoundTrack.h>
 #include <sound/SoundFileManager.h>
+#include <sound/SoundFrequency.h>
+
+static SoundTrack st(44100, 2);
+static SoundFrequency sfvec;
+
+static double freqvector[24] = {
+  486.71,
+  487.995,
+  495.348,
+  506.426,
+  516.682,
+  525.248,
+  532.93,
+  540.63,
+  548.971,
+  558.292,
+  568.727,
+  580.268,
+  592.803,
+  606.146,
+  620.053,
+  634.26,
+  648.553,
+  662.924,
+  677.844,
+  694.717,
+  716.486,
+  747.851,
+  791.852,
+  838.173};
+
+static double omega(double t) {
+  //double f0 = 440;
+  //double f1 = 660;
+  //double a = t;
+  //return (f0 * (1-a) + /f1 * a) * 2 * M_PI;
+  return sfvec.frequencyAt(t, FREQ_OMEGA);
+}
 
 /******** BOOST STUFF **********/
 #include <boost/numeric/odeint.hpp>
 using namespace boost::numeric::odeint;
-void rhs( const double x , double &dxdt , const double t )
+typedef boost::array< double , 3 > state_type;
+
+void rhs( const state_type &x , state_type &dxdt ,  double t )
 {
-  dxdt = 3.0/(2.0*t*t) + x/(2.0*t);
+  
+  double omg = omega(t);
+  
+  double drad = omg * 0.005 / PhysicalConstants::Sound::C_WATER;
+  
+  double dvis = 4 * 0.00089 / (PhysicalConstants::Fluids::RHO_WATER * omg * 0.005*0.005);
+  
+  
+  
+  double psi = (16 * 1.6e6 * 9.8) / (9 * omg * (0.4*0.4));
+
+  double dth = 2 * ( sqrt(psi-3) - (3*1.4 - 1)/(3*0.4)) / (psi - 4);
+
+  double delta = drad + dvis + dth;
+
+  double damping = omg * delta / sqrt(delta*delta + 4);
+  
+  dxdt[0] = x[1];
+  dxdt[1] = -omg * omg * x[0] - damping*x[1];
 }
 
-void write_cout( const double &x , const double t )
+void write_cout( const state_type &x , const double t )
 {
-  cout << t << '\t' << x << endl;
+  
+  st.addSample(x[0], 0);
+  st.addSample(x[0], 1);
 }
-
-// state_type = double
-typedef runge_kutta_dopri5< double > stepper_type;
 
 void boostmain()
 {
-  double x = 0.0;
-  integrate_adaptive( make_controlled( 1E-12 , 1E-12 , stepper_type() ) ,
-                     rhs , x , 1.0 , 10.0 , 0.1 , write_cout );
+  runge_kutta4< state_type > stepper;
+  state_type x = { 0.0, 1.0 }; // initial conditions
+  integrate_const(stepper, rhs , x , 0.0, 0.250, 1.0/44100.0, write_cout );
 }
 /******** BOOST STUFF **********/
 
@@ -44,6 +103,19 @@ void boostmain()
 
 
 int main() {
+
+  // read in the frequency vector
+  for (int i = 0; i < 24; i++) {
+    sfvec.addFrequency(i * (1.0/150), freqvector[i], FREQ_HERTZ);
+  }
+  
+  SoundFileManager sfm("/Users/phaedon/bubbles.aiff");
+  boostmain();
+  st.normalize();
+  sfm.open(WriteOnly);
+  sfm.writeAudio(st);
+  sfm.close();
+  return 0;
   
   std::string bubbledir = "/Users/phaedon/github/bem-laplace-simple/meshes/";
   std::string meshdir = "/Users/phaedon/github/aletler/meshes/";
@@ -51,9 +123,11 @@ int main() {
   
   TriangleMesh bubblemesh, freesurfacemesh, solidsurfacemesh;
   
-  bubblemesh.read(bubbledir + "sphere3.obj", MFF_OBJ);
-  //solidsurfacemesh.read(bubbledir + "plane_h4_s32_t512.obj", MFF_OBJ);
+  bubblemesh.read(meshdir + "rising_bubble_000001.obj", MFF_OBJ);
+  freesurfacemesh.read(meshdir + "free_surface_glass.obj", MFF_OBJ);
+  solidsurfacemesh.read(meshdir + "solid_glass.obj", MFF_OBJ);
 
+  
   
   Electrostatics e;
   e.setBubble(&bubblemesh);
@@ -62,7 +136,7 @@ int main() {
   
   bubblemesh.flipNormals();
   
-  
+  /*
   std::cout << "computing dirichlet matrix" << std::endl;
   e.computeDirichletMatrix();
   
@@ -73,7 +147,7 @@ int main() {
   e.solveLinearSystem();
   
   std::cout << "bubble capacitance!    " << e.bubbleCapacitance() << std::endl;
-
+*/
   
   
   // FIELD EVALUATION HERE
@@ -100,42 +174,14 @@ int main() {
   
   
   
-  /*
-  size_t nb = bubblemesh.size();
-  size_t nfs = freesurfacemesh.size();
-  size_t n = bubblemesh.size() + freesurfacemesh.size() + solidsurfacemesh.size();
-  MatrixXd absNormalDerivs(freesurfacemesh.size(), 1);
-  for (size_t i = 0; i < freesurfacemesh.size(); i++) {
-    absNormalDerivs(i) = fabs(e.normalDerivAt(i + nb));
-  }
-  
-  double minND = absNormalDerivs.minCoeff();
-  double maxND = absNormalDerivs.maxCoeff();
-  
-  for (size_t i = 0; i < nfs; i++) {
-    Triangle t = e.triangleAt(i + nb);
-    Vector3d c = t.centroid();
-   // double p = e.potentialAt(i);
-    double dp = absNormalDerivs(i);
-    
-    double color = (dp - minND) / (maxND - minND);
-    
-    //std::cout << dp << std::endl;
-
-    vdb_color(color, 0.1, 1-color);
-    vdb_point(c.x(), c.y(), c.z());
-  }
-  */
-  
-  
   std::cout << "done!" << std::endl;
-  return 1;
+  //return 1;
   
   
   
   Bubble b0(0);
 
-  b0.set_directory(bubbledir);
+  b0.set_directory(meshdir);
  
 
   b0.compute_all_frequencies(0, 24);
@@ -143,16 +189,16 @@ int main() {
   //b2.compute_all_frequencies(0, 48);
   //b3.compute_all_frequencies(0, 48);
 
-  /*
-  for (size_t i = 0; i < 48; i++) {
+  
+  for (size_t i = 0; i < 24; i++) {
     std::cout << "Freq: "
     << b0.get_frequency(i) << "  "
-    << b1.get_frequency(i) << "  "
-    << b2.get_frequency(i) << "  "
-    << b3.get_frequency(i) << "  "
+    //<< b1.get_frequency(i) << "  "
+    //<< b2.get_frequency(i) << "  "
+    //<< b3.get_frequency(i) << "  "
     << std::endl;
   }
-  */
+  
   
   
   /*

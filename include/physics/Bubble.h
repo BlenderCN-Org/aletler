@@ -21,6 +21,7 @@ public:
   Bubble(size_t idx) : _bubble_index(idx) {
     _surface = new TriangleMesh;
     _bubble = new TriangleMesh;
+    _solid = new TriangleMesh;
   }
   
   /*
@@ -62,36 +63,7 @@ public:
       return 0.0;
     }
   }
-  
-  // interpolates for the specific timestamp
-  // framerate: (animation) frames per second
-  double get_frequency(double timestamp, int framerate) {
-    // figure out surrounding frame numbers:
-    double frac_fn = timestamp * framerate;
-    int prev_fn = floor(frac_fn);
-    int next_fn = ceil(frac_fn);
-    
-    //std::cout << "FRAME NUM: " << prev_fn << " " << frac_fn << "   " << next_fn << std::endl;
-    
-    double prev_freq = get_frequency(prev_fn);
-    double next_freq = get_frequency(next_fn);
 
-    if (prev_fn == next_fn)
-      return prev_freq;
-    
-    // edge cases: don't interpolate with 0
-    if (prev_freq == 0.0 || next_freq == 0.0) return 0.0;
-    
-    // interp ratio
-    double a = (frac_fn - prev_fn) / (double)(next_fn - prev_fn);
-    
-    double log_pf = log(prev_freq);
-    double log_nf = log(next_freq);
-    
-    // interpolate on the log of the (hertz) frequencies
-    double interp_log_freq = log_pf * (1-a) + log_nf * a;
-    return exp(interp_log_freq);
-  }
  
 
   void set_directory(std::string _dir) {
@@ -102,8 +74,8 @@ public:
     
     _surface->clearAll();
     _bubble->clearAll();
-    
-    io_loadMeshes("surface", "b",
+    _solid->clearAll();
+    io_loadMeshes("free_surface_glass", "rising_bubble_",
                   _bubble_index, frame_index,
                   6, 6);
   }
@@ -112,7 +84,21 @@ public:
     
     Electrostatics e;
     e.setSurface(_surface);
+    e.setSolid(_solid);
     e.setBubble(_bubble);
+    
+    _bubble->flipNormals();
+    
+    e.visualize();
+    
+    std::cout << "computing dirichlet matrix" << std::endl;
+    e.computeDirichletMatrix();
+    
+    std::cout << "computing neumann matrix" << std::endl;
+    e.computeNeumannMatrix();
+    
+    std::cout << "solving linear system" << std::endl;
+    e.solveLinearSystem();
 
     return e.bubbleCapacitance();
   }
@@ -133,7 +119,7 @@ private:
   
   TriangleMesh *_surface;
   TriangleMesh *_bubble;
-  
+  TriangleMesh *_solid;
   
   
 };

@@ -35,9 +35,10 @@ void Bubble::io_loadMeshes(const std::string &surface_name,
   // and load into the private members _surface and _bubble.
   
   std::string surfacepath = _directory;
-  surfacepath.append("/");
-  surfacepath.append(surface_name + '_');
-  surfacepath.append(ZeroPadNumber(frame_index, num_digits_frame));
+  //surfacepath.append("/");
+  surfacepath.append(surface_name);
+  //surfacepath.append(surface_name + '_');
+  //surfacepath.append(ZeroPadNumber(frame_index, num_digits_frame));
   surfacepath.append(".obj");
   
   std::cout << "Surface path:  " << surfacepath << std::endl;
@@ -45,9 +46,9 @@ void Bubble::io_loadMeshes(const std::string &surface_name,
   _surface->read(surfacepath, MFF_OBJ);
   
   std::string bubblepath = _directory;
-  bubblepath.append("/");
+  //bubblepath.append("/");
   bubblepath.append(bubble_name);
-  bubblepath.append(ZeroPadNumber(bubble_index, num_digits_bubble) + '_');
+  //bubblepath.append(ZeroPadNumber(bubble_index, num_digits_bubble) + '_');
   bubblepath.append(ZeroPadNumber(frame_index, num_digits_frame));
   bubblepath.append(".obj");
   
@@ -55,5 +56,9 @@ void Bubble::io_loadMeshes(const std::string &surface_name,
 
   
   _bubble->read(bubblepath, MFF_OBJ);
+  
+  std::string solidpath = _directory;
+  solidpath.append("solid_glass.obj");
+  _solid->read(solidpath, MFF_OBJ);
   
 }

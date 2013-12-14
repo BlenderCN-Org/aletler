@@ -12,12 +12,15 @@
 
 #include "SoundParameters.h"
 #include "SphericalTools.h"
+#include <physics/PhysicalConstants.h>
 #include <Eigen/Dense>
 #include <complex>
 
 
 using namespace Eigen;
 using namespace std;
+
+using namespace PhysicalConstants;
 
 class Monopole {
 public:
@@ -26,7 +29,7 @@ public:
   Monopole(double freq) {
     m_freq = freq;
     m_omega = freq * 2 * M_PI;
-    m_k = m_omega / C_AIR;
+    m_k = m_omega / Sound::C_AIR;
     
     m_source_pos = Vector3d(0, 0, 0);
     //m_source_vel = Vector3d(0, 14, 0);
@@ -39,7 +42,7 @@ public:
     
     complex<double> g = greens(ear);
     
-    complex<double> complex_press = -ii * m_k * C_AIR * RHO_AIR * g * exp(-ii * m_omega * t);
+    complex<double> complex_press = -ii * m_k * Sound::C_AIR * Fluids::RHO_AIR * g * exp(-ii * m_omega * t);
     
     return complex_press.real();
   }
@@ -56,7 +59,7 @@ public:
   void frequency(double freq) {
     m_freq = freq;
     m_omega = freq * 2 * M_PI;
-    m_k = m_omega / C_AIR;
+    m_k = m_omega / Sound::C_AIR;
   }
   
 private:
