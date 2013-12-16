@@ -10,7 +10,6 @@
 #define soundmath_Monopole_h
 
 
-#include "SoundParameters.h"
 #include "SphericalTools.h"
 #include <physics/PhysicalConstants.h>
 #include <Eigen/Dense>

@@ -22,37 +22,9 @@
 static SoundTrack st(44100, 2);
 static SoundFrequency sfvec;
 
-static double freqvector[24] = {
-  486.71,
-  487.995,
-  495.348,
-  506.426,
-  516.682,
-  525.248,
-  532.93,
-  540.63,
-  548.971,
-  558.292,
-  568.727,
-  580.268,
-  592.803,
-  606.146,
-  620.053,
-  634.26,
-  648.553,
-  662.924,
-  677.844,
-  694.717,
-  716.486,
-  747.851,
-  791.852,
-  838.173};
 
 static double omega(double t) {
-  //double f0 = 440;
-  //double f1 = 660;
-  //double a = t;
-  //return (f0 * (1-a) + /f1 * a) * 2 * M_PI;
+
   return sfvec.frequencyAt(t, FREQ_OMEGA);
 }
 
@@ -95,7 +67,7 @@ void boostmain()
 {
   runge_kutta4< state_type > stepper;
   state_type x = { 0.0, 1.0 }; // initial conditions
-  integrate_const(stepper, rhs , x , 0.0, 0.250, 1.0/44100.0, write_cout );
+  integrate_const(stepper, rhs , x , 0.0, 0.5, 1.0/44100.0, write_cout );
 }
 /******** BOOST STUFF **********/
 
@@ -104,51 +76,10 @@ void boostmain()
 
 int main() {
 
-  // read in the frequency vector
-  for (int i = 0; i < 24; i++) {
-    sfvec.addFrequency(i * (1.0/150), freqvector[i], FREQ_HERTZ);
-  }
   
-  SoundFileManager sfm("/Users/phaedon/bubbles.aiff");
-  boostmain();
-  st.normalize();
-  sfm.open(WriteOnly);
-  sfm.writeAudio(st);
-  sfm.close();
-  return 0;
-  
-  std::string bubbledir = "/Users/phaedon/github/bem-laplace-simple/meshes/";
+  SoundFileManager sfm("/Users/phaedon/bubble_96fps.aiff");
   std::string meshdir = "/Users/phaedon/github/aletler/meshes/";
-  
-  
-  TriangleMesh bubblemesh, freesurfacemesh, solidsurfacemesh;
-  
-  bubblemesh.read(meshdir + "rising_bubble_000001.obj", MFF_OBJ);
-  freesurfacemesh.read(meshdir + "free_surface_glass.obj", MFF_OBJ);
-  solidsurfacemesh.read(meshdir + "solid_glass.obj", MFF_OBJ);
-
-  
-  
-  Electrostatics e;
-  e.setBubble(&bubblemesh);
-  e.setSurface(&freesurfacemesh);
-  e.setSolid(&solidsurfacemesh);
-  
-  bubblemesh.flipNormals();
-  
-  /*
-  std::cout << "computing dirichlet matrix" << std::endl;
-  e.computeDirichletMatrix();
-  
-  std::cout << "computing neumann matrix" << std::endl;
-  e.computeNeumannMatrix();
-  
-  std::cout << "solving linear system" << std::endl;
-  e.solveLinearSystem();
-  
-  std::cout << "bubble capacitance!    " << e.bubbleCapacitance() << std::endl;
-*/
-  
+ 
   
   // FIELD EVALUATION HERE
   /*
@@ -173,69 +104,20 @@ int main() {
   */
   
   
-  
-  std::cout << "done!" << std::endl;
-  //return 1;
-  
-  
-  
   Bubble b0(0);
-
   b0.set_directory(meshdir);
  
 
-  b0.compute_all_frequencies(0, 24);
-  // b1.compute_all_frequencies(0, 48);
-  //b2.compute_all_frequencies(0, 48);
-  //b3.compute_all_frequencies(0, 48);
-
+  b0.compute_all_frequencies(0, 35);
   
-  for (size_t i = 0; i < 24; i++) {
-    std::cout << "Freq: "
-    << b0.get_frequency(i) << "  "
-    //<< b1.get_frequency(i) << "  "
-    //<< b2.get_frequency(i) << "  "
-    //<< b3.get_frequency(i) << "  "
-    << std::endl;
-  }
+  sfvec = b0.soundFrequency();
   
-  
-  
-  /*
-  Monopole m0, m1, m2, m3;
-
-  double inv_SR = 1.0 / 44100;
-  Vector3d earL (1,1,1);
-  Vector3d earR (1,1,1);
-
-  SoundTrack st(44100, 2);
-  SoundFileManager sfm("/Users/phaedon/bubbles.aiff");
-  
-  
-  for (double i = 0.0; i < 2.0; i += inv_SR) {
-   // std::cout << "Freq @ time " << i << ":  " << b0.get_frequency(i, 24) << std::endl;
-    //std::cout << b0.get_frequency(i, 24) << std::endl;
-    
-    double s = 0.0;
-//    m0.frequency(b0.get_frequency(i, 24));
-//    m1.frequency(b1.get_frequency(i, 24));
-//    m2.frequency(b2.get_frequency(i, 24));
-//    m3.frequency(b3.get_frequency(i, 24));
-    
-    m0.frequency(b0.get_frequency(i, 24));
-    std::cout << "freq:  " << b0.get_frequency(i, 24) << std:: endl;
-    s = m0.pressure(i, earL) * exp(-4*i);
-    //s = m0.pressure(i, earL) + m1.pressure(i, earL) + m2.pressure(i, earL) + m3.pressure(i, earL);
-
-    st.addSample(s, 0);
-    st.addSample(s, 1);
-  }
-  
+  boostmain();
   st.normalize();
   sfm.open(WriteOnly);
   sfm.writeAudio(st);
   sfm.close();
-  */
+
   
   
   return 0;
