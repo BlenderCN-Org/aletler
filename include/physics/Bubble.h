@@ -20,16 +20,18 @@
 #include <iomanip>
 #include <sstream>
 
+using namespace PhysicalConstants;
+
 
 class Bubble {
-
+  
 public:
   Bubble(size_t idx) :
   _bubble_index(idx),
   _vel(0,0,0),
-  // why 0.25? THIS IS TOTALLY WRONG just a late-night experiment
-  _accel(0, 0.25 * +PhysicalConstants::Dynamics::G, 0)
-    {
+  _accel(0,0,0)
+  
+  {
     _surface = new TriangleMesh;
     _bubble = new TriangleMesh;
     _solid = new TriangleMesh;
@@ -56,10 +58,10 @@ public:
     return sqrt( four_pi_gamma * p0 * c / (PhysicalConstants::Fluids::RHO_WATER * v) );
   }
   
-
+  
   
   void compute_all_frequencies(size_t first_frame, size_t last_frame) {
- 
+    
     load(0);
     
     for (size_t i = first_frame; i <= last_frame; i++) {
@@ -68,7 +70,7 @@ public:
       
       
       std::cout << "Frequency at frame " << i << ":  " << f << std::endl;
-
+      
       timestep(1/96.0);
       std::string filename = _directory + "bubble_lr_";
       std::ostringstream ss;
@@ -80,17 +82,17 @@ public:
   }
   
   /*
-  double get_frequency(size_t framenum) {
-    if (framenum < _freqs.size()) {
-      return _freqs[framenum];
-    } else {
-      return 0.0;
-    }
-  }*/
-
+   double get_frequency(size_t framenum) {
+   if (framenum < _freqs.size()) {
+   return _freqs[framenum];
+   } else {
+   return 0.0;
+   }
+   }*/
+  
   SoundFrequency &soundFrequency() {return _soundfreq;}
- 
-
+  
+  
   void set_directory(std::string _dir) {
     _directory = _dir;
   }
@@ -103,6 +105,24 @@ public:
     io_loadMeshes("free_surface_glass", "bubble_lr_",
                   _bubble_index, frame_index,
                   6, 6);
+    
+    double bubbleVolume = _bubble->volume();
+    double mass_air = bubbleVolume * Fluids::RHO_AIR;
+    double mass_water = bubbleVolume * Fluids::RHO_WATER;
+    _accel = Vector3d(0, Dynamics::G * (mass_water - mass_air) / (mass_air + mass_water), 0);
+  }
+  
+  void setBubbleMesh(TriangleMesh *b) {
+    _bubble = b;
+    double bubbleVolume = _bubble->volume();
+    double mass_air = bubbleVolume * Fluids::RHO_AIR;
+    double mass_water = bubbleVolume * Fluids::RHO_WATER;
+    _accel = Vector3d(0, Dynamics::G * (mass_water - mass_air) / (mass_air + mass_water), 0);
+
+  }
+  
+  TriangleMesh *getBubbleMesh() {
+    return _bubble;
   }
   
   double capacitance() const {
@@ -124,19 +144,19 @@ public:
     
     std::cout << "solving linear system" << std::endl;
     e.solveLinearSystem();
-
+    
     return e.bubbleCapacitance();
   }
   
 private:
-
+  
   void io_loadMeshes(const std::string &surface_name,
                      const std::string &bubble_name,
                      size_t bubble_index,
                      size_t frame_index,
                      int num_digits_bubble,
                      int num_digits_frame);
-
+  
   std::string _directory;
   size_t _bubble_index;
   

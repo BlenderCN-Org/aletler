@@ -26,6 +26,8 @@ class BoundingBox {
     boxmin = bmin;
     boxmax = bmax;
   }
+  
+  const Vector3d &GetBoxmax() const { return boxmax; }
 
  private:
   Vector3d boxmin;

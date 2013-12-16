@@ -49,8 +49,34 @@ public:
   void solve(const VectorXd &rhs, VectorXd &x) {
     // It's ok to call this here, because we'll only really need to
     // solve one linear equation per bubble:
-    invertFullMatrix();
-    x = _A_inv * rhs;
+    
+    fastInverseSetup();
+    
+    x.resize(_Abb.rows() + _D.rows(), 1);
+    
+    VectorXd bb = rhs.block(0, 0, _Abb.rows(), 1);
+    VectorXd bas = rhs.block(_Abb.rows(), 0, _D.rows(), 1);
+    
+    VectorXd xb(_Abb.rows());
+    VectorXd xas(_D.rows());
+    
+    VectorXd t1 = _D_LU.solve(bas);
+    VectorXd t2 = bb - _B * t1;
+    xb = _X_LU.solve(t2);
+    
+    
+    VectorXd tt1 = _Abb_LU.solve(bb);
+    VectorXd tt2 = bas - _C * tt1;
+    VectorXd y1 = _D_LU.solve(tt2);
+    VectorXd y2 = -_B * y1;
+    VectorXd tt3 = _X_LU.solve(y2);
+    
+    VectorXd tt4 = _C * tt3;
+    VectorXd tt5 = tt2 - tt4;
+    xas = _D_LU.solve(tt5);
+    
+    x.block(0, 0, _Abb.rows(), 1) = xb;
+    x.block(_Abb.rows(), 0, _D.rows(), 1) = xas;
   }
   
   void solve_slow(const VectorXd &rhs, VectorXd &x) {
@@ -80,58 +106,30 @@ private:
   // using the cached inverse of its component blocks, we never actually assemble
   // matrix A.
   
-
-  MatrixXd _A_inv;
-
   MatrixXd _Abb, _B, _C, _D;
-  MatrixXd _D_inv;
-  MatrixXd _X, _Y, _Z, _U;
+  MatrixXd _Y;
   
   // Here's the fully assembled matrix A. ONLY to be used for testing speed!!!
   MatrixXd _A;
   
   
+  // use LU factorization:
+  FullPivLU<MatrixXd> _Abb_LU;
+  FullPivLU<MatrixXd> _D_LU;
+  FullPivLU<MatrixXd> _X_LU;
   
-  
-  // Assumes that we've already computed & stored the inverse of the large block (D)
-  void invertFullMatrix() {
+  void fastInverseSetup() {
     
-    MatrixXd M1 = _B * _D_inv;
-    MatrixXd M2 = M1 * _C;
     
-    _X = (_Abb - M2).inverse();
-    _Y = -_X * M1;
-    
-    MatrixXd M3 = _C * _Abb.inverse();
-    _U = (_D - M3 * _B).inverse();
-    _Z = -_U * M3;
-    
-    // Use block assignment to merge all of these elements into an inverse:
-    _A_inv.resize(_X.rows() + _Z.rows(), _X.cols() + _Y.cols());
-    
-    _A_inv.block(0, 0, _X.rows(), _X.cols()) = _X;
-    _A_inv.block(0, _X.cols(), _Y.rows(), _Y.cols()) = _Y;
-    _A_inv.block(_X.rows(), 0, _Z.rows(), _Z.cols()) = _Z;
-    _A_inv.block(_X.rows(), _X.cols(), _U.rows(), _U.cols()) = _U;
-  }
-  
-  
-  
-  void invertD() {
-    
-    // use LU factorization:
-    FullPivLU<MatrixXd> luOfD(_D);
-    if (! luOfD.isInvertible()) {
-      std::cout << "FastMultibubble solver message:  Matrix D is not invertible. Exiting..." << std:: endl;
-      assert(false);
-    }
-    
-    // and store the inverse.
-    _D_inv = luOfD.inverse();
+
+    _Abb_LU = FullPivLU<MatrixXd>(_Abb);
+
+    MatrixXd T1 = _D_LU.solve(_C);
+    _X_LU = FullPivLU<MatrixXd>(_Abb - _B * T1);
   }
   
 
-  
+
   
   // utility function for setting the various blocks
   void setMatrixBlock(const MatrixXd &m, FastMBBlock block) {
@@ -147,7 +145,7 @@ private:
         break;
       case FMB_D:
         _D = m;
-        invertD(); // critical step!
+        _D_LU = FullPivLU<MatrixXd>(m);
         break;
         
       default:

@@ -9,6 +9,8 @@
 #ifndef aletler_SoundFrequency_h
 #define aletler_SoundFrequency_h
 
+#include <vector>
+
 enum FrequencyType {
   FREQ_HERTZ,
   FREQ_OMEGA

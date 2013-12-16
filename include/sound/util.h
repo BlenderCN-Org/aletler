@@ -9,6 +9,9 @@
 #define soundmath_util_h
 
 #include <dirent.h>
+#include <iomanip>
+#include <sstream>
+
 
 inline
 double random_double(const double min, const double max)
@@ -26,7 +29,7 @@ int random_int(const int min, const int max)
 
 
 // (kb) got this from SO : http://tinyurl.com/a5vfb5g
-bool DirectoryExists( const char* test_path )
+static bool DirectoryExists( const char* test_path )
 {
     if ( test_path == NULL) {
         std::cerr<<"WARNING: checking for existence of empty directory, returning false.\n";
@@ -46,5 +49,16 @@ bool DirectoryExists( const char* test_path )
     
     return exists;
 }
+
+
+// Helper function from StackOverflow -- this should be moved
+// out of this class
+static std::string ZeroPadNumber(size_t num, int width)
+{
+  std::ostringstream ss;
+  ss << std::setw( width ) << std::setfill( '0' ) << num;
+  return ss.str();
+}
+
 
 #endif

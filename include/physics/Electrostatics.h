@@ -5,7 +5,6 @@
 #include <geometry/TriangleMesh.h>
 #include <vector>
 
-#include "vdb.h"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -54,25 +53,7 @@ class Electrostatics {
   
   
   
-  void visualize() {
-    
-    size_t nb = _bubble->size();
-    size_t nf = _free_surface->size();
-    size_t ns = _solid->size();
-    size_t n = nb+nf+ns;
-    
-    for (size_t i = 0; i < n; i++) {
-      Triangle t = triangleAt(i);
-      Vector3d c = t.centroid();
-      if (i < nb)
-        vdb_color(0, 0.2, 0.5);
-      else if (i < nb + nf)
-        vdb_color(0.8, 0, 0.8);
-      else
-        vdb_color(0.8, 0.8, 0.1);
-      vdb_point(c.x(), c.y(), c.z());
-    }
-  }
+  void visualize();
   
   
   

@@ -5,7 +5,7 @@
 #include <string>
 
 #include <geometry/BoundingBox.h>
-
+#include <sound/util.h>
 #include <Eigen/Dense>
 
 using Eigen::Vector3d;
@@ -358,6 +358,15 @@ class TriangleMesh {
   double volume() const;
   void color();
 
+  void jitter(const Vector3d &j) {
+    for (size_t i = 0; i < m_verts.size(); i++) {
+      Eigen::Vector3d dv(random_double(-j.x(), j.x()),
+                         random_double(-j.y(), j.y()),
+                         random_double(-j.z(), j.z()));
+      m_verts[i].x += dv;
+    }
+  }
+  
   std::vector<TriangleMesh> *splitMeshes();
 
   double surfaceArea() {
@@ -450,6 +459,15 @@ class TriangleMesh {
   void translate(const Vector3d &dv) {
     for (size_t i = 0; i < m_verts.size(); i++) {
       m_verts[i].x += dv;
+    }
+  }
+  
+  void scale(const Vector3d &ds) {
+    // TODO: a proper scaling would translate the mesh in order to
+    // center the bounding box of the object, scale, and then translate back
+    // For now I'm just writing this to generate some fake meshes
+    for (size_t i = 0; i < m_verts.size(); i++) {
+      m_verts[i].x = m_verts[i].x.cwiseProduct(ds);
     }
   }
   

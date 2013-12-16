@@ -12,23 +12,24 @@
 
 using Eigen::MatrixXd;
 
-void testSolverSpeed(size_t nb, size_t nas) {
+static Eigen::MatrixXd d;
+static FastMultibubble fm;
+
+
+void testSolverSpeed(size_t nb, size_t nas, bool recomputeDomain) {
   
   std::cout << "SIZE OF BUBBLE MESH:  " << nb << std:: endl;
   std::cout << "SIZE OF AIR & SURFACE BOUNDARIES:  " << nas << std:: endl;
 
-
   Timer t;
   
-  FastMultibubble fm;
-  
-  //size_t nb = 200;
-  //size_t nas = 2000;
   size_t n = nb + nas;
   
-  
-  MatrixXd d_rand = Eigen::MatrixXd::Random(nas, nas);
-  MatrixXd d = d_rand * d_rand.transpose();
+  if (recomputeDomain) {
+    MatrixXd d_rand = Eigen::MatrixXd::Random(nas, nas);
+    d = d_rand * d_rand.transpose();
+  }
+
   
   MatrixXd a(n, n);
   MatrixXd mbub_rand = Eigen::MatrixXd::Random(nb, nb);
@@ -44,16 +45,22 @@ void testSolverSpeed(size_t nb, size_t nas) {
 
   fm.setBubbleMatrices(a, nb);
   
-  t.start_timer("Inverting domain matrix");
-  fm.setDomainMatrix(d);
-  t.stop_timer();
+  if (recomputeDomain) {
+    t.start_timer("Inverting domain matrix");
+    fm.setDomainMatrix(d);
+    t.stop_timer();
+  }
+
   
   fm.assembleA();
-  
+ 
+  /*
  // std::cout << "slow solve!" << std::endl;
   t.start_timer("Slow solver");
   fm.solve_slow(rhs, xslow);
   t.stop_timer();
+  */
+  
   
   t.start_timer("Fast solver");
 
@@ -72,9 +79,15 @@ void testSolverSpeed(size_t nb, size_t nas) {
 
 int main(int argc, const char * argv[])
 {
-  for (int s = 1000; s <= 1000; s += 1000) {
-    for (int b = 200; b <= 800; b += 200) {
-      testSolverSpeed(b, s);
+  Timer t;
+
+  for (int s = 4000; s <= 4000; s += 1000) {
+    
+    bool firstDomainTest = true;
+
+    for (int b = 800; b <= 1000; b += 100) {
+      testSolverSpeed(b, s, firstDomainTest);
+      firstDomainTest = false;
     }
   }
   return 0;
