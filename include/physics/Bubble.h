@@ -128,22 +128,11 @@ public:
   double capacitance() const {
     
     Electrostatics e;
-    e.setSurface(_surface);
-    e.setSolid(_solid);
+    e.setDomain(_surface, _solid);
+
     e.setBubble(_bubble);
     
     _bubble->flipNormals();
-    
-    e.visualize();
-    
-    std::cout << "computing dirichlet matrix" << std::endl;
-    e.computeDirichletMatrix();
-    
-    std::cout << "computing neumann matrix" << std::endl;
-    e.computeNeumannMatrix();
-    
-    std::cout << "solving linear system" << std::endl;
-    e.solveLinearSystem();
     
     return e.bubbleCapacitance();
   }

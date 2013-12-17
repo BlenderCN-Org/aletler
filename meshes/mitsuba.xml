@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <scene version="0.4.4"> 
 
+<integrator type="irrcache">
 <integrator type="photonmapper">
 <integer name="causticPhotons" value="400000"/>
+</integrator>
 </integrator>
 
 <shape type="obj">
@@ -19,19 +21,25 @@
 
 
 <shape type="obj">
-<string name="filename" value="geometrySim/bubble_000001_000022.obj"/>
+<string name="filename" value="geometrySim/bubble_000008_000320.obj"/>
 <bsdf type="dielectric">
 <float name="intIOR" value="1.333"/> </bsdf>
 </shape>
 
 <shape type="obj">
-<string name="filename" value="geometrySim/bubble_000002_000022.obj"/>
+<string name="filename" value="geometrySim/bubble_000014_000203.obj"/>
 <bsdf type="dielectric">
 <float name="intIOR" value="1.333"/> </bsdf>
 </shape>
 
 <shape type="obj">
-<string name="filename" value="geometrySim/bubble_000004_000022.obj"/>
+<string name="filename" value="geometrySim/bubble_000012_000402.obj"/>
+<bsdf type="dielectric">
+<float name="intIOR" value="1.333"/> </bsdf>
+</shape>
+
+<shape type="obj">
+<string name="filename" value="geometrySim/bubble_000000_000014.obj"/>
 <bsdf type="dielectric">
 <float name="intIOR" value="1.333"/> </bsdf>
 </shape>

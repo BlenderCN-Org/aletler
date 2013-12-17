@@ -13,6 +13,154 @@
 using Eigen::Vector3d;
 
 
+void Electrostatics::precomputeDomainMatrix() {
+  
+  // size of domain matrix
+  size_t nd = _na + _ns;
+  
+  _D.resize(nd, nd);
+  _D.setZero();
+  
+  
+  // Compute the left block (the Dirichlet elements)
+  for (size_t r = 0; r < nd; r++) {
+
+    Triangle ti;
+    Vector3d cent;
+    
+    // Grab the appropriate triangle for computing the centroid (collocation)
+    if (r < _na) {
+      ti = _air->triangle(r);
+    } else {
+      ti = _solid->triangle(r - _na);
+    }
+    cent = ti.centroid();
+
+    for (size_t c = 0; c < _na; c++) {
+      
+      Triangle tj = _air->triangle(c);
+
+      _D(r, c) = (0.25 * M_1_PI) * tj.potential( cent );
+      
+    }
+  }
+  
+  
+  // Compute the right block (the Neumann elements)
+  for (size_t r = 0; r < nd; r++) {
+    
+    Triangle ti;
+    Vector3d cent;
+    if (r < _na) {
+      ti = _air->triangle(r);
+    } else {
+      ti = _solid->triangle(r - _na);
+    }
+    cent = ti.centroid();
+    
+    
+    for (size_t c = _na; c < nd; c++) {
+      
+      if (r == c) {
+        // set all the diagonals to 1/2 to solve the interior formulation
+        _D(r, c) = +0.5;
+      } else {
+        
+        Triangle tj = _solid->triangle(c - _na);
+        
+        _D(r, c) = neumannMatrixElem(tj, cent);
+        
+      }
+    }
+  }
+}
+
+
+void Electrostatics::computeBubbleSubmatrices() {
+  size_t n = _nb + _na + _ns;
+  
+  _Abb.resize(_nb, _nb);
+  _B.resize(_nb, _na + _ns);
+  _C.resize(_na + _ns, _nb);
+
+  // Let's do the left column: Abb and C.
+  for (size_t r = 0; r < n; r++) {
+    Triangle ti = triangleAt(r);
+    Vector3d cent = ti.centroid();
+    
+    for (size_t c = 0; c < _nb; c++){
+      
+      Triangle tj = triangleAt(c);
+      double dirichletElem = (0.25 * M_1_PI) * tj.potential( cent );
+      if (r < _nb) {
+        _Abb(r, c) = dirichletElem;
+      } else {
+        _C(r - _nb, c) = dirichletElem;
+      }
+    }
+  }
+  
+  
+  // Now let's do the matrix block along the top row: _B
+  for (size_t r = 0; r < _nb; r++) {
+    
+    Triangle ti = triangleAt(r);
+    Vector3d cent = ti.centroid();
+    
+    for (size_t c = 0; c < _na + _ns; c++) {
+      Triangle tj = triangleAt(c + _nb);
+      
+      if (c < _na) {
+        _B(r, c) = (0.25 * M_1_PI) * tj.potential( cent );
+      } else {
+        _B(r, c) = neumannMatrixElem(tj, cent);
+      }
+      
+    }
+  }
+  
+}
+
+
+
+
+double Electrostatics::bubbleCapacitance() {
+
+  fmbsolver.solve(_rhs, _x);
+  return _x.head(_bubble->size()).dot(_bubble->triangleAreas()) * 0.25 * M_1_PI;
+}
+
+
+
+
+void Electrostatics::visualize() {
+  
+  
+  size_t n = _nb + _na + _ns;
+  
+  for (size_t i = 0; i < n; i++) {
+    Triangle t = triangleAt(i);
+    Vector3d c = t.centroid();
+    if (i < _nb)
+      vdb_color(0, 0.2, 0.5);
+    else if (i < _nb + _na)
+      vdb_color(0.8, 0, 0.8);
+    else
+      vdb_color(0.8, 0.8, 0.1);
+    vdb_point(c.x(), c.y(), c.z());
+  }
+}
+
+
+
+
+
+/********************************
+ *    DEPRECATED HALL OF SHAME
+ ********************************/
+
+/*
+
 void Electrostatics::computeDirichletMatrix() {
   
   if (_triangles.size() == 0 || _centroids.size() == 0) {
@@ -29,7 +177,7 @@ void Electrostatics::computeDirichletMatrix() {
     // because the last column is zeroed out in the multiplication
     // Hp = Gt where G is the dirichlet matrix, we don't bother
     for (size_t j = 0; j < n_bub_fs; j++) {
-
+      
       _dirichletMatrix(i, j) = (0.25 * M_1_PI) * _triangles[j].potential( _centroids[i] );
       
     }
@@ -39,10 +187,8 @@ void Electrostatics::computeDirichletMatrix() {
 
 void Electrostatics::computeNeumannMatrix() {
   
-  size_t nb = _bubble->size();
-  size_t nf = _free_surface->size();
-  size_t n = nb + nf + _solid->size();
-
+  size_t n = _nb + _na + _ns;
+  
   
   if (_triangles.size() == 0 || _centroids.size() == 0) {
     precomputeTriangles();
@@ -59,7 +205,7 @@ void Electrostatics::computeNeumannMatrix() {
         
         // and only for the H_B and H_S columns (H_F is multiplied by zeros in the special case of
         // the free surface, so we leave it out to avoid integrating each of those triangles)
-        if (j < nb || j >= (nb + nf)) {
+        if (j < _nb || j >= (_nb + _na)) {
           
           _neumannMatrix(i, j) = neumannMatrixElem(_triangles[j], _centroids[i]);
         }
@@ -79,63 +225,19 @@ void Electrostatics::computeNeumannMatrix() {
 }
 
 
+
+
 void Electrostatics::computeCombinedMatrix() {
   
-  size_t nb = _bubble->size();
-  size_t nf = _free_surface->size();
-  size_t ns = _solid->size();
-  size_t n = nb+nf+ns;
+  
+  size_t n = _nb + _na + _ns;
   
   _combinedMatrix.resize(n, n);
-  _combinedMatrix.block(0, 0, n, nb + nf) = _dirichletMatrix.block(0, 0, n, nb + nf);
-  _combinedMatrix.block(0, nb + nf, n, ns) = _neumannMatrix.block(0, nb + nf, n, ns);
-}
-
-
-
-void Electrostatics::solveLinearSystem() {
-  computeCombinedMatrix();
-  _q = _combinedMatrix.fullPivLu().solve(_rhs);
-}
-
-
-
-double Electrostatics::bubbleCapacitance() {
-  return _q.head(_bubble->size()).dot(_bubble->triangleAreas()) * 0.25 * M_1_PI;
-}
-
-void Electrostatics::precomputeTriangles() {
-  _triangles.clear();
-  _centroids.clear();
+  _combinedMatrix.block(0, 0, n, _nb + _na) = _dirichletMatrix.block(0, 0, n, _nb + _na);
+  _combinedMatrix.block(0, _nb + _na, n, _ns) = _neumannMatrix.block(0, _nb + _na, n, _ns);
   
-  size_t nb = _bubble->size();
-  size_t nf = _free_surface->size();
-  size_t ns = _solid->size();
-  
-  for (size_t i = 0; i < nb+nf+ns; i++) {
-    _triangles.push_back(triangleAt(i));
-    _centroids.push_back(triangleAt(i).centroid());
-  }
 }
+ 
+ */
 
-
-void Electrostatics::visualize() {
-  
-  size_t nb = _bubble->size();
-  size_t nf = _free_surface->size();
-  size_t ns = _solid->size();
-  size_t n = nb+nf+ns;
-  
-  for (size_t i = 0; i < n; i++) {
-    Triangle t = triangleAt(i);
-    Vector3d c = t.centroid();
-    if (i < nb)
-      vdb_color(0, 0.2, 0.5);
-    else if (i < nb + nf)
-      vdb_color(0.8, 0, 0.8);
-    else
-      vdb_color(0.8, 0.8, 0.1);
-    vdb_point(c.x(), c.y(), c.z());
-  }
-}
 

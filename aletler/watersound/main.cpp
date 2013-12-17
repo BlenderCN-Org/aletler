@@ -13,34 +13,70 @@
 #include <sound/SoundFileManager.h>
 #include <geometry/TriangleMesh.h>
 #include <sound/SoundTrack.h>
+#include <physics/Fluid.h>
+
 
 #include <vector>
+
+static const size_t ZPADLEN = 6;
+
+static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geometrySim/";
+
+// TODO: replace with utility functions that look in the directory and figure out how many of each
+// there are...
+static const size_t numBubbles = 20;
+static const size_t numFrames = 480;
+
+// one object per bubble
+static std::vector<SoundFrequency> soundFreqs;
+
 
 
 int main(int argc, const char * argv[])
 {
-  // one object per bubble
-  std::vector<SoundFrequency> soundFreqs;
+  Fluid fluid;
+  
+  soundFreqs.resize(numBubbles);
+  
   SoundTrack st;
   SoundFileManager sfm("/Users/phaedon/fabbubbles.aiff");
   int frameRate = 96;
   size_t audioSR = 44100;
   
-  // Assuming the fluid has already been simulated, load all meshes for each frame
-  // in succession
-  size_t nAnimationFrames = 400;
-
   
   // Step forward in time
-  for (size_t i = 0; i < nAnimationFrames; i++) {
+  for (size_t i = 0; i < numFrames; i++) {
     
     std::vector<TriangleMesh> bubbleMeshes;
+    bubbleMeshes.resize(numBubbles);
     TriangleMesh airMesh;
     TriangleMesh solidMesh;
     
-    loadMeshes(i); // or something like that
-    size_t nBubbles = 10;
+    std::string zeroFrameNum = ZeroPadNumber(i, ZPADLEN);
     
+    airMesh.read(baseDir + "air_" + zeroFrameNum + ".obj", MFF_OBJ);
+    solidMesh.read(baseDir + "solid_" + zeroFrameNum + ".obj", MFF_OBJ);
+    
+    fluid.setFluidDomain(&airMesh, &solidMesh);
+
+    
+    for (size_t b = 0; b < numBubbles; b++) {
+      std::string zeroBubNum = ZeroPadNumber(b, ZPADLEN);
+      bubbleMeshes[b].clearAll();
+      std::string bubbleFilename = baseDir + "bubble_" + zeroBubNum + "_" + zeroFrameNum + ".obj";
+      
+      bool meshLoaded = bubbleMeshes[b].read(bubbleFilename, MFF_OBJ);
+      
+      if (meshLoaded) {
+        fluid.setBubble(&bubbleMeshes[b]);
+        double freq = fluid.singleBubbleFrequency();
+        std::cout << "BUBBLE " << b << ": " << freq << std::endl;
+      }
+      
+    }
+  }
+  
+    /*
     // Loop over all bubbles in current frame
     for (size_t b = 0; b < nBubbles; b++) {
       double freq = computeBubbleFrequency(bubbleMeshes[b]);
@@ -63,7 +99,7 @@ int main(int argc, const char * argv[])
   sfm.open(SFM_WRITE);
   sfm.writeAudio(st);
   sfm.close();
-  
+  */
   
   return 0;
 }

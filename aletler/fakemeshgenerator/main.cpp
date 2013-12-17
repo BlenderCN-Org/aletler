@@ -142,7 +142,7 @@ int main(int argc, const char * argv[]) {
   double smallestBub = 0.5;
   double biggestBub = 10.0;
   
-  double simDuration = 0.25;
+  double simDuration = 5.0;
   
   loadStartingMeshes();
   

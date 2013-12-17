@@ -12,15 +12,6 @@
 #include <sstream>
 
 
-// Helper function from StackOverflow -- this should be moved
-// out of this class
-std::string ZeroPadNumber(size_t num, int width)
-{
-  std::ostringstream ss;
-  ss << std::setw( width ) << std::setfill( '0' ) << num;
-  return ss.str();
-}
-
 void Bubble::io_loadMeshes(const std::string &surface_name,
                    const std::string &bubble_name,
                    size_t bubble_index,

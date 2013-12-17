@@ -354,7 +354,7 @@ class TriangleMesh {
 
   void print() const;
   void write(const std::string &filename, MeshFileFormat mff) const;
-  void read(const std::string &filename, MeshFileFormat mff);
+  bool read(const std::string &filename, MeshFileFormat mff);
   double volume() const;
   void color();
 
@@ -492,8 +492,8 @@ class TriangleMesh {
   void colorNeighbors(size_t vertIndex, size_t color);
 
   void writeObj(const std::string &filename) const;
-  void readObj(const std::string &filename);
-  void readStl(const std::string &filename);
+  bool readObj(const std::string &filename);
+  bool readStl(const std::string &filename);
   
 };
 

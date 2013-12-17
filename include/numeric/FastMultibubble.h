@@ -39,6 +39,15 @@ public:
     setMatrixBlock(m.block(nb, 0, nas, nb), FMB_C);
   }
   
+  void setBubbleMatrices(const MatrixXd &a,
+                         const MatrixXd &b,
+                         const MatrixXd &c) {
+    setMatrixBlock(a, FMB_Abb);
+    setMatrixBlock(b, FMB_B);
+    setMatrixBlock(c, FMB_C);
+
+  }
+  
   
   // this assumes that matrix m is the specific block you want to set
   void setDomainMatrix(const MatrixXd &m) {
