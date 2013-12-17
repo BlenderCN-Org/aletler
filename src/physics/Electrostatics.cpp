@@ -125,7 +125,7 @@ void Electrostatics::computeBubbleSubmatrices() {
 
 
 double Electrostatics::bubbleCapacitance() {
-
+  
   fmbsolver.solve(_rhs, _x);
   return _x.head(_bubble->size()).dot(_bubble->triangleAreas()) * 0.25 * M_1_PI;
 }

@@ -351,8 +351,8 @@ bool TriangleMesh::readObj(const std::string &filename) {
       }
     }
     
-    std::cout << "Pushed " << m_verts.size() << " vertices." << std::endl;
-    std::cout << "Pushed " << m_faces.size() << " faces." << std::endl;
+   // std::cout << "Pushed " << m_verts.size() << " vertices." << std::endl;
+   // std::cout << "Pushed " << m_faces.size() << " faces." << std::endl;
     
     ifile.close();
     return true;

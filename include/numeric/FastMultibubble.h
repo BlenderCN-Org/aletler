@@ -70,9 +70,25 @@ public:
     VectorXd xas(_D.rows());
     
     VectorXd t1 = _D_LU.solve(bas);
+  
+    /*
+    if (!_D_LU.isInvertible()) {
+      std::cout << "D is not invertible. Exiting" << std::endl;
+      assert(false);
+    }
+    if (!_X_LU.isInvertible()) {
+      std::cout << "X is not invertible. Exiting" << std::endl;
+      assert(false);
+    }
+    if (!_Abb_LU.isInvertible()) {
+      std::cout << "Abb is not invertible. Exiting" << std::endl;
+      assert(false);
+    }
+     */
+    
+    
     VectorXd t2 = bb - _B * t1;
     xb = _X_LU.solve(t2);
-    
     
     VectorXd tt1 = _Abb_LU.solve(bb);
     VectorXd tt2 = bas - _C * tt1;
@@ -83,11 +99,13 @@ public:
     VectorXd tt4 = _C * tt3;
     VectorXd tt5 = tt2 - tt4;
     xas = _D_LU.solve(tt5);
-    
+
     x.block(0, 0, _Abb.rows(), 1) = xb;
     x.block(_Abb.rows(), 0, _D.rows(), 1) = xas;
+    
   }
-  
+
+  /*
   void solve_slow(const VectorXd &rhs, VectorXd &x) {
    // std::cout << _A.rows() << "  x  " << _A.cols()  << std::endl;
     x = _A.fullPivLu().solve(rhs);
@@ -102,7 +120,7 @@ public:
     _A.block(_Abb.rows(), 0, _C.rows(), _C.cols()) = _C;
     _A.block(_Abb.rows(), _Abb.cols(), _D.rows(), _D.cols()) = _D;
   }
-  
+  */
 
   
 private:
@@ -116,10 +134,10 @@ private:
   // matrix A.
   
   MatrixXd _Abb, _B, _C, _D;
-  MatrixXd _Y;
+ // MatrixXd _Y;
   
   // Here's the fully assembled matrix A. ONLY to be used for testing speed!!!
-  MatrixXd _A;
+  //MatrixXd _A;
   
   
   // use LU factorization:
@@ -135,6 +153,7 @@ private:
 
     MatrixXd T1 = _D_LU.solve(_C);
     _X_LU = FullPivLU<MatrixXd>(_Abb - _B * T1);
+    
   }
   
 

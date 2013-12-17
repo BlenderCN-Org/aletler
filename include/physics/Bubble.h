@@ -26,15 +26,14 @@ using namespace PhysicalConstants;
 class Bubble {
   
 public:
-  Bubble(size_t idx) :
-  _bubble_index(idx),
+  
+  Bubble() :
+  _bubble_index(0),
   _vel(0,0,0),
   _accel(0,0,0)
   
   {
-    _surface = new TriangleMesh;
     _bubble = new TriangleMesh;
-    _solid = new TriangleMesh;
   }
   
   
@@ -43,60 +42,29 @@ public:
     _bubble->translate(dt * _vel);
   }
   
+  void setFrequency(double timeStamp, double capacitance) {
+    _soundfreq.addFrequency(timeStamp, frequency_omega(capacitance), FREQ_OMEGA);
+  }
   
-  double frequency_omega() const {
+  double frequency_omega(double capacitance) const {
+
+    if (capacitance == 0) return 0;
+
     double four_pi_gamma = 4 * M_PI * PhysicalConstants::Fluids::GAMMA_AIR;
-    
-    double c = capacitance();
-    if (c == 0) return 0;
     
     double v = _bubble->volume();
     
     // TODO: doens't take hydrostatic pressure into account
     double p0 = PhysicalConstants::Fluids::P_ATM;
     
-    return sqrt( four_pi_gamma * p0 * c / (PhysicalConstants::Fluids::RHO_WATER * v) );
+    return sqrt( four_pi_gamma * p0 * capacitance / (PhysicalConstants::Fluids::RHO_WATER * v) );
   }
   
   
-  
-  void compute_all_frequencies(size_t first_frame, size_t last_frame) {
-    
-    load(0);
-    
-    for (size_t i = first_frame; i <= last_frame; i++) {
-      double f = frequency_omega();
-      _soundfreq.addFrequency(i / 96.0, f, FREQ_OMEGA);
-      
-      
-      std::cout << "Frequency at frame " << i << ":  " << f << std::endl;
-      
-      timestep(1/96.0);
-      std::string filename = _directory + "bubble_lr_";
-      std::ostringstream ss;
-      ss << std::setw(6) << std::setfill('0') << i + 1;
-      filename.append(ss.str());
-      filename.append(".obj");
-      _bubble->write(filename, MFF_OBJ);
-    }
-  }
-  
-  /*
-   double get_frequency(size_t framenum) {
-   if (framenum < _freqs.size()) {
-   return _freqs[framenum];
-   } else {
-   return 0.0;
-   }
-   }*/
   
   SoundFrequency &soundFrequency() {return _soundfreq;}
   
-  
-  void set_directory(std::string _dir) {
-    _directory = _dir;
-  }
-  
+  /*
   void load(size_t frame_index) {
     
     _surface->clearAll();
@@ -111,6 +79,7 @@ public:
     double mass_water = bubbleVolume * Fluids::RHO_WATER;
     _accel = Vector3d(0, Dynamics::G * (mass_water - mass_air) / (mass_air + mass_water), 0);
   }
+   */
   
   void setBubbleMesh(TriangleMesh *b) {
     _bubble = b;
@@ -125,38 +94,15 @@ public:
     return _bubble;
   }
   
-  double capacitance() const {
-    
-    Electrostatics e;
-    e.setDomain(_surface, _solid);
-
-    e.setBubble(_bubble);
-    
-    _bubble->flipNormals();
-    
-    return e.bubbleCapacitance();
+  const SoundFrequency &getSoundFrequency() const {
+    return _soundfreq;
   }
   
 private:
-  
-  void io_loadMeshes(const std::string &surface_name,
-                     const std::string &bubble_name,
-                     size_t bubble_index,
-                     size_t frame_index,
-                     int num_digits_bubble,
-                     int num_digits_frame);
-  
-  std::string _directory;
   size_t _bubble_index;
   
-  //std::vector<double> _freqs;
-  
   SoundFrequency _soundfreq;
-  
-  
-  TriangleMesh *_surface;
   TriangleMesh *_bubble;
-  TriangleMesh *_solid;
   
   Vector3d _vel;
   Vector3d _accel;

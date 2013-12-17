@@ -25,7 +25,8 @@ static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geometr
 // TODO: replace with utility functions that look in the directory and figure out how many of each
 // there are...
 static const size_t numBubbles = 20;
-static const size_t numFrames = 480;
+//static const size_t numFrames = 480;
+static const size_t numFrames = 40;
 
 // one object per bubble
 static std::vector<SoundFrequency> soundFreqs;
@@ -47,11 +48,14 @@ int main(int argc, const char * argv[])
   // Step forward in time
   for (size_t i = 0; i < numFrames; i++) {
     
+    std::cout << "Processing frame " << i << "..." <<  std::endl;
+    
     std::vector<TriangleMesh> bubbleMeshes;
     bubbleMeshes.resize(numBubbles);
     TriangleMesh airMesh;
     TriangleMesh solidMesh;
     
+    double timeStamp = double(i) / double(frameRate);
     std::string zeroFrameNum = ZeroPadNumber(i, ZPADLEN);
     
     airMesh.read(baseDir + "air_" + zeroFrameNum + ".obj", MFF_OBJ);
@@ -68,13 +72,16 @@ int main(int argc, const char * argv[])
       bool meshLoaded = bubbleMeshes[b].read(bubbleFilename, MFF_OBJ);
       
       if (meshLoaded) {
-        fluid.setBubble(&bubbleMeshes[b]);
-        double freq = fluid.singleBubbleFrequency();
-        std::cout << "BUBBLE " << b << ": " << freq << std::endl;
+        bubbleMeshes[b].flipNormals();
+        fluid.setBubble(&bubbleMeshes[b], b, timeStamp);
+        //std::cout << "BUBBLE " << b << ": " << freq << std::endl;
       }
       
     }
   }
+  
+  fluid.printAllFrequencies();
+  
   
     /*
     // Loop over all bubbles in current frame

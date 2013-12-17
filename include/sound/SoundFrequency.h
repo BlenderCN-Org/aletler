@@ -68,6 +68,12 @@ public:
     
   }
   
+  void printFrequencyVector() const {
+    for (size_t i = 0; i < _times.size(); i++) {
+      std::cout << "t " << _times[i] << "\tf " << _frequencies[i] << std::endl;
+    }
+  }
+  
 private:
   std::vector<double> _times;
   

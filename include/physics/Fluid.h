@@ -16,7 +16,7 @@
 #include <iostream>
 #include <geometry/TriangleMesh.h>
 #include <numeric/FastMultibubble.h>
-
+#include "Bubble.h"
 
 class Fluid {
   
@@ -29,18 +29,34 @@ public:
     
     e.setDomain(_air, _solid);
   }
-  
-  void setBubble(TriangleMesh *bub) {
+
+  void setBubble(TriangleMesh *bub, size_t bubbleIndex, double timeStamp) {
+    
+    if (bubbleIndex >= _bubbles.size()) {
+      _bubbles.resize(bubbleIndex + 1);
+    }
+
+    _bubbles[bubbleIndex].setBubbleMesh(bub);
+    
     _bubble = bub;
     e.setBubble(_bubble);
+    
+    _bubbles[bubbleIndex].setFrequency(timeStamp, e.bubbleCapacitance());
   }
   
-  double singleBubbleFrequency() {
-    return e.bubbleCapacitance();
+  const void printAllFrequencies() const {
+    std::cout << "Printing frequencies for " << _bubbles.size() << " bubbles." << std::endl;
+    for (size_t b = 0; b < _bubbles.size(); b++) {
+      std::cout << "BUBBLE # " << b << ":" << std::endl;
+      _bubbles[b].getSoundFrequency().printFrequencyVector();
+    }
   }
+  
   
 private:
   Electrostatics e;
+  
+  std::vector<Bubble> _bubbles;
   
   TriangleMesh *_air;
   TriangleMesh *_solid;

@@ -121,7 +121,6 @@ class Electrostatics {
   
 
   void computeRHS() {
-    std::cout << "nb, na, ns:  " << _nb << " " << _na << " " << _ns << std::endl;
     size_t n = _nb + _na + _ns;
     _Hb.resize(n, _nb);
     
@@ -145,9 +144,12 @@ class Electrostatics {
       
       for (size_t c = 0; c < _nb; c++) {
         
-        Triangle tj = _bubble->triangle(c);
-        
-        _Hb(r, c) = neumannMatrixElem(tj, cent);
+        if (r == c) {
+          _Hb(r, c) = +0.5;
+        } else {
+          Triangle tj = _bubble->triangle(c);
+          _Hb(r, c) = neumannMatrixElem(tj, cent);
+        }
         
       }
     }
