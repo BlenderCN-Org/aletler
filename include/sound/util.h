@@ -51,8 +51,7 @@ static bool DirectoryExists( const char* test_path )
 }
 
 
-// Helper function from StackOverflow -- this should be moved
-// out of this class
+// Helper function from StackOverflow
 static std::string ZeroPadNumber(size_t num, int width)
 {
   std::ostringstream ss;

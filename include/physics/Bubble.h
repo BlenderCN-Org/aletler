@@ -10,18 +10,10 @@
 #define aletler_Bubble_h
 
 #include <string>
-#include <geometry/TriangleMesh.h>
-#include "Electrostatics.h"
-#include "PhysicalConstants.h"
-#include <sound/SoundFrequency.h>
 #include <vector>
 
-
-#include <iomanip>
-#include <sstream>
-
-using namespace PhysicalConstants;
-
+#include <geometry/TriangleMesh.h>
+#include <sound/SoundFrequency.h>
 
 class Bubble {
   
@@ -30,10 +22,12 @@ public:
   Bubble() :
   _bubble_index(0),
   _vel(0,0,0),
-  _accel(0,0,0)
+  _accel(0,0,0),
+  _r0(-1) // flag for "not yet set"
   
   {
     _bubble = new TriangleMesh;
+  
   }
   
   
@@ -46,49 +40,14 @@ public:
     _soundfreq.addFrequency(timeStamp, frequency_omega(capacitance), FREQ_OMEGA);
   }
   
-  double frequency_omega(double capacitance) const {
-
-    if (capacitance == 0) return 0;
-
-    double four_pi_gamma = 4 * M_PI * PhysicalConstants::Fluids::GAMMA_AIR;
-    
-    double v = _bubble->volume();
-    
-    // TODO: doens't take hydrostatic pressure into account
-    double p0 = PhysicalConstants::Fluids::P_ATM;
-    
-    return sqrt( four_pi_gamma * p0 * capacitance / (PhysicalConstants::Fluids::RHO_WATER * v) );
-  }
-  
+  double frequency_omega(double capacitance) const;
+  void setBubbleMesh(TriangleMesh *b);
+  void integrateVibrationODE();
+  double getSample(size_t sampleIndex);
   
   
   SoundFrequency &soundFrequency() {return _soundfreq;}
-  
-  /*
-  void load(size_t frame_index) {
-    
-    _surface->clearAll();
-    _bubble->clearAll();
-    _solid->clearAll();
-    io_loadMeshes("free_surface_glass", "bubble_lr_",
-                  _bubble_index, frame_index,
-                  6, 6);
-    
-    double bubbleVolume = _bubble->volume();
-    double mass_air = bubbleVolume * Fluids::RHO_AIR;
-    double mass_water = bubbleVolume * Fluids::RHO_WATER;
-    _accel = Vector3d(0, Dynamics::G * (mass_water - mass_air) / (mass_air + mass_water), 0);
-  }
-   */
-  
-  void setBubbleMesh(TriangleMesh *b) {
-    _bubble = b;
-    double bubbleVolume = _bubble->volume();
-    double mass_air = bubbleVolume * Fluids::RHO_AIR;
-    double mass_water = bubbleVolume * Fluids::RHO_WATER;
-    _accel = Vector3d(0, Dynamics::G * (mass_water - mass_air) / (mass_air + mass_water), 0);
-
-  }
+ 
   
   TriangleMesh *getBubbleMesh() {
     return _bubble;
@@ -100,6 +59,15 @@ public:
   
 private:
   size_t _bubble_index;
+  
+  size_t sample0;
+  size_t samplef;
+  
+  // the initial "radius" of the bubble. Used for computing damping,
+  // and set the first time that a bubble mesh is provided.
+  double _r0;
+  
+  std::vector<double> _samples;
   
   SoundFrequency _soundfreq;
   TriangleMesh *_bubble;

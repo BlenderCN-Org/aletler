@@ -25,6 +25,11 @@ namespace PhysicalConstants {
 
     // 0C in Kelvin:
     static const double KELVIN = 273.15;
+    
+    // Shear viscosity of water:
+    static const double MU_WATER = 0.00089;
+    
+    static const double THERMAL_DAMPING = 1.6e6;
   }
 
   namespace Sound {

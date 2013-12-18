@@ -21,6 +21,15 @@
 		8210A4F4184A919A003C1D56 /* libaletler-sound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4ED184A9179003C1D56 /* libaletler-sound.a */; };
 		8232F59718525A8B00EEF1F6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4CC1849984A003C1D56 /* main.cpp */; };
 		8232F59818525B2200EEF1F6 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
+		8232F5A2185E7E0700EEF1F6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8232F5A1185E7E0700EEF1F6 /* main.cpp */; };
+		8232F5AF185EC84500EEF1F6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8232F5AE185EC84500EEF1F6 /* main.cpp */; };
+		8232F5BC185F622C00EEF1F6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8232F5BB185F622C00EEF1F6 /* main.cpp */; };
+		8232F5C2185F646900EEF1F6 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
+		8232F5C3185FB08E00EEF1F6 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
+		8232F5C4185FB09700EEF1F6 /* libaletler-sound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4ED184A9179003C1D56 /* libaletler-sound.a */; };
+		8232F5C7185FBCB600EEF1F6 /* Fluid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8232F5C5185FBCB600EEF1F6 /* Fluid.cpp */; };
+		8232F5C8185FBCB600EEF1F6 /* Fluid.h in Headers */ = {isa = PBXBuildFile; fileRef = 8232F5C6185FBCB600EEF1F6 /* Fluid.h */; };
+		8232F5C9185FDD0700EEF1F6 /* libaletler-physics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4BF1849940E003C1D56 /* libaletler-physics.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +43,33 @@
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		8232F58C18525A7800EEF1F6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		8232F59D185E7E0700EEF1F6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		8232F5AA185EC84500EEF1F6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		8232F5B7185F622C00EEF1F6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -56,7 +92,6 @@
 		8210A49618499145003C1D56 /* Listener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Listener.h; sourceTree = "<group>"; };
 		8210A49718499145003C1D56 /* Monopole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Monopole.h; sourceTree = "<group>"; };
 		8210A49818499145003C1D56 /* SoundFileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundFileManager.h; sourceTree = "<group>"; };
-		8210A49918499145003C1D56 /* SoundParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundParameters.h; sourceTree = "<group>"; };
 		8210A49A18499145003C1D56 /* SoundTrack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundTrack.h; sourceTree = "<group>"; };
 		8210A49B18499145003C1D56 /* SphericalTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SphericalTools.h; sourceTree = "<group>"; };
 		8210A49C18499145003C1D56 /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
@@ -71,7 +106,6 @@
 		8210A4B418499220003C1D56 /* libaletler-geometry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaletler-geometry.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8210A4BF1849940E003C1D56 /* libaletler-physics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaletler-physics.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8210A4C31849943A003C1D56 /* Bubble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bubble.cpp; path = physics/Bubble.cpp; sourceTree = "<group>"; };
-		8210A4CA1849984A003C1D56 /* hello000.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = hello000.obj; sourceTree = "<group>"; };
 		8210A4CB1849984A003C1D56 /* implicitSurfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = implicitSurfaces.h; sourceTree = "<group>"; };
 		8210A4CC1849984A003C1D56 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8210A4CF1849984A003C1D56 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -80,6 +114,16 @@
 		8210A4E518499CC4003C1D56 /* Electrostatics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Electrostatics.cpp; path = physics/Electrostatics.cpp; sourceTree = "<group>"; };
 		8210A4ED184A9179003C1D56 /* libaletler-sound.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaletler-sound.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8232F58E18525A7800EEF1F6 /* test-geometry */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-geometry"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8232F599185B922000EEF1F6 /* SoundFrequency.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundFrequency.h; sourceTree = "<group>"; };
+		8232F59A185E6B2400EEF1F6 /* FastMultibubble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FastMultibubble.h; path = numeric/FastMultibubble.h; sourceTree = "<group>"; };
+		8232F59F185E7E0700EEF1F6 /* fastmultibubbletester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fastmultibubbletester; sourceTree = BUILT_PRODUCTS_DIR; };
+		8232F5A1185E7E0700EEF1F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8232F5AC185EC84500EEF1F6 /* watersound */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = watersound; sourceTree = BUILT_PRODUCTS_DIR; };
+		8232F5AE185EC84500EEF1F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8232F5B9185F622C00EEF1F6 /* fakemeshgenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fakemeshgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
+		8232F5BB185F622C00EEF1F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8232F5C5185FBCB600EEF1F6 /* Fluid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluid.cpp; sourceTree = "<group>"; };
+		8232F5C6185FBCB600EEF1F6 /* Fluid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluid.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +166,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8232F59C185E7E0700EEF1F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8232F5A9185EC84500EEF1F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8232F5C9185FDD0700EEF1F6 /* libaletler-physics.a in Frameworks */,
+				8232F5C4185FB09700EEF1F6 /* libaletler-sound.a in Frameworks */,
+				8232F5C3185FB08E00EEF1F6 /* libaletler-geometry.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8232F5B6185F622C00EEF1F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8232F5C2185F646900EEF1F6 /* libaletler-geometry.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -131,6 +200,9 @@
 				8210A48A18499145003C1D56 /* include */,
 				8210A49F18499156003C1D56 /* src */,
 				8210A4C81849984A003C1D56 /* tests */,
+				8232F5A0185E7E0700EEF1F6 /* fastmultibubbletester */,
+				8232F5AD185EC84500EEF1F6 /* watersound */,
+				8232F5BA185F622C00EEF1F6 /* fakemeshgenerator */,
 				8210A4841849912A003C1D56 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,6 +215,9 @@
 				8210A4D618499898003C1D56 /* test-physics */,
 				8210A4ED184A9179003C1D56 /* libaletler-sound.a */,
 				8232F58E18525A7800EEF1F6 /* test-geometry */,
+				8232F59F185E7E0700EEF1F6 /* fastmultibubbletester */,
+				8232F5AC185EC84500EEF1F6 /* watersound */,
+				8232F5B9185F622C00EEF1F6 /* fakemeshgenerator */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,6 +228,7 @@
 				8210A48B18499145003C1D56 /* geometry */,
 				8210A48F18499145003C1D56 /* physics */,
 				8210A49418499145003C1D56 /* sound */,
+				8232F59A185E6B2400EEF1F6 /* FastMultibubble.h */,
 			);
 			name = include;
 			path = ../include;
@@ -175,6 +251,8 @@
 				8210A49118499145003C1D56 /* Bubble.h */,
 				8210A49218499145003C1D56 /* Electrostatics.h */,
 				8210A49318499145003C1D56 /* PhysicalConstants.h */,
+				8232F5C5185FBCB600EEF1F6 /* Fluid.cpp */,
+				8232F5C6185FBCB600EEF1F6 /* Fluid.h */,
 			);
 			path = physics;
 			sourceTree = "<group>";
@@ -185,8 +263,8 @@
 				8210A49518499145003C1D56 /* BubbleSound.h */,
 				8210A49618499145003C1D56 /* Listener.h */,
 				8210A49718499145003C1D56 /* Monopole.h */,
+				8232F599185B922000EEF1F6 /* SoundFrequency.h */,
 				8210A49818499145003C1D56 /* SoundFileManager.h */,
-				8210A49918499145003C1D56 /* SoundParameters.h */,
 				8210A49A18499145003C1D56 /* SoundTrack.h */,
 				8210A49B18499145003C1D56 /* SphericalTools.h */,
 				8210A49C18499145003C1D56 /* Timer.h */,
@@ -250,7 +328,6 @@
 		8210A4C91849984A003C1D56 /* geometry */ = {
 			isa = PBXGroup;
 			children = (
-				8210A4CA1849984A003C1D56 /* hello000.obj */,
 				8210A4CB1849984A003C1D56 /* implicitSurfaces.h */,
 				8210A4CC1849984A003C1D56 /* main.cpp */,
 			);
@@ -273,6 +350,30 @@
 			path = physics;
 			sourceTree = "<group>";
 		};
+		8232F5A0185E7E0700EEF1F6 /* fastmultibubbletester */ = {
+			isa = PBXGroup;
+			children = (
+				8232F5A1185E7E0700EEF1F6 /* main.cpp */,
+			);
+			path = fastmultibubbletester;
+			sourceTree = "<group>";
+		};
+		8232F5AD185EC84500EEF1F6 /* watersound */ = {
+			isa = PBXGroup;
+			children = (
+				8232F5AE185EC84500EEF1F6 /* main.cpp */,
+			);
+			path = watersound;
+			sourceTree = "<group>";
+		};
+		8232F5BA185F622C00EEF1F6 /* fakemeshgenerator */ = {
+			isa = PBXGroup;
+			children = (
+				8232F5BB185F622C00EEF1F6 /* main.cpp */,
+			);
+			path = fakemeshgenerator;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -287,6 +388,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8232F5C8185FBCB600EEF1F6 /* Fluid.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,6 +487,57 @@
 			productReference = 8232F58E18525A7800EEF1F6 /* test-geometry */;
 			productType = "com.apple.product-type.tool";
 		};
+		8232F59E185E7E0700EEF1F6 /* fastmultibubbletester */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8232F5A5185E7E0700EEF1F6 /* Build configuration list for PBXNativeTarget "fastmultibubbletester" */;
+			buildPhases = (
+				8232F59B185E7E0700EEF1F6 /* Sources */,
+				8232F59C185E7E0700EEF1F6 /* Frameworks */,
+				8232F59D185E7E0700EEF1F6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = fastmultibubbletester;
+			productName = fastmultibubbletester;
+			productReference = 8232F59F185E7E0700EEF1F6 /* fastmultibubbletester */;
+			productType = "com.apple.product-type.tool";
+		};
+		8232F5AB185EC84500EEF1F6 /* watersound */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8232F5B2185EC84500EEF1F6 /* Build configuration list for PBXNativeTarget "watersound" */;
+			buildPhases = (
+				8232F5A8185EC84500EEF1F6 /* Sources */,
+				8232F5A9185EC84500EEF1F6 /* Frameworks */,
+				8232F5AA185EC84500EEF1F6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = watersound;
+			productName = watersound;
+			productReference = 8232F5AC185EC84500EEF1F6 /* watersound */;
+			productType = "com.apple.product-type.tool";
+		};
+		8232F5B8185F622C00EEF1F6 /* fakemeshgenerator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8232F5BF185F622C00EEF1F6 /* Build configuration list for PBXNativeTarget "fakemeshgenerator" */;
+			buildPhases = (
+				8232F5B5185F622C00EEF1F6 /* Sources */,
+				8232F5B6185F622C00EEF1F6 /* Frameworks */,
+				8232F5B7185F622C00EEF1F6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = fakemeshgenerator;
+			productName = fakemeshgenerator;
+			productReference = 8232F5B9185F622C00EEF1F6 /* fakemeshgenerator */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -411,6 +564,9 @@
 				8210A4D518499898003C1D56 /* test-physics */,
 				8210A4EC184A9179003C1D56 /* aletler-sound */,
 				8232F58D18525A7800EEF1F6 /* test-geometry */,
+				8232F59E185E7E0700EEF1F6 /* fastmultibubbletester */,
+				8232F5AB185EC84500EEF1F6 /* watersound */,
+				8232F5B8185F622C00EEF1F6 /* fakemeshgenerator */,
 			);
 		};
 /* End PBXProject section */
@@ -431,6 +587,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8210A4E718499CC4003C1D56 /* Electrostatics.cpp in Sources */,
+				8232F5C7185FBCB600EEF1F6 /* Fluid.cpp in Sources */,
 				8210A4C51849943A003C1D56 /* Bubble.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -458,6 +615,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				8232F59718525A8B00EEF1F6 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8232F59B185E7E0700EEF1F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8232F5A2185E7E0700EEF1F6 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8232F5A8185EC84500EEF1F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8232F5AF185EC84500EEF1F6 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8232F5B5185F622C00EEF1F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8232F5BC185F622C00EEF1F6 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,6 +763,16 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"~/github/aletler/include/",
+					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
+					/usr/local/include/,
+					"~/github/vdb/",
+					"~/github/odeint-v2/",
+					/opt/local/include/,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -590,6 +781,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"~/github/aletler/include/",
+					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
+					/usr/local/include/,
+					"~/github/vdb/",
+					"~/github/odeint-v2/",
+					/opt/local/include/,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -678,6 +879,94 @@
 			};
 			name = Release;
 		};
+		8232F5A6185E7E0700EEF1F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8232F5A7185E7E0700EEF1F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		8232F5B3185EC84500EEF1F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"~/github/aletler/include/",
+					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
+					/usr/local/include/,
+					"~/github/odeint-v2/",
+					/opt/local/include/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8232F5B4185EC84500EEF1F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"~/github/aletler/include/",
+					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
+					/usr/local/include/,
+					"~/github/odeint-v2/",
+					/opt/local/include/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		8232F5C0185F622C00EEF1F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"~/github/aletler/include/",
+					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
+					/usr/local/include/,
+					/opt/local/include/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8232F5C1185F622C00EEF1F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"~/github/aletler/include/",
+					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
+					/usr/local/include/,
+					/opt/local/include/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -733,6 +1022,34 @@
 				8232F59518525A7800EEF1F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8232F5A5185E7E0700EEF1F6 /* Build configuration list for PBXNativeTarget "fastmultibubbletester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8232F5A6185E7E0700EEF1F6 /* Debug */,
+				8232F5A7185E7E0700EEF1F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8232F5B2185EC84500EEF1F6 /* Build configuration list for PBXNativeTarget "watersound" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8232F5B3185EC84500EEF1F6 /* Debug */,
+				8232F5B4185EC84500EEF1F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8232F5BF185F622C00EEF1F6 /* Build configuration list for PBXNativeTarget "fakemeshgenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8232F5C0185F622C00EEF1F6 /* Debug */,
+				8232F5C1185F622C00EEF1F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

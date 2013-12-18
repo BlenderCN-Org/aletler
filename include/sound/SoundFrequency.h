@@ -57,7 +57,7 @@ public:
       a = (t - prevTime) / (nextTime - prevTime);
     double freq  = (1-a) * prevFreq + a * nextFreq;
     
-    std::cout << freq << std::endl;
+    //std::cout << freq << std::endl;
     
     if (ft == FREQ_HERTZ)
       return freq * 0.5 * M_1_PI;
@@ -73,6 +73,11 @@ public:
       std::cout << "t " << _times[i] << "\tf " << _frequencies[i] << std::endl;
     }
   }
+  
+  double startTime() { return _times[0]; }
+  double stopTime() { return _times[_times.size() - 1]; }
+  
+  bool isEmpty() { return _times.size() == 0; }
   
 private:
   std::vector<double> _times;

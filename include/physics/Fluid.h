@@ -18,6 +18,8 @@
 #include <numeric/FastMultibubble.h>
 #include "Bubble.h"
 
+#include <boost/math/special_functions/fpclassify.hpp>
+
 class Fluid {
   
 public:
@@ -41,15 +43,31 @@ public:
     _bubble = bub;
     e.setBubble(_bubble);
     
-    _bubbles[bubbleIndex].setFrequency(timeStamp, e.bubbleCapacitance());
+    double bubCap = e.bubbleCapacitance();
+    if (isnan(bubCap)) {
+      std::cout << "capacitance is NaN" << std::endl;
+    } else {
+      _bubbles[bubbleIndex].setFrequency(timeStamp, bubCap);
+    }
   }
   
-  const void printAllFrequencies() const {
+  void printAllFrequencies() const {
     std::cout << "Printing frequencies for " << _bubbles.size() << " bubbles." << std::endl;
     for (size_t b = 0; b < _bubbles.size(); b++) {
       std::cout << "BUBBLE # " << b << ":" << std::endl;
       _bubbles[b].getSoundFrequency().printFrequencyVector();
     }
+  }
+  
+  void integrateAllBubbleSounds() {
+    for (size_t b = 0; b < _bubbles.size(); b++) {
+      std::cout << "Integrating ODE for bubble # " << b << std::endl;
+      _bubbles[b].integrateVibrationODE();
+    }
+  }
+  
+  double getSample(size_t bubbleNum, size_t audioFrame) {
+    return _bubbles[bubbleNum].getSample(audioFrame);
   }
   
   

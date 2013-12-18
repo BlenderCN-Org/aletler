@@ -51,7 +51,7 @@ void simulateGeometry(size_t frameRate,
   
   // initialize bubble objects
   for (size_t i = 0; i < numBubbles; i++) {
-    bubbles[i] = new Bubble(i);
+    bubbles[i] = new Bubble();
     TriangleMesh *currBubble = new TriangleMesh;
     
     // yep, for now a different copy of each
@@ -136,13 +136,13 @@ void loadStartingMeshes() {
 
 int main(int argc, const char * argv[]) {
 
-  size_t framerate = 96;
-  size_t numbubbles = 20;
+  size_t framerate = 200;
+  size_t numbubbles = 500;
   
-  double smallestBub = 0.5;
-  double biggestBub = 10.0;
+  double smallestBub = 0.25;
+  double biggestBub = 5.0;
   
-  double simDuration = 5.0;
+  double simDuration = 10.0;
   
   loadStartingMeshes();
   
@@ -150,7 +150,7 @@ int main(int argc, const char * argv[]) {
                    smallestBub, biggestBub,
                    simDuration,
                    numbubbles,
-                   baseDir + "geometrySim/");
+                   baseDir + "geomsim2/");
   
   
   return 0;

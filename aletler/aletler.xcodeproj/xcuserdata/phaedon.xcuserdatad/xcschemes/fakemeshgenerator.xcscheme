@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8210A4D518499898003C1D56"
-               BuildableName = "test-physics"
-               BlueprintName = "test-physics"
+               BlueprintIdentifier = "8232F5B8185F622C00EEF1F6"
+               BuildableName = "fakemeshgenerator"
+               BlueprintName = "fakemeshgenerator"
                ReferencedContainer = "container:aletler.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8210A4D518499898003C1D56"
-            BuildableName = "test-physics"
-            BlueprintName = "test-physics"
+            BlueprintIdentifier = "8232F5B8185F622C00EEF1F6"
+            BuildableName = "fakemeshgenerator"
+            BlueprintName = "fakemeshgenerator"
             ReferencedContainer = "container:aletler.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -44,16 +44,16 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8210A4D518499898003C1D56"
-            BuildableName = "test-physics"
-            BlueprintName = "test-physics"
+            BlueprintIdentifier = "8232F5B8185F622C00EEF1F6"
+            BuildableName = "fakemeshgenerator"
+            BlueprintName = "fakemeshgenerator"
             ReferencedContainer = "container:aletler.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -69,9 +69,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8210A4D518499898003C1D56"
-            BuildableName = "test-physics"
-            BlueprintName = "test-physics"
+            BlueprintIdentifier = "8232F5B8185F622C00EEF1F6"
+            BuildableName = "fakemeshgenerator"
+            BlueprintName = "fakemeshgenerator"
             ReferencedContainer = "container:aletler.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
