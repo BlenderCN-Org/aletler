@@ -9,6 +9,6 @@ add_snd_exe(bmbie-solve
         ../fsm/dunavant.cpp
         ../utils/nano_timer.c
         LINK_LIBRARIES 
-        ${TBB_LIBRARY} ${MKL_LIBS}
+        ${TBB_LIBRARY} ${MKL_LIBS} rt
         OUT_DIR ${BIN_DIR})
 

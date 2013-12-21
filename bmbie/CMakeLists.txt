@@ -46,7 +46,7 @@ endif()
 # TBB
 find_package(TBB REQUIRED)
 
-include(snd_edit_external)
+#include(snd_edit_external)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src

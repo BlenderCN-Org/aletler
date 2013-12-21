@@ -54,6 +54,8 @@ struct _ParallelTransferEval
 
 std::complex<REAL> BIESolver::eval(const Point3<REAL>& pt) const
 {
+  SHOULD_NEVER_HAPPEN(-1);
+  /*
     _ParallelTransferEval sum(this, pt);
     //tbb::parallel_reduce(tbb::blocked_range<size_t>(0, nEles_, 300), sum);
     tbb::parallel_deterministic_reduce(tbb::blocked_range<size_t>(0, nEles_, 500), sum);
@@ -61,7 +63,9 @@ std::complex<REAL> BIESolver::eval(const Point3<REAL>& pt) const
     //_ParallelTransferEval ss(sum, tbb::split());
     //ss(tbb::blocked_range<size_t>(nEles_/2, nEles_));
     //sum.join(ss);
-
+   
     return sum.ret;
+  */
+  return complex<REAL>(0., 0.);
 }
 
