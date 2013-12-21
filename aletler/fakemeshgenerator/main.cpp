@@ -133,6 +133,17 @@ void loadStartingMeshes() {
   solidMesh->read(baseDir + "solid_glass.obj", MFF_OBJ);
 }
 
+void saveFastBEM() {
+  
+  // create a fake matrix for now
+  VectorXd neumannBC(airMesh->size());
+  for (size_t i = 0; i < airMesh->size(); i++) {
+    neumannBC(i) = i;
+  }
+  
+  airMesh->writeFastBEM(baseDir + "myfakebem.dat", neumannBC);
+}
+
 
 int main(int argc, const char * argv[]) {
 
@@ -145,6 +156,8 @@ int main(int argc, const char * argv[]) {
   double simDuration = 10.0;
   
   loadStartingMeshes();
+  saveFastBEM();
+  return 0;
   
   simulateGeometry(framerate,
                    smallestBub, biggestBub,

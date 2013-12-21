@@ -16,7 +16,8 @@ typedef double (*scalarFn3d)(const Vector3d &yi, const Vector3d &xj, const Vecto
 
 enum MeshFileFormat {
   MFF_OBJ,
-  MFF_STL
+  MFF_STL,
+  MFF_FASTBEM
 };
 
 enum TriangleQuadrature {
@@ -357,6 +358,9 @@ class TriangleMesh {
   bool read(const std::string &filename, MeshFileFormat mff);
   double volume() const;
   void color();
+  
+  void writeFastBEM(const std::string &filename,
+                    const VectorXd &neumannBC) const;
 
   void jitter(const Vector3d &j) {
     for (size_t i = 0; i < m_verts.size(); i++) {

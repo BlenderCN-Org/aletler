@@ -227,6 +227,59 @@ void TriangleMesh::write(const std::string &filename, MeshFileFormat mff) const 
 }
 
 
+void TriangleMesh::writeFastBEM(const std::string &filename,
+                                const VectorXd &neumannBC) const {
+  std::ofstream ofile;
+  ofile.open(filename.c_str());
+  
+  // just the convention in this file format
+  static const int NEUM_BC_IDX = 2;
+  
+  ofile << "Free surface mesh" << "\n";
+  ofile << "Complete 1" << "\n";
+  ofile << "Full 0 0.d0" << "\n";
+  ofile << m_faces.size() << " " << m_verts.size() << " 0 0\n";
+  ofile << "1 0\n";
+  ofile << "(1., 0.)  -1.   0.  0.\n";
+  ofile << 0 << "\n";
+  ofile << "343.   1.29   2.d-5  1.d-12\n";
+  ofile << "54.59  54.59  1  0  0\n";
+  ofile << " 0   3  1  0\n";
+  // TODO: bunch of input lines
+  
+  
+  ofile << "$ Nodes:" << "\n";
+  
+  for (size_t i = 0; i < m_verts.size(); i++) {
+    // vertices are indexed starting from 1
+    ofile << i+1 << " \t"
+    << std::setprecision(10)
+	  << std::fixed
+    << m_verts[i].x.x() << " \t"
+    << m_verts[i].x.y() << " \t"
+    << m_verts[i].x.z() << "\n";
+  }
+  
+  ofile << "$ Elements and Boundary Conditions:" << "\n";
+  for (size_t i = 0; i < m_faces.size(); i++) {
+    ofile << i+1 << " \t"
+    << m_faces[i]->v[0] + 1 << " \t"
+	  << m_faces[i]->v[1] + 1 << " \t"
+	  << m_faces[i]->v[2] + 1 << " \t"
+    << NEUM_BC_IDX << "\t (" << neumannBC(i) << ", 0.0)"
+    << "\n";
+    
+  }
+
+  ofile << "$ Field Points" << "\n";
+  ofile << "$ Field Cells" << "\n";
+  ofile << "$ End of the File" << "\n";
+
+  
+  ofile.close();
+  
+}
+
 void TriangleMesh::writeObj(const std::string &filename) const {
   
   if (m_verts.size() == 0) {
