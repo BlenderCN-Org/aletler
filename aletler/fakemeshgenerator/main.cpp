@@ -15,6 +15,8 @@
 static TriangleMesh *airMesh = NULL;
 static TriangleMesh *solidMesh = NULL;
 
+static TriangleMesh *comboMesh = NULL;
+
 static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/";
 
 struct FakeBubbleStats {
@@ -131,6 +133,12 @@ void loadStartingMeshes() {
   
   solidMesh = new TriangleMesh;
   solidMesh->read(baseDir + "solid_glass.obj", MFF_OBJ);
+  
+  comboMesh = new TriangleMesh;
+  comboMesh->read(baseDir + "free_surface_glass.obj", MFF_OBJ);
+  comboMesh->read(baseDir + "solid_glass.obj", MFF_OBJ);
+  
+  comboMesh->write(baseDir + "combo.obj", MFF_OBJ);
 }
 
 void saveFastBEM() {
@@ -142,6 +150,8 @@ void saveFastBEM() {
   }
   
   airMesh->writeFastBEM(baseDir + "myfakebem.dat", neumannBC);
+  
+  
 }
 
 

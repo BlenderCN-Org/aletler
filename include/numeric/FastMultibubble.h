@@ -71,21 +71,6 @@ public:
     
     VectorXd t1 = _D_LU.solve(bas);
   
-    /*
-    if (!_D_LU.isInvertible()) {
-      std::cout << "D is not invertible. Exiting" << std::endl;
-      assert(false);
-    }
-    if (!_X_LU.isInvertible()) {
-      std::cout << "X is not invertible. Exiting" << std::endl;
-      assert(false);
-    }
-    if (!_Abb_LU.isInvertible()) {
-      std::cout << "Abb is not invertible. Exiting" << std::endl;
-      assert(false);
-    }
-     */
-    
     
     VectorXd t2 = bb - _B * t1;
     xb = _X_LU.solve(t2);
@@ -134,10 +119,6 @@ private:
   // matrix A.
   
   MatrixXd _Abb, _B, _C, _D;
- // MatrixXd _Y;
-  
-  // Here's the fully assembled matrix A. ONLY to be used for testing speed!!!
-  //MatrixXd _A;
   
   
   // use LU factorization:
@@ -146,8 +127,6 @@ private:
   FullPivLU<MatrixXd> _X_LU;
   
   void fastInverseSetup() {
-    
-    
 
     _Abb_LU = FullPivLU<MatrixXd>(_Abb);
 

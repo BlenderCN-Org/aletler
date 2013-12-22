@@ -9,6 +9,8 @@
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
+
+
 class Electrostatics {
 
  public:
@@ -20,56 +22,11 @@ class Electrostatics {
   {}
   
   
-  void setBubble(TriangleMesh *b) {
-    _bubble = b;
-    _nb = _bubble->size();
-    computeRHS();
-    computeBubbleSubmatrices();
-
-    fmbsolver.setBubbleMatrices(_Abb, _B, _C);
-  }
-  
-
-  
-  void setDomain(TriangleMesh *air, TriangleMesh *solid) {
-    
-    _air = air;
-    _solid = solid;
-    
-    _na = _air->size();
-    _ns = _solid->size();
-
-    precomputeDomainMatrix();
-    
-    // This is one of the bottlenecks:
-    fmbsolver.setDomainMatrix(_D);
-  }
-  
-
+  void setBubble(TriangleMesh *b);
+  void setDomain(TriangleMesh *air, TriangleMesh *solid);
   double bubbleCapacitance();
 
-  
-  double evaluateField(const Vector3d &x) const {
-
-    size_t n = _nb + _na + _ns;
-    
-    MatrixXd singleLayer(1, n);
-    MatrixXd doubleLayer(1, n);
-    
-    for (size_t i = 0; i < _nb; i++) {
-      
-      
-      Triangle t = _bubble->triangle(i);
-      singleLayer(i) = dirichletMatrixElem(t, x);
-      doubleLayer(i) = neumannMatrixElem(t, x);
-      
-    }
-    
-    return (-doubleLayer * _1_0_0 + singleLayer * _x)(0,0);
-  }
-  
-  
-  
+  double evaluateField(const Vector3d &x) const;
   void visualize();
   
   
@@ -104,20 +61,10 @@ class Electrostatics {
   
   
   void precomputeDomainMatrix();
-
-
   void computeBubbleSubmatrices();
 
-  
-  double dirichletMatrixElem(const Triangle &j, const Vector3d &xi) const {
-    return (0.25 * M_1_PI) * j.integral(dirichletMatrixEntry, xi, GAUSS4X4);
-  }
-  
-  double neumannMatrixElem(const Triangle &j, const Vector3d &xi) const {
-    return (-0.25 * M_1_PI) * j.integral(neumannMatrixEntry, xi, STRANG3);
-  }
-  
-
+  double dirichletMatrixElem(const Triangle &j, const Vector3d &xi) const;
+  double neumannMatrixElem(const Triangle &j, const Vector3d &xi) const;
   
 
   void computeRHS() {

@@ -12,10 +12,7 @@
 
 
 #include "Electrostatics.h"
-
-#include <iostream>
 #include <geometry/TriangleMesh.h>
-#include <numeric/FastMultibubble.h>
 #include "Bubble.h"
 
 #include <boost/math/special_functions/fpclassify.hpp>

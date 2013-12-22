@@ -13,6 +13,84 @@
 using Eigen::Vector3d;
 
 
+/****************************
+ *   FUNCTIONS & CALLBACKS
+ ****************************/
+
+static double neumannMatrixEntry(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
+  
+  return (xj - yi).dot(nj.normalized()) / pow( (xj - yi).norm(), 3);
+}
+
+static double dirichletMatrixEntry(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
+  return 1.0 / (xj - yi).norm();
+}
+
+
+/**********************
+ *   PUBLIC METHODS
+ **********************/
+
+void Electrostatics::setBubble(TriangleMesh *b) {
+  _bubble = b;
+  _nb = _bubble->size();
+  computeRHS();
+  computeBubbleSubmatrices();
+  
+  fmbsolver.setBubbleMatrices(_Abb, _B, _C);
+}
+
+
+void Electrostatics::setDomain(TriangleMesh *air, TriangleMesh *solid) {
+  
+  _air = air;
+  _solid = solid;
+  
+  _na = _air->size();
+  _ns = _solid->size();
+  
+  precomputeDomainMatrix();
+  
+  // This is one of the bottlenecks:
+  fmbsolver.setDomainMatrix(_D);
+}
+
+
+double Electrostatics::evaluateField(const Vector3d &x) const {
+  
+  size_t n = _nb + _na + _ns;
+  
+  MatrixXd singleLayer(1, n);
+  MatrixXd doubleLayer(1, n);
+  
+  for (size_t i = 0; i < _nb; i++) {
+    
+    
+    Triangle t = _bubble->triangle(i);
+    singleLayer(i) = dirichletMatrixElem(t, x);
+    doubleLayer(i) = neumannMatrixElem(t, x);
+    
+  }
+  
+  return (-doubleLayer * _1_0_0 + singleLayer * _x)(0,0);
+}
+
+/**********************
+ *   PRIVATE METHODS
+ **********************/
+
+
+
+
+double Electrostatics::dirichletMatrixElem(const Triangle &j, const Vector3d &xi) const {
+  return (0.25 * M_1_PI) * j.integral(dirichletMatrixEntry, xi, GAUSS4X4);
+}
+
+double Electrostatics::neumannMatrixElem(const Triangle &j, const Vector3d &xi) const {
+  return (-0.25 * M_1_PI) * j.integral(neumannMatrixEntry, xi, STRANG3);
+}
+
+
 void Electrostatics::precomputeDomainMatrix() {
   
   // size of domain matrix

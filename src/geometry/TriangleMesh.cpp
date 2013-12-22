@@ -12,6 +12,13 @@
 
 #include "MarchingSource.h"
 
+
+
+static double oneFn(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
+  return 1.0;
+}
+
+
 struct stl_triangle {
   float normal[3];
   float v1[3];
@@ -95,6 +102,7 @@ void TriangleMesh::addTriangle(Vertex &v0, Vertex &v1, Vertex &v2) {
                        insertVertex(v1),
                        insertVertex(v2));
   
+  tri->boundaryType = this->boundaryType;
   
   // Make sure each vertex contains pointer to this triangle
   m_verts[tri->v[0]].faces.push_back(tri);
@@ -141,6 +149,7 @@ size_t TriangleMesh::insertVertex(Vertex &v) {
   
   return vIndex;
 }
+
 
 
 void TriangleMesh::boundingBox(double boxmin[3], double boxmax[3]) const {
@@ -212,6 +221,31 @@ void TriangleMesh::triangulateImplicitFunc(float xmin, float xmax,
 }
 
 
+double TriangleMesh::surfaceArea() {
+  // This is mainly to test my integration function
+  
+  // ANALYTIC (SORT OF) -- just the sum of all the triangle areas
+  double sa = 0;
+  for (size_t i = 0; i < size(); i++) {
+    Triangle t = triangle(i);
+    sa += t.area();
+  }
+  
+  std::cout << "analytic version: " << sa << std::endl;
+  
+  // INTEGRAL
+  sa = 0;
+  for (size_t i = 0; i < size(); i++) {
+    Triangle t = triangle(i);
+    sa += t.integral(oneFn, Vector3d(0,0,0), STRANG3);
+  }
+  
+  std::cout << "integral version: " << sa << std::endl;
+  
+  return sa;
+}
+
+
 void TriangleMesh::print() const {
   std::cout << m_verts.size() << " vertices, " << m_faces.size() << " faces." << std::endl;
 }
@@ -235,16 +269,16 @@ void TriangleMesh::writeFastBEM(const std::string &filename,
   // just the convention in this file format
   static const int NEUM_BC_IDX = 2;
   
-  ofile << "Free surface mesh" << "\n";
-  ofile << "Complete 1" << "\n";
-  ofile << "Full 0 0.d0" << "\n";
-  ofile << m_faces.size() << " " << m_verts.size() << " 0 0\n";
-  ofile << "1 0\n";
-  ofile << "(1., 0.)  -1.   0.  0.\n";
+  ofile << "Air & solid mesh" << "\n";
+  ofile << "Complete \t1" << "\n";
+  ofile << "Full \t0 \t0.d0" << "\n";
+  ofile << m_faces.size() << "\t" << m_verts.size() << " 0 \t 0\n";
+  ofile << "0 \t 0\n";
+  //ofile << "(1., 0.)  -1.   0.  0.\n";
   ofile << 0 << "\n";
-  ofile << "343.   1.29   2.d-5  1.d-12\n";
-  ofile << "54.59  54.59  1  0  0\n";
-  ofile << " 0   3  1  0\n";
+  ofile << "343. \t 1.29 \t 2.d-5 \t 1.d-12\n";
+  ofile << "54.59 \t 54.59 \t 1 \t 0 \t 0\n";
+  ofile << " 0 \t 3 \t 1 \t 0\n";
   // TODO: bunch of input lines
   
   
@@ -376,6 +410,11 @@ bool TriangleMesh::readObj(const std::string &filename) {
   
   const std::string& whitespace = " \t";
   
+  // this index allows for the possibility that we load multiple OBJ
+  // files into a single TriangleMesh object
+  size_t vertexIndexAdjuster = m_verts.size();
+  
+  
   if (ifile.is_open()) {
     while (std::getline (ifile,line)) {
       
@@ -397,9 +436,9 @@ bool TriangleMesh::readObj(const std::string &filename) {
         vertIndex[0] = vertIndex[1] = vertIndex[2] = 0;
         getVertIndicesFromString(vertIndex, line);
         
-        Vertex &v0 = m_verts[vertIndex[0]];
-        Vertex &v1 = m_verts[vertIndex[1]];
-        Vertex &v2 = m_verts[vertIndex[2]];
+        Vertex &v0 = m_verts[vertIndex[0] + vertexIndexAdjuster];
+        Vertex &v1 = m_verts[vertIndex[1] + vertexIndexAdjuster];
+        Vertex &v2 = m_verts[vertIndex[2] + vertexIndexAdjuster];
         addTriangle(v0, v1, v2);
       }
     }

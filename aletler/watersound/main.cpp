@@ -23,14 +23,21 @@ using namespace PhysicalConstants;
 
 static const size_t ZPADLEN = 6;
 
-static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geomsim2/";
 
 // TODO: replace with utility functions that look in the directory and figure out how many of each
 // there are...
+
+static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geometrySim/";
+static const size_t numBubbles = 10;
+static const size_t numFrames = 96;
+static const int frameRate = 96;
+
+/*
+static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geomsim2/";
 static const size_t numBubbles = 500;
 static const size_t numFrames = 1000;
 static const int frameRate = 200;
-//static const size_t numFrames = 40;
+*/
 
 
 int main(int argc, const char * argv[])
@@ -38,7 +45,7 @@ int main(int argc, const char * argv[])
   Fluid fluid;
   
   SoundTrack st;
-  SoundFileManager sfm("/Users/phaedon/fabbubbles3.aiff");
+  SoundFileManager sfm("/Users/phaedon/fabbubbles4.aiff");
   
   
   // Step forward in time
