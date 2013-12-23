@@ -2,7 +2,6 @@
 #include <iostream>
 #include <geometry/TriangleMesh.h>
 #include "implicitSurfaces.h"
-//#include <functional>
 
 static double g_center[3];
 static double g_radius;

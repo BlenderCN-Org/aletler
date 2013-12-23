@@ -13,6 +13,10 @@ using Eigen::Vector3d;
 using Eigen::VectorXd;
 
 
+static double oneFn(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
+  return 1.0;
+}
+
 
 enum MeshFileFormat {
   MFF_OBJ,

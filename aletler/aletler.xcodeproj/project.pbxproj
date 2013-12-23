@@ -7,17 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8210A4B81849923D003C1D56 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4A118499156003C1D56 /* BoundingBox.cpp */; };
-		8210A4B91849923F003C1D56 /* MarchingSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4A318499156003C1D56 /* MarchingSource.cpp */; };
-		8210A4BA18499242003C1D56 /* TriangleMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4A518499157003C1D56 /* TriangleMesh.cpp */; };
-		8210A4C51849943A003C1D56 /* Bubble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4C31849943A003C1D56 /* Bubble.cpp */; };
 		8210A4E218499ABE003C1D56 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4DF184998C4003C1D56 /* main.cpp */; };
 		8210A4E318499AF3003C1D56 /* libaletler-physics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4BF1849940E003C1D56 /* libaletler-physics.a */; };
 		8210A4E418499B03003C1D56 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
-		8210A4E718499CC4003C1D56 /* Electrostatics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4E518499CC4003C1D56 /* Electrostatics.cpp */; };
-		8210A4F1184A9185003C1D56 /* BubbleSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4A918499157003C1D56 /* BubbleSound.cpp */; };
-		8210A4F2184A9188003C1D56 /* SoundFileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4AC18499157003C1D56 /* SoundFileManager.cpp */; };
-		8210A4F3184A918A003C1D56 /* SoundTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4AE18499157003C1D56 /* SoundTrack.cpp */; };
 		8210A4F4184A919A003C1D56 /* libaletler-sound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4ED184A9179003C1D56 /* libaletler-sound.a */; };
 		8232F59718525A8B00EEF1F6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8210A4CC1849984A003C1D56 /* main.cpp */; };
 		8232F59818525B2200EEF1F6 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
@@ -27,9 +19,37 @@
 		8232F5C2185F646900EEF1F6 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
 		8232F5C3185FB08E00EEF1F6 /* libaletler-geometry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4B418499220003C1D56 /* libaletler-geometry.a */; };
 		8232F5C4185FB09700EEF1F6 /* libaletler-sound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4ED184A9179003C1D56 /* libaletler-sound.a */; };
-		8232F5C7185FBCB600EEF1F6 /* Fluid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8232F5C5185FBCB600EEF1F6 /* Fluid.cpp */; };
-		8232F5C8185FBCB600EEF1F6 /* Fluid.h in Headers */ = {isa = PBXBuildFile; fileRef = 8232F5C6185FBCB600EEF1F6 /* Fluid.h */; };
 		8232F5C9185FDD0700EEF1F6 /* libaletler-physics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4BF1849940E003C1D56 /* libaletler-physics.a */; };
+		82F116E61867AD0700BBE57C /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F116DA1867AD0700BBE57C /* BoundingBox.cpp */; };
+		82F116E71867AD0700BBE57C /* BoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116DB1867AD0700BBE57C /* BoundingBox.h */; };
+		82F116E91867AD0700BBE57C /* MarchingSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F116DD1867AD0700BBE57C /* MarchingSource.cpp */; };
+		82F116EA1867AD0700BBE57C /* MarchingSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116DE1867AD0700BBE57C /* MarchingSource.h */; };
+		82F116EC1867AD0700BBE57C /* Triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F116E01867AD0700BBE57C /* Triangle.cpp */; };
+		82F116ED1867AD0700BBE57C /* Triangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116E11867AD0700BBE57C /* Triangle.h */; };
+		82F116EE1867AD0700BBE57C /* TriangleMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F116E21867AD0700BBE57C /* TriangleMesh.cpp */; };
+		82F116EF1867AD0700BBE57C /* TriangleMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116E31867AD0700BBE57C /* TriangleMesh.h */; };
+		82F116F11867AD0700BBE57C /* TriangleQuadrature.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116E51867AD0700BBE57C /* TriangleQuadrature.h */; };
+		82F116FC1867AD6500BBE57C /* Bubble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F116F51867AD6500BBE57C /* Bubble.cpp */; };
+		82F116FD1867AD6500BBE57C /* Bubble.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116F61867AD6500BBE57C /* Bubble.h */; };
+		82F116FE1867AD6500BBE57C /* Electrostatics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F116F71867AD6500BBE57C /* Electrostatics.cpp */; };
+		82F116FF1867AD6500BBE57C /* Electrostatics.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116F81867AD6500BBE57C /* Electrostatics.h */; };
+		82F117001867AD6500BBE57C /* Fluid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F116F91867AD6500BBE57C /* Fluid.cpp */; };
+		82F117011867AD6500BBE57C /* Fluid.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116FA1867AD6500BBE57C /* Fluid.h */; };
+		82F117021867AD6500BBE57C /* PhysicalConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F116FB1867AD6500BBE57C /* PhysicalConstants.h */; };
+		82F117171867AD7C00BBE57C /* BubbleSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F117051867AD7C00BBE57C /* BubbleSound.cpp */; };
+		82F117181867AD7C00BBE57C /* BubbleSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F117061867AD7C00BBE57C /* BubbleSound.h */; };
+		82F1171A1867AD7C00BBE57C /* Listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F117081867AD7C00BBE57C /* Listener.h */; };
+		82F1171C1867AD7C00BBE57C /* Monopole.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F1170A1867AD7C00BBE57C /* Monopole.h */; };
+		82F1171D1867AD7C00BBE57C /* SoundFileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F1170B1867AD7C00BBE57C /* SoundFileManager.cpp */; };
+		82F1171E1867AD7C00BBE57C /* SoundFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F1170C1867AD7C00BBE57C /* SoundFileManager.h */; };
+		82F117201867AD7C00BBE57C /* SoundFrequency.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F1170E1867AD7C00BBE57C /* SoundFrequency.h */; };
+		82F117211867AD7C00BBE57C /* SoundTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F1170F1867AD7C00BBE57C /* SoundTrack.cpp */; };
+		82F117221867AD7C00BBE57C /* SoundTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F117101867AD7C00BBE57C /* SoundTrack.h */; };
+		82F117241867AD7C00BBE57C /* SphericalTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F117121867AD7C00BBE57C /* SphericalTools.h */; };
+		82F117251867AD7C00BBE57C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F117131867AD7C00BBE57C /* Timer.h */; };
+		82F117261867AD7C00BBE57C /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F117141867AD7C00BBE57C /* util.h */; };
+		82F117271867AD7C00BBE57C /* ZeroCrossing.h in Headers */ = {isa = PBXBuildFile; fileRef = 82F117151867AD7C00BBE57C /* ZeroCrossing.h */; };
+		82FCCC2B18665696003F14DE /* libaletler-physics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210A4BF1849940E003C1D56 /* libaletler-physics.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -81,49 +101,51 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8210A48C18499145003C1D56 /* BoundingBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
-		8210A48D18499145003C1D56 /* MarchingSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarchingSource.h; sourceTree = "<group>"; };
-		8210A48E18499145003C1D56 /* TriangleMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TriangleMesh.h; sourceTree = "<group>"; };
-		8210A49018499145003C1D56 /* #PhysicalConstants.h# */ = {isa = PBXFileReference; lastKnownFileType = text; path = "#PhysicalConstants.h#"; sourceTree = "<group>"; };
-		8210A49118499145003C1D56 /* Bubble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bubble.h; sourceTree = "<group>"; };
-		8210A49218499145003C1D56 /* Electrostatics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Electrostatics.h; sourceTree = "<group>"; };
-		8210A49318499145003C1D56 /* PhysicalConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicalConstants.h; sourceTree = "<group>"; };
-		8210A49518499145003C1D56 /* BubbleSound.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BubbleSound.h; sourceTree = "<group>"; };
-		8210A49618499145003C1D56 /* Listener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Listener.h; sourceTree = "<group>"; };
-		8210A49718499145003C1D56 /* Monopole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Monopole.h; sourceTree = "<group>"; };
-		8210A49818499145003C1D56 /* SoundFileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundFileManager.h; sourceTree = "<group>"; };
-		8210A49A18499145003C1D56 /* SoundTrack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundTrack.h; sourceTree = "<group>"; };
-		8210A49B18499145003C1D56 /* SphericalTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SphericalTools.h; sourceTree = "<group>"; };
-		8210A49C18499145003C1D56 /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
-		8210A49D18499145003C1D56 /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
-		8210A49E18499145003C1D56 /* ZeroCrossing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZeroCrossing.h; sourceTree = "<group>"; };
-		8210A4A118499156003C1D56 /* BoundingBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
-		8210A4A318499156003C1D56 /* MarchingSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MarchingSource.cpp; sourceTree = "<group>"; };
-		8210A4A518499157003C1D56 /* TriangleMesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TriangleMesh.cpp; sourceTree = "<group>"; };
-		8210A4A918499157003C1D56 /* BubbleSound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BubbleSound.cpp; sourceTree = "<group>"; };
-		8210A4AC18499157003C1D56 /* SoundFileManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SoundFileManager.cpp; sourceTree = "<group>"; };
-		8210A4AE18499157003C1D56 /* SoundTrack.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SoundTrack.cpp; sourceTree = "<group>"; };
 		8210A4B418499220003C1D56 /* libaletler-geometry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaletler-geometry.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8210A4BF1849940E003C1D56 /* libaletler-physics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaletler-physics.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8210A4C31849943A003C1D56 /* Bubble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bubble.cpp; path = physics/Bubble.cpp; sourceTree = "<group>"; };
 		8210A4CB1849984A003C1D56 /* implicitSurfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = implicitSurfaces.h; sourceTree = "<group>"; };
 		8210A4CC1849984A003C1D56 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8210A4CF1849984A003C1D56 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8210A4D618499898003C1D56 /* test-physics */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-physics"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8210A4DF184998C4003C1D56 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		8210A4E518499CC4003C1D56 /* Electrostatics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Electrostatics.cpp; path = physics/Electrostatics.cpp; sourceTree = "<group>"; };
 		8210A4ED184A9179003C1D56 /* libaletler-sound.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaletler-sound.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8232F58E18525A7800EEF1F6 /* test-geometry */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-geometry"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8232F599185B922000EEF1F6 /* SoundFrequency.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundFrequency.h; sourceTree = "<group>"; };
-		8232F59A185E6B2400EEF1F6 /* FastMultibubble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FastMultibubble.h; path = numeric/FastMultibubble.h; sourceTree = "<group>"; };
 		8232F59F185E7E0700EEF1F6 /* fastmultibubbletester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fastmultibubbletester; sourceTree = BUILT_PRODUCTS_DIR; };
 		8232F5A1185E7E0700EEF1F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8232F5AC185EC84500EEF1F6 /* watersound */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = watersound; sourceTree = BUILT_PRODUCTS_DIR; };
 		8232F5AE185EC84500EEF1F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8232F5B9185F622C00EEF1F6 /* fakemeshgenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fakemeshgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		8232F5BB185F622C00EEF1F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		8232F5C5185FBCB600EEF1F6 /* Fluid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluid.cpp; sourceTree = "<group>"; };
-		8232F5C6185FBCB600EEF1F6 /* Fluid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluid.h; sourceTree = "<group>"; };
+		82F116DA1867AD0700BBE57C /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
+		82F116DB1867AD0700BBE57C /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
+		82F116DD1867AD0700BBE57C /* MarchingSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MarchingSource.cpp; sourceTree = "<group>"; };
+		82F116DE1867AD0700BBE57C /* MarchingSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarchingSource.h; sourceTree = "<group>"; };
+		82F116E01867AD0700BBE57C /* Triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Triangle.cpp; sourceTree = "<group>"; };
+		82F116E11867AD0700BBE57C /* Triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Triangle.h; sourceTree = "<group>"; };
+		82F116E21867AD0700BBE57C /* TriangleMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriangleMesh.cpp; sourceTree = "<group>"; };
+		82F116E31867AD0700BBE57C /* TriangleMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangleMesh.h; sourceTree = "<group>"; };
+		82F116E51867AD0700BBE57C /* TriangleQuadrature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangleQuadrature.h; sourceTree = "<group>"; };
+		82F116F31867AD5C00BBE57C /* FastMultibubble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FastMultibubble.h; sourceTree = "<group>"; };
+		82F116F51867AD6500BBE57C /* Bubble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bubble.cpp; sourceTree = "<group>"; };
+		82F116F61867AD6500BBE57C /* Bubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bubble.h; sourceTree = "<group>"; };
+		82F116F71867AD6500BBE57C /* Electrostatics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Electrostatics.cpp; sourceTree = "<group>"; };
+		82F116F81867AD6500BBE57C /* Electrostatics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Electrostatics.h; sourceTree = "<group>"; };
+		82F116F91867AD6500BBE57C /* Fluid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fluid.cpp; sourceTree = "<group>"; };
+		82F116FA1867AD6500BBE57C /* Fluid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fluid.h; sourceTree = "<group>"; };
+		82F116FB1867AD6500BBE57C /* PhysicalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicalConstants.h; sourceTree = "<group>"; };
+		82F117051867AD7C00BBE57C /* BubbleSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BubbleSound.cpp; sourceTree = "<group>"; };
+		82F117061867AD7C00BBE57C /* BubbleSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleSound.h; sourceTree = "<group>"; };
+		82F117081867AD7C00BBE57C /* Listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Listener.h; sourceTree = "<group>"; };
+		82F1170A1867AD7C00BBE57C /* Monopole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Monopole.h; sourceTree = "<group>"; };
+		82F1170B1867AD7C00BBE57C /* SoundFileManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundFileManager.cpp; sourceTree = "<group>"; };
+		82F1170C1867AD7C00BBE57C /* SoundFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundFileManager.h; sourceTree = "<group>"; };
+		82F1170E1867AD7C00BBE57C /* SoundFrequency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundFrequency.h; sourceTree = "<group>"; };
+		82F1170F1867AD7C00BBE57C /* SoundTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundTrack.cpp; sourceTree = "<group>"; };
+		82F117101867AD7C00BBE57C /* SoundTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundTrack.h; sourceTree = "<group>"; };
+		82F117121867AD7C00BBE57C /* SphericalTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphericalTools.h; sourceTree = "<group>"; };
+		82F117131867AD7C00BBE57C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		82F117141867AD7C00BBE57C /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		82F117151867AD7C00BBE57C /* ZeroCrossing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZeroCrossing.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +209,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82FCCC2B18665696003F14DE /* libaletler-physics.a in Frameworks */,
 				8232F5C2185F646900EEF1F6 /* libaletler-geometry.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -197,8 +220,10 @@
 		8210A47A1849912A003C1D56 = {
 			isa = PBXGroup;
 			children = (
-				8210A48A18499145003C1D56 /* include */,
-				8210A49F18499156003C1D56 /* src */,
+				82F116D91867AD0700BBE57C /* geometry */,
+				82F116F21867AD5C00BBE57C /* numeric */,
+				82F116F41867AD6500BBE57C /* physics */,
+				82F117031867AD7C00BBE57C /* sound */,
 				8210A4C81849984A003C1D56 /* tests */,
 				8232F5A0185E7E0700EEF1F6 /* fastmultibubbletester */,
 				8232F5AD185EC84500EEF1F6 /* watersound */,
@@ -220,98 +245,6 @@
 				8232F5B9185F622C00EEF1F6 /* fakemeshgenerator */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		8210A48A18499145003C1D56 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				8210A48B18499145003C1D56 /* geometry */,
-				8210A48F18499145003C1D56 /* physics */,
-				8210A49418499145003C1D56 /* sound */,
-				8232F59A185E6B2400EEF1F6 /* FastMultibubble.h */,
-			);
-			name = include;
-			path = ../include;
-			sourceTree = "<group>";
-		};
-		8210A48B18499145003C1D56 /* geometry */ = {
-			isa = PBXGroup;
-			children = (
-				8210A48C18499145003C1D56 /* BoundingBox.h */,
-				8210A48D18499145003C1D56 /* MarchingSource.h */,
-				8210A48E18499145003C1D56 /* TriangleMesh.h */,
-			);
-			path = geometry;
-			sourceTree = "<group>";
-		};
-		8210A48F18499145003C1D56 /* physics */ = {
-			isa = PBXGroup;
-			children = (
-				8210A49018499145003C1D56 /* #PhysicalConstants.h# */,
-				8210A49118499145003C1D56 /* Bubble.h */,
-				8210A49218499145003C1D56 /* Electrostatics.h */,
-				8210A49318499145003C1D56 /* PhysicalConstants.h */,
-				8232F5C5185FBCB600EEF1F6 /* Fluid.cpp */,
-				8232F5C6185FBCB600EEF1F6 /* Fluid.h */,
-			);
-			path = physics;
-			sourceTree = "<group>";
-		};
-		8210A49418499145003C1D56 /* sound */ = {
-			isa = PBXGroup;
-			children = (
-				8210A49518499145003C1D56 /* BubbleSound.h */,
-				8210A49618499145003C1D56 /* Listener.h */,
-				8210A49718499145003C1D56 /* Monopole.h */,
-				8232F599185B922000EEF1F6 /* SoundFrequency.h */,
-				8210A49818499145003C1D56 /* SoundFileManager.h */,
-				8210A49A18499145003C1D56 /* SoundTrack.h */,
-				8210A49B18499145003C1D56 /* SphericalTools.h */,
-				8210A49C18499145003C1D56 /* Timer.h */,
-				8210A49D18499145003C1D56 /* util.h */,
-				8210A49E18499145003C1D56 /* ZeroCrossing.h */,
-			);
-			path = sound;
-			sourceTree = "<group>";
-		};
-		8210A49F18499156003C1D56 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				8210A4C718499448003C1D56 /* physics */,
-				8210A4A018499156003C1D56 /* geometry */,
-				8210A4A718499157003C1D56 /* sound */,
-			);
-			name = src;
-			path = ../src;
-			sourceTree = "<group>";
-		};
-		8210A4A018499156003C1D56 /* geometry */ = {
-			isa = PBXGroup;
-			children = (
-				8210A4A118499156003C1D56 /* BoundingBox.cpp */,
-				8210A4A318499156003C1D56 /* MarchingSource.cpp */,
-				8210A4A518499157003C1D56 /* TriangleMesh.cpp */,
-			);
-			path = geometry;
-			sourceTree = "<group>";
-		};
-		8210A4A718499157003C1D56 /* sound */ = {
-			isa = PBXGroup;
-			children = (
-				8210A4A918499157003C1D56 /* BubbleSound.cpp */,
-				8210A4AC18499157003C1D56 /* SoundFileManager.cpp */,
-				8210A4AE18499157003C1D56 /* SoundTrack.cpp */,
-			);
-			path = sound;
-			sourceTree = "<group>";
-		};
-		8210A4C718499448003C1D56 /* physics */ = {
-			isa = PBXGroup;
-			children = (
-				8210A4C31849943A003C1D56 /* Bubble.cpp */,
-				8210A4E518499CC4003C1D56 /* Electrostatics.cpp */,
-			);
-			name = physics;
 			sourceTree = "<group>";
 		};
 		8210A4C81849984A003C1D56 /* tests */ = {
@@ -374,6 +307,68 @@
 			path = fakemeshgenerator;
 			sourceTree = "<group>";
 		};
+		82F116D91867AD0700BBE57C /* geometry */ = {
+			isa = PBXGroup;
+			children = (
+				82F116DA1867AD0700BBE57C /* BoundingBox.cpp */,
+				82F116DB1867AD0700BBE57C /* BoundingBox.h */,
+				82F116DD1867AD0700BBE57C /* MarchingSource.cpp */,
+				82F116DE1867AD0700BBE57C /* MarchingSource.h */,
+				82F116E01867AD0700BBE57C /* Triangle.cpp */,
+				82F116E11867AD0700BBE57C /* Triangle.h */,
+				82F116E21867AD0700BBE57C /* TriangleMesh.cpp */,
+				82F116E31867AD0700BBE57C /* TriangleMesh.h */,
+				82F116E51867AD0700BBE57C /* TriangleQuadrature.h */,
+			);
+			name = geometry;
+			path = ../src/geometry;
+			sourceTree = "<group>";
+		};
+		82F116F21867AD5C00BBE57C /* numeric */ = {
+			isa = PBXGroup;
+			children = (
+				82F116F31867AD5C00BBE57C /* FastMultibubble.h */,
+			);
+			name = numeric;
+			path = ../src/numeric;
+			sourceTree = "<group>";
+		};
+		82F116F41867AD6500BBE57C /* physics */ = {
+			isa = PBXGroup;
+			children = (
+				82F116F51867AD6500BBE57C /* Bubble.cpp */,
+				82F116F61867AD6500BBE57C /* Bubble.h */,
+				82F116F71867AD6500BBE57C /* Electrostatics.cpp */,
+				82F116F81867AD6500BBE57C /* Electrostatics.h */,
+				82F116F91867AD6500BBE57C /* Fluid.cpp */,
+				82F116FA1867AD6500BBE57C /* Fluid.h */,
+				82F116FB1867AD6500BBE57C /* PhysicalConstants.h */,
+			);
+			name = physics;
+			path = ../src/physics;
+			sourceTree = "<group>";
+		};
+		82F117031867AD7C00BBE57C /* sound */ = {
+			isa = PBXGroup;
+			children = (
+				82F117051867AD7C00BBE57C /* BubbleSound.cpp */,
+				82F117061867AD7C00BBE57C /* BubbleSound.h */,
+				82F117081867AD7C00BBE57C /* Listener.h */,
+				82F1170A1867AD7C00BBE57C /* Monopole.h */,
+				82F1170B1867AD7C00BBE57C /* SoundFileManager.cpp */,
+				82F1170C1867AD7C00BBE57C /* SoundFileManager.h */,
+				82F1170E1867AD7C00BBE57C /* SoundFrequency.h */,
+				82F1170F1867AD7C00BBE57C /* SoundTrack.cpp */,
+				82F117101867AD7C00BBE57C /* SoundTrack.h */,
+				82F117121867AD7C00BBE57C /* SphericalTools.h */,
+				82F117131867AD7C00BBE57C /* Timer.h */,
+				82F117141867AD7C00BBE57C /* util.h */,
+				82F117151867AD7C00BBE57C /* ZeroCrossing.h */,
+			);
+			name = sound;
+			path = ../src/sound;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -381,6 +376,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82F116EA1867AD0700BBE57C /* MarchingSource.h in Headers */,
+				82F116ED1867AD0700BBE57C /* Triangle.h in Headers */,
+				82F116E71867AD0700BBE57C /* BoundingBox.h in Headers */,
+				82F116F11867AD0700BBE57C /* TriangleQuadrature.h in Headers */,
+				82F116EF1867AD0700BBE57C /* TriangleMesh.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,7 +388,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8232F5C8185FBCB600EEF1F6 /* Fluid.h in Headers */,
+				82F117011867AD6500BBE57C /* Fluid.h in Headers */,
+				82F116FD1867AD6500BBE57C /* Bubble.h in Headers */,
+				82F116FF1867AD6500BBE57C /* Electrostatics.h in Headers */,
+				82F117021867AD6500BBE57C /* PhysicalConstants.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +399,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82F117261867AD7C00BBE57C /* util.h in Headers */,
+				82F117241867AD7C00BBE57C /* SphericalTools.h in Headers */,
+				82F117221867AD7C00BBE57C /* SoundTrack.h in Headers */,
+				82F1171E1867AD7C00BBE57C /* SoundFileManager.h in Headers */,
+				82F1171A1867AD7C00BBE57C /* Listener.h in Headers */,
+				82F117181867AD7C00BBE57C /* BubbleSound.h in Headers */,
+				82F117271867AD7C00BBE57C /* ZeroCrossing.h in Headers */,
+				82F117201867AD7C00BBE57C /* SoundFrequency.h in Headers */,
+				82F117251867AD7C00BBE57C /* Timer.h in Headers */,
+				82F1171C1867AD7C00BBE57C /* Monopole.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,9 +589,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8210A4B81849923D003C1D56 /* BoundingBox.cpp in Sources */,
-				8210A4B91849923F003C1D56 /* MarchingSource.cpp in Sources */,
-				8210A4BA18499242003C1D56 /* TriangleMesh.cpp in Sources */,
+				82F116EE1867AD0700BBE57C /* TriangleMesh.cpp in Sources */,
+				82F116E61867AD0700BBE57C /* BoundingBox.cpp in Sources */,
+				82F116EC1867AD0700BBE57C /* Triangle.cpp in Sources */,
+				82F116E91867AD0700BBE57C /* MarchingSource.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,9 +600,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8210A4E718499CC4003C1D56 /* Electrostatics.cpp in Sources */,
-				8232F5C7185FBCB600EEF1F6 /* Fluid.cpp in Sources */,
-				8210A4C51849943A003C1D56 /* Bubble.cpp in Sources */,
+				82F116FE1867AD6500BBE57C /* Electrostatics.cpp in Sources */,
+				82F117001867AD6500BBE57C /* Fluid.cpp in Sources */,
+				82F116FC1867AD6500BBE57C /* Bubble.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,9 +618,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8210A4F1184A9185003C1D56 /* BubbleSound.cpp in Sources */,
-				8210A4F2184A9188003C1D56 /* SoundFileManager.cpp in Sources */,
-				8210A4F3184A918A003C1D56 /* SoundTrack.cpp in Sources */,
+				82F117171867AD7C00BBE57C /* BubbleSound.cpp in Sources */,
+				82F1171D1867AD7C00BBE57C /* SoundFileManager.cpp in Sources */,
+				82F117211867AD7C00BBE57C /* SoundTrack.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -679,7 +693,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"~/github/aletler/include/",
+					"~/github/aletler/src/",
 					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
 					/usr/local/include/,
 				);
@@ -718,7 +732,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"~/github/aletler/include/",
+					"~/github/aletler/src/",
 					"/usr/local/include/eigen-eigen-ffa86ffb5570/",
 					/usr/local/include/,
 				);

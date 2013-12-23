@@ -14,9 +14,6 @@
 
 
 
-static double oneFn(const Vector3d &yi, const Vector3d &xj, const Vector3d &nj) {
-  return 1.0;
-}
 
 
 struct stl_triangle {
