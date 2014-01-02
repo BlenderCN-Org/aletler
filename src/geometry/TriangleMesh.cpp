@@ -293,11 +293,21 @@ void TriangleMesh::writeFastBEM(const std::string &filename,
   
   ofile << "$ Elements and Boundary Conditions:" << "\n";
   for (size_t i = 0; i < m_faces.size(); i++) {
+    
+    float nbc = 0.0;
+    
+    // TODO WARNING! This assumes that the air mesh came first,
+    // and therefore the first sequence of faces have a neumann BC
+    // that is computed (via the Laplace solve), and passed
+    // to this function as a vector:
+    if (m_faces[i]->boundaryType == FBT_AIR)
+      nbc = neumannBC(i);
+    
     ofile << i+1 << " \t"
     << m_faces[i]->v[0] + 1 << " \t"
 	  << m_faces[i]->v[1] + 1 << " \t"
 	  << m_faces[i]->v[2] + 1 << " \t"
-    << NEUM_BC_IDX << "\t (" << neumannBC(i) << ", 0.0)"
+    << NEUM_BC_IDX << "\t (" << nbc << ", 0.0)"
     << "\n";
     
   }

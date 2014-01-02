@@ -125,7 +125,8 @@ void simulateGeometry(size_t frameRate,
     
   }
 }
-                      
+
+
 void loadStartingMeshes() {
   
   airMesh = new TriangleMesh;
@@ -134,12 +135,17 @@ void loadStartingMeshes() {
   solidMesh = new TriangleMesh;
   solidMesh->read(baseDir + "solid_glass.obj", MFF_OBJ);
   
+  // TODO: the boundary types will ultimately be specified by the simulator,
+  // not hard-coded like this!
   comboMesh = new TriangleMesh;
+  comboMesh->boundaryType = FBT_AIR;
   comboMesh->read(baseDir + "free_surface_glass.obj", MFF_OBJ);
+  comboMesh->boundaryType = FBT_SOLID;
   comboMesh->read(baseDir + "solid_glass.obj", MFF_OBJ);
   
   comboMesh->write(baseDir + "combo.obj", MFF_OBJ);
 }
+
 
 void saveFastBEM() {
   
@@ -149,9 +155,7 @@ void saveFastBEM() {
     neumannBC(i) = i;
   }
   
-  airMesh->writeFastBEM(baseDir + "myfakebem.dat", neumannBC);
-  
-  
+  comboMesh->writeFastBEM(baseDir + "myfakebem.dat", neumannBC);
 }
 
 
