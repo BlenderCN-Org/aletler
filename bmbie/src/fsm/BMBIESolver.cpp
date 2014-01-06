@@ -170,7 +170,8 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
   for (size_t i = 0; i < spec_->nGaussPts; i++) {
     Vector3<REAL> y = spec_->triCenters[i];
     Vector3<REAL> r = y - x; // TODO maybe switch?
-    Vector3<complex<REAL> > rc(complex<REAL>(r.x, 0),
+    
+    Eigen::Vector3cd rc(complex<REAL>(r.x, 0),
                                complex<REAL>(r.y, 0),
                                complex<REAL>(r.z, 0));
     
@@ -187,13 +188,13 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
     const REAL invss = 1. / (4.*M_PI*lenr2*lenr);
     
     const complex<REAL> G = -expnegikr / (4.0 * M_PI * lenr);
-    const Vector3<complex<REAL> > GradG = (ikr_plus_1 * expnegikr / (4.0 * M_PI * lenr * lenr2)) * rc;
-    const Vector3<REAL> GradGReal = Vector3<REAL>(GradG.x.real(), GradG.y.real(), GradG.z.real());
-    const Vector3<complex<REAL> > complexNormal(complex<REAL>(spec_->triNormals[i].x, 0),
-                                                complex<REAL>(spec_->triNormals[i].y, 0),
-                                                complex<REAL>(spec_->triNormals[i].z, 0));
+    const Eigen::Vector3cd GradG = (ikr_plus_1 * expnegikr / (4.0 * M_PI * lenr * lenr2)) * rc;
+    const Eigen::Vector3cd GradGReal(GradG.x().real(), GradG.y().real(), GradG.z().real());
+    const Eigen::Vector3cd complexNormal(complex<REAL>(spec_->triNormals[i].x, 0),
+                                         complex<REAL>(spec_->triNormals[i].y, 0),
+                                         complex<REAL>(spec_->triNormals[i].z, 0));
                                       
-    const REAL dGdn_r = GradGReal.dot(spec_->triNormals[i]);
+   // const REAL dGdn_r = GradGReal.dot(spec_->triNormals[i]);
     const complex<REAL> dGdn_c = GradG.dot(complexNormal);
     lp(i) = spec_->triAreas[i] * dGdn_c;
     lv(i) = spec_->triAreas[i] * G ;
