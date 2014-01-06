@@ -168,7 +168,7 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
   wts.resize(nGaussPts);
   
   for (size_t i = 0; i < nGaussPts; i++) {
-    Vector3<REAL> y = spec->triCenters[i];
+    Vector3<REAL> y = spec_->triCenters[i];
     Vector3<REAL> r = y - x; // TODO maybe switch?
     
     const REAL lenr  = r.length();
@@ -182,12 +182,12 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
     
     const REAL invss = 1. / (4.*M_PI*lenr2*lenr);
     
-    const REAL G = -expnegikr / (4.0 * M_PI * lenr);
-    const Vector3<REAL> GradG = ((1 + ikr) * expnegikr / (4.0 * M_PI * lenr * lenr2)) * r;
+    const complex<REAL> G = -expnegikr / (4.0 * M_PI * lenr);
+    const Vector3<complex<REAL> > GradG = ((ikr + 1) * expnegikr / (4.0 * M_PI * lenr * lenr2)) * r;
     const REAL dGdn = GradG.dot(spec->triNormals[i]);
     
-    lp(i) = spec->triAreas[i] * dGdn;
-    lv(i) = spec->triAreas[i] * G ;
+    lp(i) = spec_->triAreas[i] * dGdn;
+    lv(i) = spec_->triAreas[i] * G ;
     
   }
   
