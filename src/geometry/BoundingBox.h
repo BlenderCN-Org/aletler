@@ -29,6 +29,10 @@ class BoundingBox {
   
   const Vector3d &GetBoxmax() const { return boxmax; }
 
+  const Vector3d getBoxCenter() const {
+    return (boxmin + boxmax) * 0.5;
+  }
+  
  private:
   Vector3d boxmin;
   Vector3d boxmax;
