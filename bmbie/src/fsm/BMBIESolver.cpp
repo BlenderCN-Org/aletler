@@ -163,11 +163,11 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
   Eigen::VectorXd lp;
   Eigen::VectorXd lv;
   
-  lp.resize(nGaussPts);
-  lv.resize(nGaussPts);
-  wts.resize(nGaussPts);
+  lp.resize(spec_->nGaussPts);
+  lv.resize(spec_->nGaussPts);
+  wts.resize(spec_->nGaussPts);
   
-  for (size_t i = 0; i < nGaussPts; i++) {
+  for (size_t i = 0; i < spec_->nGaussPts; i++) {
     Vector3<REAL> y = spec_->triCenters[i];
     Vector3<REAL> r = y - x; // TODO maybe switch?
     
@@ -175,6 +175,7 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
     const REAL lenr2 = r.length_sqr();
     
     const complex<REAL> ikr = complex<REAL>(0, k_ * lenr);
+    const complex<REAL> ikr_plus_1 = complex<REAL>(1, k_ * lenr);
     const complex<REAL> negikr = complex<REAL>(0, -k_ * lenr);
 
     const complex<REAL> expikr = std::exp(ikr);
@@ -183,7 +184,7 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
     const REAL invss = 1. / (4.*M_PI*lenr2*lenr);
     
     const complex<REAL> G = -expnegikr / (4.0 * M_PI * lenr);
-    const Vector3<complex<REAL> > GradG = ((ikr + 1) * expnegikr / (4.0 * M_PI * lenr * lenr2)) * r;
+    const Vector3<complex<REAL> > GradG = (ikr_plus_1 * expnegikr / (4.0 * M_PI * lenr * lenr2)) * r;
     const REAL dGdn = GradG.dot(spec->triNormals[i]);
     
     lp(i) = spec_->triAreas[i] * dGdn;
@@ -191,5 +192,5 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
     
   }
   
-  wts = lp.transpose() * A_.inverse() + lv.transpose();
+  wts = (lp.transpose() * A_.inverse() + lv.transpose()).transpose();
 }
