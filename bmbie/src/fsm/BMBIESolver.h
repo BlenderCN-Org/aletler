@@ -3,6 +3,7 @@
 
 #include <boost/multi_array.hpp>
 #include "BIESolver.h"
+#include <complex>
 
 /*
  * Helmholtz BIE solver using Burton-Miller formula
@@ -17,8 +18,9 @@ public:
   
   void solve(REAL freq);
   
+  
   void computeWeightVector(const Vector3<REAL> &x, // listening position
-                           std::vector<REAL> &wts);
+                           Eigen::VectorXcd &wts);
   
   
 private:
