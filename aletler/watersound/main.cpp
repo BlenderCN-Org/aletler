@@ -15,6 +15,7 @@
 #include <sound/SoundTrack.h>
 #include <physics/Fluid.h>
 #include <physics/PhysicalConstants.h>
+#include <io/FileNameGen.h>
 
 using namespace PhysicalConstants;
 
@@ -27,10 +28,10 @@ static const size_t ZPADLEN = 6;
 // TODO: replace with utility functions that look in the directory and figure out how many of each
 // there are...
 
-static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geometrySim/";
-static const size_t numBubbles = 10;
-static const size_t numFrames = 96;
-static const int frameRate = 96;
+static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geomsim3/";
+static const size_t numBubbles = 1;
+static const size_t numFrames = 200;
+static const int frameRate = 200;
 
 /*
 static const std::string baseDir = "/Users/phaedon/github/aletler/meshes/geomsim2/";
@@ -45,7 +46,7 @@ int main(int argc, const char * argv[])
   Fluid fluid;
   
   SoundTrack st;
-  SoundFileManager sfm("/Users/phaedon/fabbubbles4.aiff");
+  SoundFileManager sfm("/Users/phaedon/fabbubbles5.aiff");
   
   
   // Step forward in time
@@ -59,27 +60,34 @@ int main(int argc, const char * argv[])
     TriangleMesh solidMesh;
     
     double timeStamp = double(i) / double(frameRate);
-    std::string zeroFrameNum = ZeroPadNumber(i, ZPADLEN);
     
-    airMesh.read(baseDir + "air_" + zeroFrameNum + ".obj", MFF_OBJ);
-    solidMesh.read(baseDir + "solid_" + zeroFrameNum + ".obj", MFF_OBJ);
+    airMesh.read(airMeshFilename(baseDir, "", i), MFF_OBJ);
+    solidMesh.read(solidMeshFilename(baseDir, "", i), MFF_OBJ);
     
     fluid.setFluidDomain(&airMesh, &solidMesh);
 
     
     for (size_t b = 0; b < numBubbles; b++) {
-      std::string zeroBubNum = ZeroPadNumber(b, ZPADLEN);
+      //std::string zeroBubNum = ZeroPadNumber(b, ZPADLEN);
       bubbleMeshes[b].clearAll();
-      std::string bubbleFilename = baseDir + "bubble_" + zeroBubNum + "_" + zeroFrameNum + ".obj";
+      std::string bubbleFilename = bubbleMeshFilename(baseDir, "", b, i);
+     /* std::string bubbleFilename = baseDir + "bubble_" + zeroBubNum + "_" + zeroFrameNum + ".obj";*/
       
       bool meshLoaded = bubbleMeshes[b].read(bubbleFilename, MFF_OBJ);
       
       if (meshLoaded) {
         bubbleMeshes[b].flipNormals();
-        fluid.setBubble(&bubbleMeshes[b], b, timeStamp);
+        std::string fastBEMfile = fastBEMFilename(baseDir, "fastbem", b, i);
+        std::string velocityFile = velocityFilename(baseDir, "velocities", b, i);
+        fluid.setBubble(&bubbleMeshes[b], b, timeStamp, fastBEMfile, velocityFile);
       }
       
+      
     }
+  }
+  
+  for (size_t b = 0; b < numBubbles; b++) {
+    fluid.saveBubbleFrequencyFile(b);
   }
   
   //fluid.printAllFrequencies();

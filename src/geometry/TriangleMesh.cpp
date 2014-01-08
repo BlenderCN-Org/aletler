@@ -88,7 +88,9 @@ static bool isDegenerateTriangle(const Vertex &v0, const Vertex &v1, const Verte
 }
 
 
-void TriangleMesh::addTriangle(Vertex &v0, Vertex &v1, Vertex &v2) {
+void TriangleMesh::addTriangle(const Vertex &v0,
+                               const Vertex &v1,
+                               const Vertex &v2) {
   
   if (isDegenerateTriangle(v0, v1, v2)) {
     std::cout << "not adding degenerate triangle with duplicate vertices" << std::endl;
@@ -129,7 +131,7 @@ Vector3d TriangleMesh::normal(size_t i) {
 }
 
 
-size_t TriangleMesh::insertVertex(Vertex &v) {
+size_t TriangleMesh::insertVertex(const Vertex &v) {
   size_t vIndex = 0;
   
   
@@ -259,7 +261,8 @@ void TriangleMesh::write(const std::string &filename, MeshFileFormat mff) const 
 
 
 void TriangleMesh::writeFastBEM(const std::string &filename,
-                                const VectorXd &neumannBC) const {
+                                const VectorXd &neumannBC,
+                                double freq_hz) const {
   std::ofstream ofile;
   ofile.open(filename.c_str());
   
@@ -274,9 +277,8 @@ void TriangleMesh::writeFastBEM(const std::string &filename,
   //ofile << "(1., 0.)  -1.   0.  0.\n";
   ofile << 0 << "\n";
   ofile << "343. \t 1.29 \t 2.d-5 \t 1.d-12\n";
-  ofile << "54.59 \t 54.59 \t 1 \t 0 \t 0\n";
+  ofile << freq_hz << " \t " << freq_hz << " \t 1 \t 0 \t 0\n";
   ofile << " 0 \t 3 \t 1 \t 0\n";
-  // TODO: bunch of input lines
   
   
   ofile << "$ Nodes:" << "\n";

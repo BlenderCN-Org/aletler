@@ -202,9 +202,15 @@ void Electrostatics::computeBubbleSubmatrices() {
 
 
 
-double Electrostatics::bubbleCapacitance() {
+double Electrostatics::bubbleCapacitance(VectorXd &velAir) {
   
   fmbsolver.solve(_rhs, _x);
+  
+  // Save the free surface velocities for later...
+  velAir.resize(_air->size(), 1);
+  velAir = _x.block(_bubble->size(), 0, _air->size(), 1);
+  
+  // Compute capacitance!
   return _x.head(_bubble->size()).dot(_bubble->triangleAreas()) * 0.25 * M_1_PI;
 }
 

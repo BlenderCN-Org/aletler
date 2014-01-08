@@ -19,6 +19,8 @@
 #include <sound/SoundFileManager.h>
 #include <sound/SoundFrequency.h>
 
+#include <sound/BoundaryPressure.h>
+
 static SoundTrack st(44100, 2);
 static SoundFrequency sfvec;
 
@@ -70,7 +72,6 @@ void boostmain()
   integrate_const(stepper, rhs , x , 0.0, 0.5, 1.0/44100.0, write_cout );
 }
 /******** BOOST STUFF **********/
-
 
 
 

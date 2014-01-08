@@ -9,6 +9,9 @@
 #include "PhysicalConstants.h"
 #include "Bubble.h"
 #include <boost/numeric/odeint.hpp>
+#include <io/FileNameGen.h>
+#include <sstream>
+#include <string>
 
 using namespace boost::numeric::odeint;
 typedef boost::array< double , 3 > state_type;
@@ -19,6 +22,33 @@ using namespace PhysicalConstants;
 static std::vector<double> *g_samples = NULL;
 static SoundFrequency *g_soundfreq = NULL;
 static double g_r0 = 0;
+
+
+
+
+ template <typename T>
+ T StringToNumber (const std::string &Text ) {
+ //character array as argument
+ std::stringstream ss(Text);
+ T result;
+ return ss >> result ? result : 0;
+ }
+
+
+
+static void bubbleFreqFromString(const std::string &line,
+                                 double &t,
+                                 double &f ) {
+  
+  std::stringstream stream(line);
+  std::string ts, fs;
+  stream >> ts;
+  stream >> fs;
+  
+  t = StringToNumber<double>(ts);
+  f = StringToNumber<double>(fs);
+}
+
 
 static double forcingfn(double t) {
   
@@ -139,4 +169,61 @@ double Bubble::getSample(size_t sampleIndex) {
   if (arrayIndex >= _samples.size()) return 0;
   
   return _samples[arrayIndex];
+}
+
+
+void Bubble::saveBubbleFrequencyFile() const {
+  std::string filename = bubbleFreqFilename("/Users/phaedon/github/aletler/meshes/geomsim3/", "bubblefreqs", _bubble_index);
+  
+  std::ofstream ofile;
+  ofile.open(filename.c_str());
+  
+  ofile << std::setprecision(10) << std::fixed;
+  ofile << _r0 << std::endl;
+  _soundfreq.saveFrequencyFile(ofile);
+  
+  ofile.close();
+}
+
+
+
+bool Bubble::loadBubbleFrequencyFile(const std::string &filename) {
+  std::ifstream ifile(filename.c_str());
+  std::string line;
+  
+  const std::string &whitespace = " \t";
+  
+  if (ifile.is_open()) {
+    
+    // grab the first line, which contains the "radius":
+    std::getline(ifile, line);
+    std::stringstream stream(line);
+    std::string rs;
+    stream >> rs;
+    
+    _r0 = StringToNumber<double>(rs);
+ 
+    while (std::getline (ifile,line)) {
+      
+      size_t strBegin = line.find_first_not_of(whitespace);
+      if (strBegin == std::string::npos  // empty line
+          || line[strBegin] == '#')  // comment
+        continue;
+      
+      double timestamp, freq;
+      bubbleFreqFromString(line, timestamp, freq);
+      
+      _soundfreq.addFrequency(timestamp, freq, FREQ_OMEGA);
+      
+    }
+    
+    ifile.close();
+    return true;
+    
+  } else {
+    //std::cout << "Unable to open file" << std::endl;
+    return false;
+  }
+  
+
 }

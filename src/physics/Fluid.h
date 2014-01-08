@@ -18,7 +18,7 @@
 #include <boost/math/special_functions/fpclassify.hpp>
 
 class Fluid {
-  
+
 public:
   Fluid() {}
   
@@ -27,9 +27,17 @@ public:
     _solid = solid;
     
     e.setDomain(_air, _solid);
+    
+    _combined.clearAll();
+    _combined.boundaryType = FBT_AIR;
+    _combined.append(_air);
+    _combined.boundaryType = FBT_SOLID;
+    _combined.append(_solid);
   }
 
-  void setBubble(TriangleMesh *bub, size_t bubbleIndex, double timeStamp) {
+  void setBubble(TriangleMesh *bub, size_t bubbleIndex, double timeStamp,
+                 std::string &fastBEMfilename,
+                 std::string &velocityFilename) {
     
     if (bubbleIndex >= _bubbles.size()) {
       _bubbles.resize(bubbleIndex + 1);
@@ -40,11 +48,16 @@ public:
     _bubble = bub;
     e.setBubble(_bubble);
     
-    double bubCap = e.bubbleCapacitance();
+    VectorXd velAir;
+    double bubCap = e.bubbleCapacitance(velAir);
     if (isnan(bubCap)) {
       std::cout << "capacitance is NaN" << std::endl;
     } else {
-      _bubbles[bubbleIndex].setFrequency(timeStamp, bubCap);
+
+      float freq_hz = _bubbles[bubbleIndex].setFrequency(timeStamp, bubCap);
+      _combined.writeFastBEM(fastBEMfilename, velAir, freq_hz);
+      
+      saveAirVelocityFile(velocityFilename, velAir);
     }
   }
   
@@ -67,6 +80,11 @@ public:
     return _bubbles[bubbleNum].getSample(audioFrame);
   }
   
+  void saveBubbleFrequencyFile(size_t bubbleIndex) const {
+    _bubbles[bubbleIndex].saveBubbleFrequencyFile();
+  }
+  
+  void saveAirVelocityFile(const std::string &fullFilename, const VectorXd &velAir);
   
 private:
   Electrostatics e;
@@ -77,6 +95,7 @@ private:
   TriangleMesh *_solid;
   TriangleMesh *_bubble;
   
+  TriangleMesh _combined;
   
 };
 

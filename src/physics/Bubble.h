@@ -36,8 +36,12 @@ public:
     _bubble->translate(dt * _vel);
   }
   
-  void setFrequency(double timeStamp, double capacitance) {
-    _soundfreq.addFrequency(timeStamp, frequency_omega(capacitance), FREQ_OMEGA);
+  // returns the frequency, in Hz
+  double setFrequency(double timeStamp, double capacitance) {
+    double f_omega = frequency_omega(capacitance);
+    _soundfreq.addFrequency(timeStamp, f_omega, FREQ_OMEGA);
+    
+    return f_omega * 0.5 * M_1_PI;
   }
   
   double frequency_omega(double capacitance) const;
@@ -45,9 +49,6 @@ public:
   void integrateVibrationODE();
   double getSample(size_t sampleIndex);
   
-  
-  SoundFrequency &soundFrequency() {return _soundfreq;}
- 
   
   TriangleMesh *getBubbleMesh() {
     return _bubble;
@@ -57,7 +58,12 @@ public:
     return _soundfreq;
   }
   
+  void saveBubbleFrequencyFile() const;
+  
+  bool loadBubbleFrequencyFile(const std::string &filename);
+  
 private:
+  
   size_t _bubble_index;
   
   size_t sample0;

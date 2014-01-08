@@ -24,7 +24,10 @@ class Electrostatics {
   
   void setBubble(TriangleMesh *b);
   void setDomain(TriangleMesh *air, TriangleMesh *solid);
-  double bubbleCapacitance();
+  
+  // The parameter velAir is an empty vector that is appropriately resized
+  // to take the solved values of the velocity of the free surface
+  double bubbleCapacitance(VectorXd &velAir);
 
   double evaluateField(const Vector3d &x) const;
   void visualize();

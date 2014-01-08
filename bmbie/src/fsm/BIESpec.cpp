@@ -129,6 +129,8 @@ BIESpec* load_from_fastbem_input(const char* filename)
 {
     BIESpec* ret = new BIESpec;
 
+  ret->nAirTris = 0;
+  
     char text[1024];
     int ntgl, nvtx, nfp;
 
@@ -216,6 +218,9 @@ BIESpec* load_from_fastbem_input(const char* filename)
             PRINT_ERROR("Only Neumann boundary condition is supported now\n");
             exit(1);
         }
+      if (v1 != 0.0) {
+        ret->nAirTris++;
+      }
         ret->triangles[id-1].set(idx-1, idy-1, idz-1);
         ret->normalVel(id-1) = complex<REAL>(v1, v2);
     }

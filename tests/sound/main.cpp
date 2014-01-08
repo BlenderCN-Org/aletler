@@ -18,6 +18,7 @@
 #include <sound/BubbleSound.h>
 #include <sound/util.h>
 #include <sound/ZeroCrossing.h>
+#include <sound/BoundaryPressure.h>
 
 void filter_simplest_lowpass(const vector<double> &x, vector<double> &y, void *args) {
     for (int i = 1; i < x.size(); i++) {
@@ -89,6 +90,9 @@ Bubble *singleBubble() {
 
   return bubble;
 }
+
+
+
 
 
 int main(int argc, const char * argv[])

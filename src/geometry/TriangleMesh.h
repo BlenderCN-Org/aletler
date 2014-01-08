@@ -81,7 +81,8 @@ class TriangleMesh {
   void color();
   
   void writeFastBEM(const std::string &filename,
-                    const VectorXd &neumannBC) const;
+                    const VectorXd &neumannBC,
+                    double freq_hz) const;
 
   void jitter(const Vector3d &j) {
     for (size_t i = 0; i < m_verts.size(); i++) {
@@ -89,6 +90,15 @@ class TriangleMesh {
                          random_double(-j.y(), j.y()),
                          random_double(-j.z(), j.z()));
       m_verts[i].x += dv;
+    }
+  }
+  
+  void append(const TriangleMesh *tm) {
+    for (size_t i = 0; i < tm->m_faces.size(); i++) {
+      Face *f = tm->m_faces[i];
+      addTriangle(tm->m_verts[f->v[0]],
+                  tm->m_verts[f->v[1]],
+                  tm->m_verts[f->v[2]]);
     }
   }
   
@@ -194,8 +204,10 @@ class TriangleMesh {
   double triangleArea(size_t i) { return _triangleAreas(i); }
   VectorXd _triangleAreas;
   
-  void addTriangle(Vertex &v1, Vertex &v2, Vertex &v3);
-  size_t insertVertex(Vertex &v);
+  void addTriangle(const Vertex &v1,
+                   const Vertex &v2,
+                   const Vertex &v3);
+  size_t insertVertex(const Vertex &v);
   double signedVolumeOfTriangle(const Vertex &v1, const Vertex &v2, const Vertex &v3) const;
 
   // helper functions

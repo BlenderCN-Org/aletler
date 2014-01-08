@@ -67,7 +67,7 @@ void simulateGeometry(size_t frameRate,
     double dx = random_double(-0.05, +0.05);
     double dz = random_double(-0.05, +0.05);
     Vector3d dpos(dx,0,dz);
-    currBubble->translate(dpos);
+    //currBubble->translate(dpos);  // TODO: uncomment this line to randomizing starting position
     
     bubbles[i]->setBubbleMesh(currBubble);
     
@@ -84,7 +84,7 @@ void simulateGeometry(size_t frameRate,
     std::string zeropadFrameNum = ZeroPadNumber(f, 6);
 
     // add a bit of random vertical motion to the fluid surface
-    airMesh->jitter(Vector3d(0,0.0005,0));
+    //airMesh->jitter(Vector3d(0,0.0005,0));
     
     solidMesh->write(outputDir + solidPrefix + zeropadFrameNum + ".obj", MFF_OBJ);
     airMesh->write(outputDir + airPrefix + zeropadFrameNum + ".obj", MFF_OBJ);
@@ -147,37 +147,25 @@ void loadStartingMeshes() {
 }
 
 
-void saveFastBEM() {
-  
-  // create a fake matrix for now
-  VectorXd neumannBC(airMesh->size());
-  for (size_t i = 0; i < airMesh->size(); i++) {
-    neumannBC(i) = i;
-  }
-  
-  comboMesh->writeFastBEM(baseDir + "myfakebem.dat", neumannBC);
-}
 
 
 int main(int argc, const char * argv[]) {
 
   size_t framerate = 200;
-  size_t numbubbles = 500;
+  size_t numbubbles = 1;
   
-  double smallestBub = 0.25;
+  double smallestBub = 4.8;
   double biggestBub = 5.0;
   
-  double simDuration = 10.0;
+  double simDuration = 1.0;
   
   loadStartingMeshes();
-  saveFastBEM();
-  return 0;
   
   simulateGeometry(framerate,
                    smallestBub, biggestBub,
                    simDuration,
                    numbubbles,
-                   baseDir + "geomsim2/");
+                   baseDir + "geomsim3/");
   
   
   return 0;

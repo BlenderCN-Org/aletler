@@ -55,6 +55,9 @@ struct BIESpec
     std::pair<REAL, REAL>               freqRange;
     int                                 nFreq;
     REAL                                freqDelta;
+  
+  // # of trianges on the air/free surface boundary. Assumes these appear first in the file
+  size_t nAirTris;
 
     void init(size_t nGauss, const Point3<REAL>* gPts, const REAL* gW,
               size_t nGQ, const REAL* gqX, const REAL* gqW);

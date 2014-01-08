@@ -163,11 +163,13 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
   Eigen::VectorXcd lp;
   Eigen::VectorXcd lv;
   
-  lp.resize(spec_->nGaussPts);
-  lv.resize(spec_->nGaussPts);
-  wts.resize(spec_->nGaussPts);
+  size_t nTris = spec_->triangles.size();
   
-  for (size_t i = 0; i < spec_->nGaussPts; i++) {
+  lp.resize(nTris);
+  lv.resize(nTris);
+  wts.resize(nTris);
+  
+  for (size_t i = 0; i < nTris; i++) {
     Vector3<REAL> y = spec_->triCenters[i];
     Vector3<REAL> r = y - x; // TODO maybe switch?
     
@@ -202,5 +204,10 @@ void BMBIESolver::computeWeightVector(const Vector3<REAL> & x,
   }
   
   
+  // Equation (41) from Doug James, Fast Multibubble writeup
+  std::cout << "lp dim: " << lp.rows() << " x " << lp.cols() << std::endl;
+  std::cout << "lv dim: " << lv.rows() << " x " << lv.cols() << std::endl;
+  std::cout << "A dim: " << A_.rows() << " x " << A_.cols() << std::endl;
+
   wts = (lp.transpose() * A_.inverse() + lv.transpose()).transpose();
 }

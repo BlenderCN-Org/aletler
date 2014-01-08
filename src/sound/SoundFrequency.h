@@ -10,6 +10,8 @@
 #define aletler_SoundFrequency_h
 
 #include <vector>
+#include <fstream>
+#include <iomanip>  // std::setprecision
 
 enum FrequencyType {
   FREQ_HERTZ,
@@ -74,10 +76,24 @@ public:
     }
   }
   
-  double startTime() { return _times[0]; }
-  double stopTime() { return _times[_times.size() - 1]; }
+  double startTime() const { return _times[0]; }
+  double stopTime() const { return _times[_times.size() - 1]; }
   
   bool isEmpty() { return _times.size() == 0; }
+  
+  void saveFrequencyFile(std::ofstream &ofile) const {
+    //std::ofstream ofile;
+    //ofile.open(filename.c_str());
+    
+    for (size_t i = 0; i < _frequencies.size(); i++) {
+      ofile << std::setprecision(10)
+      << std::fixed
+      << _times[i] << " "
+      << _frequencies[i] << std::endl;
+    }
+    
+   // ofile.close();
+  }
   
 private:
   std::vector<double> _times;
