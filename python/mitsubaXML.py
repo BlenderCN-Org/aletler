@@ -1,3 +1,6 @@
+
+
+
 import glob
 #import xml.etree.cElementTree as ET
 #if this will be used a bunch: consider: http://effbot.org/zone/element.htm
@@ -10,10 +13,10 @@ Edit these variables below
 '''
 #where objs are located
 #filePath = '/Users/arthur/Desktop/mitTest/geometrySim/'
-filePath = '/Users/phaedon/github/aletler/meshes/geomsim2/'
+filePath = '/Users/phaedon/fallingJet/smoothobj/'
 #Where we write the xmls
 #outDir = '/Users/arthur/Desktop/mitTest/xmls/'
-outDir = '/Users/phaedon/github/aletler/meshes/xmls/'
+outDir = '/Users/phaedon/fallingJet/smoothxml/'
 #This takes us from xmls to geoSim folder
 
 def beginScene ():
@@ -52,13 +55,13 @@ for msh in glob.glob(filePath+'*.obj'):
      #print m[0]
      #assumes only one air and solid per xml file
      #but multiple bubbles
-     if (m[0] == 'air'):
+     if (m[0] == 'smoothedInterface'):
        checkIfLast(m[1])
        air[strToInt(m[1])] = msh
-     elif (m[0] == 'solid'):
+     elif (m[0] == 'bubbles'):
        checkIfLast(m[1])
        solid[strToInt(m[1])] = msh
-     elif (m[0] == 'bubble'):
+     elif (m[0] == 'garbage'):
        checkIfLast(m[2])
        tmp = bubble.get(strToInt(m[2]),[])
        tmp.append(msh)
@@ -72,7 +75,8 @@ for x in range(0,lastScene+1):
   if (air.has_key(x)):
     data += addShape(air[x],1.333)
   if (solid.has_key(x)):
-    data += addShape(solid[x],1.5)
+    #data += addShape(solid[x],1.5)
+    data += addShape(solid[x],1.333) # since I changed "solid" to "bubbles"
   if (bubble.has_key(x)):
     for b in bubble[x]:
       data += addShape(b,1.333)

@@ -31,6 +31,14 @@ static std::string fastBEMFilename(const std::string &baseDir,
   + "fastbem" + fileNameSuffix(bubbleNum, frameNum) + ".dat";
 }
 
+static std::string outBEMFilename(const std::string &baseDir,
+                                   const std::string &subDir,
+                                   size_t bubbleNum, size_t frameNum) {
+  return baseDir + "/" + subDir + "/"
+  + "outfastbem" + fileNameSuffix(bubbleNum, frameNum) + ".dat";
+}
+
+
 static std::string bubbleFreqFilename(const std::string &baseDir,
                                       const std::string &subDir,
                                       size_t bubbleNum) {

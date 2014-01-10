@@ -28,16 +28,39 @@ int main(int argc, const char * argv[]) {
   
   for (size_t b = 0; b < g_numBubbles; b++) {
     
+    g_bubbles[b].setAnimFrameRate(frameRate);
+
     std::string filename = bubbleFreqFilename(baseDir, "bubblefreqs", b);
     g_bubbles[b].loadBubbleFrequencyFile(filename);
     g_bubbles[b].integrateVibrationODE();
 
   }
   
+  /*******/
+  // Here, we load the results of the external BEM solver (the weights)
+  // and also the air-surface velocities
+  
+  Eigen::VectorXd weights;
+  Eigen::VectorXd airVel;
+  
+  for (size_t f = 0; f < numFrames; f++) {
+    
+    for (size_t b = 0; b < g_numBubbles; b++) {
+      const std::string wtSubDir = "bemout";
+      const std::string avSubDir = "velocities";
+      
+      const std::string velFile = velocityFilename(baseDir, avSubDir, b, f);
+      const std::string bemFile = outBEMFilename(baseDir, wtSubDir, b, f);
+      
+      g_bubbles[b].loadExternalSolverFiles(bemFile, velFile);
+    }
+  }
+  /*******/
+  
+  
   
   SoundTrack st;
   SoundFileManager sfm("/Users/phaedon/fabbubbles6.aiff");
-  
   
   
   // Now we can interpolate the frequencies for audio time step

@@ -168,7 +168,10 @@ double Bubble::getSample(size_t sampleIndex) {
   // I guess there's some edge case:
   if (arrayIndex >= _samples.size()) return 0;
   
-  return _samples[arrayIndex];
+  
+  double t = (sampleIndex * 1.0) / (double)( Sound::SAMPLING_RATE );
+  
+  return _samples[arrayIndex] * getPressureScale(t);
 }
 
 
@@ -226,4 +229,106 @@ bool Bubble::loadBubbleFrequencyFile(const std::string &filename) {
   }
   
 
+}
+
+
+// returns the frequency, in Hz
+double Bubble::setFrequency(double timeStamp, double capacitance) {
+  double f_omega = frequency_omega(capacitance);
+  _soundfreq.addFrequency(timeStamp, f_omega, FREQ_OMEGA);
+  
+  return f_omega * 0.5 * M_1_PI;
+}
+
+
+void Bubble::timestep(double dt) {
+  _vel += dt * _accel;
+  _bubble->translate(dt * _vel);
+}
+
+void Bubble::loadExternalSolverFiles(const std::string &weightFilename,
+                             const std::string &velFilename) {
+  
+  
+  
+  std::ifstream ifileWt(weightFilename.c_str());
+  std::string lineWt;
+  
+  
+  if (! ifileWt.is_open()) {
+    // file doesn't exist. Fail quietly
+    return;
+  }
+  
+  // this will store the dot product!
+  std::complex<double> pressure(0,0);
+  
+  std::ifstream ifileVel(velFilename.c_str());
+  std::string lineVel;
+  
+  const std::string &whitespace = " \t";
+  
+  while (std::getline (ifileWt, lineWt)) {
+    std::getline (ifileVel, lineVel);
+    
+    std::complex<double> thisWt, thisVel;
+    std::string thisWtStr, thisVelStr;
+    // parse both lines
+    // multiply them
+    
+    
+    double wtreal, wtimag;
+    
+    
+    std::stringstream streamWt(lineWt);
+    streamWt >> thisWtStr;
+    wtreal = StringToNumber<double>(thisWtStr);
+    streamWt >> thisWtStr;
+    wtimag = StringToNumber<double>(thisWtStr);
+    
+    thisWt = std::complex<double>(wtreal, wtimag);
+    
+    std::stringstream streamVel(lineVel);
+    streamVel >> thisVelStr;
+  
+    
+    thisVel = std::complex<double>(StringToNumber<double>(thisVelStr), 0.0);
+    
+    // dot product, step by step!
+    pressure += thisWt * thisVel;
+    
+    
+  }
+  
+  ifileWt.close();
+  ifileVel.close();
+  
+  std::cout << "pressure: " << std::abs(pressure) << std::endl;
+  _pressureScales.push_back(std::abs(pressure));
+}
+
+
+double Bubble::getPressureScale(double time) {
+
+  if (time < _soundfreq.startTime() || time > _soundfreq.stopTime()) {
+    return 0.0;
+  }
+  
+  size_t firstFrame = floor(_soundfreq.startTime() * _animFrameRate);
+  
+ // Sound::SAMPLING_RATE
+  size_t anim_prev = floor(time * _animFrameRate);
+  size_t anim_next = ceil(time * _animFrameRate);
+  
+  if (anim_next == anim_prev)
+    return _pressureScales[anim_prev - firstFrame];
+  
+  double time_prev = anim_prev / double(_animFrameRate);
+  double time_next = anim_next / double(_animFrameRate);
+  
+  double a = (time - time_prev) / (time_next - time_prev);
+  
+  return (1-a) * _pressureScales[anim_prev - firstFrame]
+    + a * _pressureScales[anim_next - firstFrame];
+  
 }

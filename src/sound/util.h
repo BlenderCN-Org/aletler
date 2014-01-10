@@ -50,14 +50,7 @@ static bool DirectoryExists( const char* test_path )
     return exists;
 }
 
-/*
-// Helper function from StackOverflow
-static std::string ZeroPadNumber(size_t num, int width)
-{
-  std::ostringstream ss;
-  ss << std::setw( width ) << std::setfill( '0' ) << num;
-  return ss.str();
-}
-*/
+
+
 
 #endif

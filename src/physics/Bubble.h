@@ -31,18 +31,10 @@ public:
   }
   
   
-  void timestep(double dt) {
-    _vel += dt * _accel;
-    _bubble->translate(dt * _vel);
-  }
+  void timestep(double dt);
   
   // returns the frequency, in Hz
-  double setFrequency(double timeStamp, double capacitance) {
-    double f_omega = frequency_omega(capacitance);
-    _soundfreq.addFrequency(timeStamp, f_omega, FREQ_OMEGA);
-    
-    return f_omega * 0.5 * M_1_PI;
-  }
+  double setFrequency(double timeStamp, double capacitance);
   
   double frequency_omega(double capacitance) const;
   void setBubbleMesh(TriangleMesh *b);
@@ -62,10 +54,20 @@ public:
   
   bool loadBubbleFrequencyFile(const std::string &filename);
   
+  void loadExternalSolverFiles(const std::string &weightFilename,
+                               const std::string &velFilename);
+  
+  
+  void setAnimFrameRate(size_t fr) { _animFrameRate = fr; }
+  
 private:
+  
+  double getPressureScale(double time);
   
   size_t _bubble_index;
   
+  // These are the first and last SOUND samples (i.e. at 44100 kHz)
+  // and can be used to index into the _samples vector
   size_t sample0;
   size_t samplef;
   
@@ -77,6 +79,12 @@ private:
   
   SoundFrequency _soundfreq;
   TriangleMesh *_bubble;
+  
+  // The ANIMATION frame rate at which external pressure scalar samples are generated.
+  size_t _animFrameRate;
+  
+  //std::vector<size_t> _pressureFrames;
+  std::vector<double> _pressureScales;
   
   Vector3d _vel;
   Vector3d _accel;
