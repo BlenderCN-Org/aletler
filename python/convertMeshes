@@ -2,7 +2,7 @@
 
 import os, sys
 import glob
-
+import subprocess
 
 SCRIPT_FILENAME = "_convertMeshes.py"
 
@@ -83,6 +83,24 @@ def main(argv = None):
     stlFiles = filterSTLFiles(stlFiles, startFrame, endFrame)
 
     generateConversionScript(dirSTL, dirOBJ, stlFiles)
+    
+    args = ["/home/phaedon/Applications/blender-2.69-linux-glibc211-x86_64/blender",
+            "-b",
+            "--python",
+            SCRIPT_FILENAME]
+
+    # Nothing after this command runs because of whatever blender does
+    subprocess.Popen(args)
+
+    """
+    mtlFiles = dirOBJ + '/' + "*.mtl"
+    args2 = ["rm",
+             mtlFiles]
+
+    subprocess.Popen(args2)
+    print mtlFiles
+    """
+
     return 0
 
 
