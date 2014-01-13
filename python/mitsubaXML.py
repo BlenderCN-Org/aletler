@@ -1,23 +1,15 @@
-
-
+#!/usr/bin/python
 
 import glob
+import os, sys
+
 #import xml.etree.cElementTree as ET
 #if this will be used a bunch: consider: http://effbot.org/zone/element.htm
 air = {}
 solid = {}
 bubble = {}
 lastScene = 0
-'''
-Edit these variables below
-'''
-#where objs are located
-#filePath = '/Users/arthur/Desktop/mitTest/geometrySim/'
-filePath = '/Users/phaedon/fallingJet/smoothobj/'
-#Where we write the xmls
-#outDir = '/Users/arthur/Desktop/mitTest/xmls/'
-outDir = '/Users/phaedon/fallingJet/smoothxml/'
-#This takes us from xmls to geoSim folder
+
 
 def beginScene ():
   return   '<?xml version="1.0" encoding="utf-8"?>\n' \
@@ -50,38 +42,71 @@ def strToInt(num):
     num = 0
   return int(num)
 
-for msh in glob.glob(filePath+'*.obj'):
-     m = msh[len(filePath):-4].split('_')
-     #print m[0]
+
+def main(argv = None):
+  if argv is None:
+    argv = sys.argv
+    
+  dirOBJ = argv[1]
+  dirXML = argv[2]
+
+  if not os.path.isdir(dirOBJ):
+    print dirOBJ + " is not a valid input path. Exiting."
+    return 2
+
+  if not os.path.isdir(dirXML):
+    print dirXML + " does not exist. Creating now."
+    os.mkdir(dirXML)
+  
+
+  objFileList = glob.glob(dirOBJ + '*.obj')
+
+  sceneNumbers = []
+  
+  for msh in objFileList:
+    objFile = msh.split('/')[-1:][0]
+    m = objFile.strip(".obj").split('_')
+
+    scene = int(m[1])
+    if scene not in sceneNumbers:
+      sceneNumbers.append(scene)
+    
      #assumes only one air and solid per xml file
      #but multiple bubbles
-     if (m[0] == 'smoothedInterface'):
-       checkIfLast(m[1])
-       air[strToInt(m[1])] = msh
-     elif (m[0] == 'bubbles'):
-       checkIfLast(m[1])
-       solid[strToInt(m[1])] = msh
-     elif (m[0] == 'garbage'):
-       checkIfLast(m[2])
-       tmp = bubble.get(strToInt(m[2]),[])
-       tmp.append(msh)
-       bubble[strToInt(m[2])] = tmp
-     else:
-       pass
+    if (m[0] == 'smoothedInterface'):
+      checkIfLast(m[1])
+      air[strToInt(m[1])] = msh
+    elif (m[0] == 'bubbles'):
+      checkIfLast(m[1])
+      solid[strToInt(m[1])] = msh
+    elif (m[0] == 'garbage'):
+      checkIfLast(m[2])
+      tmp = bubble.get(strToInt(m[2]),[])
+      tmp.append(msh)
+      bubble[strToInt(m[2])] = tmp
+    else:
+      pass
 
-for x in range(0,lastScene+1):
-  name = 'out'+str(x).zfill(6)+'.xml'
-  data = beginScene()
-  if (air.has_key(x)):
-    data += addShape(air[x],1.333)
-  if (solid.has_key(x)):
-    #data += addShape(solid[x],1.5)
-    data += addShape(solid[x],1.333) # since I changed "solid" to "bubbles"
-  if (bubble.has_key(x)):
-    for b in bubble[x]:
-      data += addShape(b,1.333)
-  data += endScene()
-  f = open(outDir+name,'w')
-  f.write(data)
-  f.close()
+  for x in sceneNumbers:
+    
+    name = 'out'+str(x).zfill(6)+'.xml'
+    data = beginScene()
+    if (air.has_key(x)):
+      data += addShape(air[x],1.333)
+    if (solid.has_key(x)):
+      #data += addShape(solid[x],1.5)
+      data += addShape(solid[x],1.333) # since I changed "solid" to "bubbles"
+    if (bubble.has_key(x)):
+      for b in bubble[x]:
+        data += addShape(b,1.333)
+    data += endScene()
 
+    f = open(dirXML + name,'w')
+    f.write(data)
+    f.close()
+  
+
+  return 0
+
+if __name__ == "__main__":
+  sys.exit(main())
