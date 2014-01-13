@@ -12,6 +12,7 @@
 #include <vector>
 #include <fstream>
 #include <iomanip>  // std::setprecision
+#include <numeric/Interpolators.h>
 
 enum FrequencyType {
   FREQ_HERTZ,
@@ -34,40 +35,13 @@ public:
   }
   
   double frequencyAt(double t, FrequencyType ft = FREQ_HERTZ) {
-    double prevTime = _times[0];
-    double nextTime = _times[0];
-    double prevFreq = _frequencies[0];
-    double nextFreq = _frequencies[0];
     
-    int currindex = 0;
-    
-    // TODO fix this slow method of linear search
-    while (_times[currindex] < t) {
-      currindex++;
-      
-      prevTime = _times[currindex - 1];
-      prevFreq = _frequencies[currindex - 1];
-      if (currindex < _frequencies.size()) {
-        nextFreq = _frequencies[currindex];
-        nextTime = _times[currindex];
-      }
-    }
-    
-    // for now, linear interp
-    double a = 0;
-    if (nextTime != prevTime)
-      a = (t - prevTime) / (nextTime - prevTime);
-    double freq  = (1-a) * prevFreq + a * nextFreq;
-    
-    //std::cout << freq << std::endl;
+    double freq = interpLinearVectors(t, _times, _frequencies);
     
     if (ft == FREQ_HERTZ)
       return freq * 0.5 * M_1_PI;
     else
-      return freq;
-    
-    
-    
+      return freq;    
   }
   
   void printFrequencyVector() const {

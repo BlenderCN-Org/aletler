@@ -52,7 +52,7 @@ int main(int argc, const char * argv[]) {
       const std::string velFile = velocityFilename(baseDir, avSubDir, b, f);
       const std::string bemFile = outBEMFilename(baseDir, wtSubDir, b, f);
       
-      g_bubbles[b].loadExternalSolverFiles(bemFile, velFile);
+      g_bubbles[b].loadExternalSolverFiles(bemFile, velFile, double(f) / double(frameRate));
     }
   }
   /*******/

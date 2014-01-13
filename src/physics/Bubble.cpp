@@ -12,6 +12,7 @@
 #include <io/FileNameGen.h>
 #include <sstream>
 #include <string>
+#include <io/FileStringParsers.h>
 
 using namespace boost::numeric::odeint;
 typedef boost::array< double , 3 > state_type;
@@ -22,32 +23,6 @@ using namespace PhysicalConstants;
 static std::vector<double> *g_samples = NULL;
 static SoundFrequency *g_soundfreq = NULL;
 static double g_r0 = 0;
-
-
-
-
- template <typename T>
- T StringToNumber (const std::string &Text ) {
- //character array as argument
- std::stringstream ss(Text);
- T result;
- return ss >> result ? result : 0;
- }
-
-
-
-static void bubbleFreqFromString(const std::string &line,
-                                 double &t,
-                                 double &f ) {
-  
-  std::stringstream stream(line);
-  std::string ts, fs;
-  stream >> ts;
-  stream >> fs;
-  
-  t = StringToNumber<double>(ts);
-  f = StringToNumber<double>(fs);
-}
 
 
 static double forcingfn(double t) {
@@ -200,11 +175,7 @@ bool Bubble::loadBubbleFrequencyFile(const std::string &filename) {
     
     // grab the first line, which contains the "radius":
     std::getline(ifile, line);
-    std::stringstream stream(line);
-    std::string rs;
-    stream >> rs;
-    
-    _r0 = StringToNumber<double>(rs);
+    _r0 = StringToNumber<double>(line);
  
     while (std::getline (ifile,line)) {
       
@@ -214,7 +185,7 @@ bool Bubble::loadBubbleFrequencyFile(const std::string &filename) {
         continue;
       
       double timestamp, freq;
-      bubbleFreqFromString(line, timestamp, freq);
+      StringToDoublePair(line, timestamp, freq);
       
       _soundfreq.addFrequency(timestamp, freq, FREQ_OMEGA);
       
@@ -247,7 +218,8 @@ void Bubble::timestep(double dt) {
 }
 
 void Bubble::loadExternalSolverFiles(const std::string &weightFilename,
-                             const std::string &velFilename) {
+                             const std::string &velFilename,
+                                     double timestamp) {
   
   
   
@@ -262,73 +234,41 @@ void Bubble::loadExternalSolverFiles(const std::string &weightFilename,
   
   // this will store the dot product!
   std::complex<double> pressure(0,0);
-  
   std::ifstream ifileVel(velFilename.c_str());
   std::string lineVel;
   
-  const std::string &whitespace = " \t";
   
+  if (! ifileVel.is_open()) {
+    // file doesn't exist. Fail quietly
+    return;
+  }
+  
+
   while (std::getline (ifileWt, lineWt)) {
     std::getline (ifileVel, lineVel);
     
     std::complex<double> thisWt, thisVel;
-    std::string thisWtStr, thisVelStr;
+    std::string thisVelStr;
+    
     // parse both lines
     // multiply them
     
-    
-    double wtreal, wtimag;
-    
-    
-    std::stringstream streamWt(lineWt);
-    streamWt >> thisWtStr;
-    wtreal = StringToNumber<double>(thisWtStr);
-    streamWt >> thisWtStr;
-    wtimag = StringToNumber<double>(thisWtStr);
-    
-    thisWt = std::complex<double>(wtreal, wtimag);
-    
-    std::stringstream streamVel(lineVel);
-    streamVel >> thisVelStr;
-  
-    
-    thisVel = std::complex<double>(StringToNumber<double>(thisVelStr), 0.0);
+    thisWt = StringToComplex(lineWt);
+    thisVel = std::complex<double>(StringToNumber<double>(lineVel), 0.0);
     
     // dot product, step by step!
     pressure += thisWt * thisVel;
-    
-    
   }
   
   ifileWt.close();
   ifileVel.close();
   
   std::cout << "pressure: " << std::abs(pressure) << std::endl;
-  _pressureScales.push_back(std::abs(pressure));
+  _cpressureScales.push_back(pressure);
+  _pressureTimes.push_back(timestamp);
 }
 
 
 double Bubble::getPressureScale(double time) {
-
-  if (time < _soundfreq.startTime() || time > _soundfreq.stopTime()) {
-    return 0.0;
-  }
-  
-  size_t firstFrame = floor(_soundfreq.startTime() * _animFrameRate);
-  
- // Sound::SAMPLING_RATE
-  size_t anim_prev = floor(time * _animFrameRate);
-  size_t anim_next = ceil(time * _animFrameRate);
-  
-  if (anim_next == anim_prev)
-    return _pressureScales[anim_prev - firstFrame];
-  
-  double time_prev = anim_prev / double(_animFrameRate);
-  double time_next = anim_next / double(_animFrameRate);
-  
-  double a = (time - time_prev) / (time_next - time_prev);
-  
-  return (1-a) * _pressureScales[anim_prev - firstFrame]
-    + a * _pressureScales[anim_next - firstFrame];
-  
+  return std::abs(interpLinearComplexVectors(time, _pressureTimes, _cpressureScales));
 }

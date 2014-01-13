@@ -55,7 +55,8 @@ public:
   bool loadBubbleFrequencyFile(const std::string &filename);
   
   void loadExternalSolverFiles(const std::string &weightFilename,
-                               const std::string &velFilename);
+                               const std::string &velFilename,
+                               double timestamp);
   
   
   void setAnimFrameRate(size_t fr) { _animFrameRate = fr; }
@@ -84,7 +85,8 @@ private:
   size_t _animFrameRate;
   
   //std::vector<size_t> _pressureFrames;
-  std::vector<double> _pressureScales;
+  std::vector<double> _pressureTimes;
+  std::vector<std::complex<double> > _cpressureScales;
   
   Vector3d _vel;
   Vector3d _accel;
