@@ -1,0 +1,44 @@
+#!/usr/bin/python
+
+import os, sys
+import glob
+import subprocess
+import shutil
+
+def readImageFiles(imageDir, fileExt):
+    return glob.glob(imageDir + "/*." + fileExt)
+    
+def renameFiles(imgFiles, imageDir, fileExt):
+    imgNames = [ f.strip('.'+fileExt).split('/')[-1:][0] for f in imgFiles ]
+    imgNums = [int(f[-6:]) for f in imgNames]
+    imgNums.sort()
+    print imgNums
+
+    for i in range(len(imgNums)):
+
+    	oldRoot = imgNames[0][:-6]
+    	newName = oldRoot + str(i).zfill(6) + '.' + fileExt
+
+	newPath = imageDir + '/' + newName
+
+	oldPath = imageDir + '/' + oldRoot + str(imgNums[i]).zfill(6) + '.' + fileExt
+	#	print oldPath + "  -->  " + newPath
+	shutil.move(oldPath, newPath)    
+	
+def main(argv = None):
+    if argv is None:
+        argv = sys.argv
+
+    if len(argv) < 3:
+        print "Syntax:"
+        print "reindexNumberedFiles imageDir fileExt"
+        return 1
+
+    inFiles = readImageFiles(argv[1], argv[2])
+    renameFiles(inFiles, argv[1], argv[2])
+
+    return 0
+		
+
+if __name__ == "__main__":
+    sys.exit(main())
